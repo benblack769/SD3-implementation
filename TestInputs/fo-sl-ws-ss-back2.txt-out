@@ -1,0 +1,80 @@
+PC: 40000001
+ Inserting new PCAdd 40000001
+	 ADDR 10 change 1 distance 0
+Address: 10
+Result: 0
+Current State: 1
+Current Stride: 0
+
+	 ADDR 20 change 1 distance 10
+Address: 20
+Result: 0
+Current State: 2
+Current Stride: 10
+
+	 ADDR 30 change 1 distance 10
+Address: 30
+Result: 4
+Current State: 3
+Current Stride: 10
+
+	 ADDR 40 change 1 distance 10
+Address: 40
+Result: 4
+Current State: 4
+Current Stride: 10
+
+	 ADDR 500 change -1 distance 10
+Address: 500
+Result: 3
+Current State: 3
+Current Stride: 10
+
+	 ADDR 300 change -1 distance 10
+Address: 300
+Result: 3
+Current State: 2
+Current Stride: 10
+
+	 ADDR 50 change 1 distance 10
+Address: 50
+Result: 4
+Current State: 3
+Current Stride: 10
+
+	 ADDR 60 change 1 distance 10
+Address: 60
+Result: 4
+Current State: 4
+Current Stride: 10
+
+	 ADDR 400 change -1 distance 10
+Address: 400
+Result: 3
+Current State: 3
+Current Stride: 10
+
+	 ADDR 200 change -1 distance 10
+Address: 200
+Result: 3
+Current State: 2
+Current Stride: 10
+
+PURGE # of entries: 1
+Purge PC : 40000001 lost points: 10 60
+STRIDES: 
+PC: 40000001 killed: 0 [10,60] Stride: 10 #Accesses: 6 Size: 4 Mode: 0
+*****
+POINTS: 
+Address: 10 killed: 0 PC: 40000001 Address: 10 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 60 killed: 0 PC: 40000001 Address: 60 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 200 killed: 0 PC: 40000001 Address: 200 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 300 killed: 0 PC: 40000001 Address: 300 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 400 killed: 0 PC: 40000001 Address: 400 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 500 killed: 0 PC: 40000001 Address: 500 #Accesses: 1 Size: 4 Mode: 0
+*****

@@ -1,0 +1,363 @@
+PC: 40000009
+ Inserting new PCAdd 40000009
+	 ADDR 90 change 1 distance 0
+Address: 90
+Result: 0
+Current State: 1
+Current Stride: 0
+
+	 ADDR 80 change 1 distance -10
+Address: 80
+Result: 0
+Current State: 2
+Current Stride: -10
+
+	 ADDR 70 change 1 distance -10
+Address: 70
+Result: 4
+Current State: 3
+Current Stride: -10
+
+	 ADDR 70 change -1 distance -10
+Address: 70
+Result: 3
+Current State: 2
+Current Stride: -10
+
+	 ADDR 70 change -1 distance 0
+Address: 70
+Result: 0
+Current State: 1
+Current Stride: 0
+
+	 ADDR 70 change 1 distance 0
+Address: 70
+Result: 0
+Current State: 2
+Current Stride: 0
+
+	 ADDR 70 change 0 distance 0
+	 AFTER UPDATE: 
+PC: 40000009 Address: 70 #Accesses: 2 Size: 4 Mode: 0
+
+	 AFTER UPDATE: 
+PC: 40000009 Address: 70 #Accesses: 3 Size: 4 Mode: 0
+
+	 AFTER UPDATE: 
+PC: 40000009 Address: 70 #Accesses: 4 Size: 4 Mode: 0
+
+Address: 70
+Result: 2
+Current State: 2
+Current Stride: 0
+
+	 ADDR 70 change 0 distance 0
+	 AFTER UPDATE: 
+PC: 40000009 Address: 70 #Accesses: 5 Size: 4 Mode: 0
+
+Address: 70
+Result: 3
+Current State: 2
+Current Stride: 0
+
+	 ADDR 2 change -1 distance 0
+Address: 2
+Result: 0
+Current State: 1
+Current Stride: 0
+
+	 ADDR 1 change 1 distance -1
+Address: 1
+Result: 0
+Current State: 2
+Current Stride: -1
+
+	 ADDR 8 change -1 distance 0
+Address: 8
+Result: 1
+Current State: 1
+Current Stride: 0
+
+PC: 40000001
+ Inserting new PCAdd 40000001
+	 ADDR 99 change 1 distance 0
+Address: 99
+Result: 0
+Current State: 1
+Current Stride: 0
+
+	 ADDR 98 change 1 distance -1
+Address: 98
+Result: 0
+Current State: 2
+Current Stride: -1
+
+	 ADDR 97 change 1 distance -1
+Address: 97
+Result: 4
+Current State: 3
+Current Stride: -1
+
+	 ADDR 96 change 1 distance -1
+Address: 96
+Result: 4
+Current State: 4
+Current Stride: -1
+
+	 ADDR 95 change 0 distance -1
+Address: 95
+Result: 4
+Current State: 4
+Current Stride: -1
+
+	 ADDR 94 change 0 distance -1
+Address: 94
+Result: 4
+Current State: 4
+Current Stride: -1
+
+	 ADDR 100 change -1 distance -1
+Address: 100
+Result: 3
+Current State: 3
+Current Stride: -1
+
+	 ADDR 101 change -1 distance -1
+Address: 101
+Result: 3
+Current State: 2
+Current Stride: -1
+
+	 ADDR 117 change -1 distance 0
+Address: 117
+Result: 0
+Current State: 1
+Current Stride: 0
+
+	 ADDR 127 change 1 distance 10
+Address: 127
+Result: 0
+Current State: 2
+Current Stride: 10
+
+PC: 40000040
+ Inserting new PCAdd 40000040
+	 ADDR 10 change 1 distance 0
+Address: 10
+Result: 0
+Current State: 1
+Current Stride: 0
+
+	 ADDR 20 change 1 distance 10
+Address: 20
+Result: 0
+Current State: 2
+Current Stride: 10
+
+	 ADDR 30 change 1 distance 10
+Address: 30
+Result: 4
+Current State: 3
+Current Stride: 10
+
+	 ADDR 40 change 1 distance 10
+Address: 40
+Result: 4
+Current State: 4
+Current Stride: 10
+
+	 ADDR 50 change 0 distance 10
+Address: 50
+Result: 4
+Current State: 4
+Current Stride: 10
+
+	 ADDR 60 change 0 distance 10
+Address: 60
+Result: 4
+Current State: 4
+Current Stride: 10
+
+PC: 40000009
+	 ADDR 90 change 1 distance 82
+Address: 90
+Result: 0
+Current State: 2
+Current Stride: 82
+
+	 ADDR 80 change -1 distance 0
+Address: 80
+Result: 1
+Current State: 1
+Current Stride: 0
+
+	 ADDR 70 change 1 distance -10
+Address: 70
+Result: 0
+Current State: 2
+Current Stride: -10
+
+	 ADDR 70 change -1 distance 0
+	 AFTER UPDATE: 
+PC: 40000009 Address: 70 #Accesses: 6 Size: 4 Mode: 0
+
+Address: 70
+Result: 1
+Current State: 1
+Current Stride: 0
+
+	 ADDR 70 change 1 distance 0
+Address: 70
+Result: 0
+Current State: 2
+Current Stride: 0
+
+	 ADDR 70 change 0 distance 0
+	 AFTER UPDATE: 
+PC: 40000009 Address: 70 #Accesses: 7 Size: 4 Mode: 0
+
+	 AFTER UPDATE: 
+PC: 40000009 Address: 70 #Accesses: 8 Size: 4 Mode: 0
+
+	 AFTER UPDATE: 
+PC: 40000009 Address: 70 #Accesses: 9 Size: 4 Mode: 0
+
+Address: 70
+Result: 2
+Current State: 2
+Current Stride: 0
+
+	 ADDR 70 change 0 distance 0
+	 AFTER UPDATE: 
+PC: 40000009 Address: 70 #Accesses: 10 Size: 4 Mode: 0
+
+Address: 70
+Result: 3
+Current State: 2
+Current Stride: 0
+
+	 ADDR 2 change -1 distance 0
+Address: 2
+Result: 0
+Current State: 1
+Current Stride: 0
+
+	 ADDR 1 change 1 distance -1
+Address: 1
+Result: 0
+Current State: 2
+Current Stride: -1
+
+	 ADDR 8 change -1 distance 0
+	 AFTER UPDATE: 
+PC: 40000009 Address: 2 #Accesses: 2 Size: 4 Mode: 0
+
+	 AFTER UPDATE: 
+PC: 40000009 Address: 1 #Accesses: 2 Size: 4 Mode: 0
+
+Address: 8
+Result: 1
+Current State: 1
+Current Stride: 0
+
+PC: 40000070
+ Inserting new PCAdd 40000070
+	 ADDR 11 change 1 distance 0
+Address: 11
+Result: 0
+Current State: 1
+Current Stride: 0
+
+	 ADDR 22 change 1 distance 11
+Address: 22
+Result: 0
+Current State: 2
+Current Stride: 11
+
+	 ADDR 33 change 1 distance 11
+Address: 33
+Result: 4
+Current State: 3
+Current Stride: 11
+
+	 ADDR 44 change 1 distance 11
+Address: 44
+Result: 4
+Current State: 4
+Current Stride: 11
+
+	 ADDR 55 change 0 distance 11
+Address: 55
+Result: 4
+Current State: 4
+Current Stride: 11
+
+	 ADDR 4 change -1 distance 11
+Address: 4
+Result: 3
+Current State: 3
+Current Stride: 11
+
+	 ADDR 6 change -1 distance 11
+Address: 6
+Result: 3
+Current State: 2
+Current Stride: 11
+
+	 ADDR 8 change -1 distance 0
+Address: 8
+Result: 0
+Current State: 1
+Current Stride: 0
+
+	 ADDR 10 change 1 distance 2
+Address: 10
+Result: 0
+Current State: 2
+Current Stride: 2
+
+PURGE # of entries: 4
+Purge PC : 40000001 lost points: 117 127
+Purge PC : 40000009 lost points: 8 	 AFTER UPDATE: 
+PC: 40000009 Address: 8 #Accesses: 2 Size: 4 Mode: 0
+
+
+Purge PC : 40000040  nothing lost 
+Purge PC : 40000070 lost points: 8 10
+STRIDES: 
+PC: 40000001 killed: 0 [99,94] Stride: -1 #Accesses: 6 Size: 4 Mode: 0
+*****
+PC: 40000009 killed: 0 [90,70] Stride: -10 #Accesses: 3 Size: 4 Mode: 0
+*****
+PC: 40000040 killed: 0 [10,60] Stride: 10 #Accesses: 6 Size: 4 Mode: 0
+*****
+PC: 40000070 killed: 0 [11,55] Stride: 11 #Accesses: 5 Size: 4 Mode: 0
+*****
+POINTS: 
+Address: 1 killed: 0 PC: 40000009 Address: 1 #Accesses: 2 Size: 4 Mode: 0
+*****
+Address: 2 killed: 0 PC: 40000009 Address: 2 #Accesses: 2 Size: 4 Mode: 0
+*****
+Address: 4 killed: 0 PC: 40000070 Address: 4 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 6 killed: 0 PC: 40000070 Address: 6 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 8 killed: 0 PC: 40000009 Address: 8 #Accesses: 2 Size: 4 Mode: 0
+Address: 8 killed: 0 PC: 40000070 Address: 8 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 10 killed: 0 PC: 40000070 Address: 10 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 70 killed: 0 PC: 40000009 Address: 70 #Accesses: 10 Size: 4 Mode: 0
+*****
+Address: 80 killed: 0 PC: 40000009 Address: 80 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 90 killed: 0 PC: 40000009 Address: 90 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 100 killed: 0 PC: 40000001 Address: 100 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 101 killed: 0 PC: 40000001 Address: 101 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 117 killed: 0 PC: 40000001 Address: 117 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 127 killed: 0 PC: 40000001 Address: 127 #Accesses: 1 Size: 4 Mode: 0
+*****

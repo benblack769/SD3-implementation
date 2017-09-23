@@ -1,0 +1,105 @@
+PC: 40000001
+ Inserting new PCAdd 40000001
+	 ADDR 10 change 1 distance 0
+Address: 10
+Result: 0
+Current State: 1
+Current Stride: 0
+
+	 ADDR 40 change 1 distance 30
+Address: 40
+Result: 0
+Current State: 2
+Current Stride: 30
+
+	 ADDR 100 change -1 distance 0
+Address: 100
+Result: 1
+Current State: 1
+Current Stride: 0
+
+	 ADDR 30 change 1 distance -70
+Address: 30
+Result: 0
+Current State: 2
+Current Stride: -70
+
+	 ADDR 800 change -1 distance 0
+Address: 800
+Result: 1
+Current State: 1
+Current Stride: 0
+
+	 ADDR 20 change 1 distance -780
+Address: 20
+Result: 0
+Current State: 2
+Current Stride: -780
+
+	 ADDR 1000 change -1 distance 0
+Address: 1000
+Result: 1
+Current State: 1
+Current Stride: 0
+
+	 ADDR 55 change 1 distance -945
+Address: 55
+Result: 0
+Current State: 2
+Current Stride: -945
+
+	 ADDR 600 change -1 distance 0
+Address: 600
+Result: 1
+Current State: 1
+Current Stride: 0
+
+	 ADDR 10 change 1 distance -590
+Address: 10
+Result: 0
+Current State: 2
+Current Stride: -590
+
+	 ADDR 100 change -1 distance 0
+	 AFTER UPDATE: 
+PC: 40000001 Address: 10 #Accesses: 2 Size: 4 Mode: 0
+
+Address: 100
+Result: 1
+Current State: 1
+Current Stride: 0
+
+	 ADDR 30 change 1 distance -70
+Address: 30
+Result: 0
+Current State: 2
+Current Stride: -70
+
+PURGE # of entries: 1
+Purge PC : 40000001 lost points: 100 	 AFTER UPDATE: 
+PC: 40000001 Address: 100 #Accesses: 2 Size: 4 Mode: 0
+
+30
+	 AFTER UPDATE: 
+PC: 40000001 Address: 30 #Accesses: 2 Size: 4 Mode: 0
+
+STRIDES: 
+POINTS: 
+Address: 10 killed: 0 PC: 40000001 Address: 10 #Accesses: 2 Size: 4 Mode: 0
+*****
+Address: 20 killed: 0 PC: 40000001 Address: 20 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 30 killed: 0 PC: 40000001 Address: 30 #Accesses: 2 Size: 4 Mode: 0
+*****
+Address: 40 killed: 0 PC: 40000001 Address: 40 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 55 killed: 0 PC: 40000001 Address: 55 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 100 killed: 0 PC: 40000001 Address: 100 #Accesses: 2 Size: 4 Mode: 0
+*****
+Address: 600 killed: 0 PC: 40000001 Address: 600 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 800 killed: 0 PC: 40000001 Address: 800 #Accesses: 1 Size: 4 Mode: 0
+*****
+Address: 1000 killed: 0 PC: 40000001 Address: 1000 #Accesses: 1 Size: 4 Mode: 0
+*****
