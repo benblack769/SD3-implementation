@@ -9,7 +9,8 @@ set(CPP_SOURCE_DIR ${PROJECT_SOURCE_DIR})
 
 include_directories("${CPP_SOURCE_DIR}")
 
-add_executable(test ${CPP_SOURCE_DIR}/tester.cpp ${CPP_SOURCE_DIR}/StrideDetector.cpp  ${CPP_SOURCE_DIR}/PendingStrideTable.cpp ${CPP_SOURCE_DIR}/PendingPointTable.cpp ${CPP_SOURCE_DIR}/Stride.cpp ${CPP_SOURCE_DIR}/Point.cpp)
+#add_executable(test ${CPP_SOURCE_DIR}/tester.cpp ${CPP_SOURCE_DIR}/StrideDetector.cpp  ${CPP_SOURCE_DIR}/PendingStrideTable.cpp ${CPP_SOURCE_DIR}/PendingPointTable.cpp ${CPP_SOURCE_DIR}/Stride.cpp ${CPP_SOURCE_DIR}/Point.cpp ${CPP_SOURCE_DIR}/Types.h)
+add_executable(test ${CPP_SOURCE_DIR}/test-new-in.cpp ${CPP_SOURCE_DIR}/StrideDetector.cpp  ${CPP_SOURCE_DIR}/PendingStrideTable.cpp ${CPP_SOURCE_DIR}/PendingPointTable.cpp ${CPP_SOURCE_DIR}/Stride.cpp ${CPP_SOURCE_DIR}/Point.cpp)
 
 set_property(TARGET test PROPERTY CXX_STANDARD 98)
 set_property(TARGET test PROPERTY CXX_STANDARD_REQUIRED ON)
