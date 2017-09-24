@@ -1,0 +1,15 @@
+cmake_minimum_required (VERSION 2.8)
+project (StrideDetector C CXX)
+
+set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+
+set(CPP_SOURCE_DIR ${PROJECT_SOURCE_DIR})
+
+include_directories("${CPP_SOURCE_DIR}")
+
+add_executable(test ${CPP_SOURCE_DIR}/tester.cpp ${CPP_SOURCE_DIR}/StrideDetector.cpp  ${CPP_SOURCE_DIR}/PendingStrideTable.cpp ${CPP_SOURCE_DIR}/PendingPointTable.cpp ${CPP_SOURCE_DIR}/Stride.cpp)
+
+set_property(TARGET test PROPERTY CXX_STANDARD 98)
+set_property(TARGET test PROPERTY CXX_STANDARD_REQUIRED ON)

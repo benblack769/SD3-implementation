@@ -50,15 +50,6 @@ void handleStrideDetectorResult(long long pc, long long memAddr, MemAccessType r
                 }
             }
 
-            long long lost2 = strDet->getSecondLostPoint();
-            if (lost2 != 0) {
-                if (pendingPointTable->doesPointExist(lost2, pc, READ)) {
-                    pendingPointTable->updateExistingPoint(lost2, pc, READ);
-                } else {
-                    pendingPointTable->addNewPoint(lost2, pc, 1, 4, READ);
-                }
-            }
-
         } else if (result == NEWPOINT) {
             // This happens when there have been 3 consecutive accesses to this
             // point (stride==0) We need to account for all three accesses when
