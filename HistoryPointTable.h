@@ -1,30 +1,27 @@
 #ifndef __HISTORYPOINTTABLE_H__
 #define __HISTORYPOINTTABLE_H__
 
-
 #include "Point.h"
 #include <map>
 
 using namespace std;
 
-class HistoryPointTable
-{	     
-   
- public:
-  HistoryPointTable(){};
+class HistoryPointTable {
 
-  void addNewPoint(long long memAddress, long long PC, long long numAccesses=1, long long accessSize=4, MemAccessMode readOrWrite=READ); 
+  public:
+    HistoryPointTable(){};
 
-  bool doesPointExist(long long memAddress);
+    void addNewPoint(long long memAddress, long long PC, long long numAccesses = 1, long long accessSize = 4,
+                     MemAccessMode readOrWrite = READ);
 
-  list<Point*> getPoints(long long memAddress);
+    bool doesPointExist(long long memAddress);
 
-  map<Interval, bool> getIntervalMap();
+    list<Point *> getPoints(long long memAddress);
 
- private:
+    map<Interval, bool> getIntervalMap();
 
-  std::multimap<long long, Point*> myPoints;
-
+  private:
+    std::multimap<long long, Point *> myPoints;
 };
 
-#endif 
+#endif
