@@ -3,11 +3,7 @@
 
 using namespace std;
 
-enum IntervalType {
-    UndefinedInteraval = -1,
-    PointInterval = 0,
-    StrideInterval = 1
-};
+enum IntervalType { UndefinedInteraval = -1, PointInterval = 0, StrideInterval = 1 };
 
 class Interval {
     friend class IntervalLessThan;
@@ -15,8 +11,7 @@ class Interval {
   public:
     Interval();
     Interval(long long lowerBound, long long upperBound);
-    Interval(long long lowerBound, long long upperBound, IntervalType type,
-             Point *point = NULL, Stride *stride = NULL);
+    Interval(long long lowerBound, long long upperBound, IntervalType type, Point *point = NULL, Stride *stride = NULL);
 
   private:
     long long myLowerBound;

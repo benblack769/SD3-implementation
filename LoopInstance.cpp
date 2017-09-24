@@ -29,11 +29,8 @@ void LoopInstance::endCurrentIteration() {
     // clear pending tables
 }
 
-void LoopInstance::addMemAccess(long long memAddress, long long PC,
-                                int accessSize, MemAccessMode readOrWrite) {
-    pair<multimap<long long, PerPCDetector>::iterator,
-         multimap<long long, PerPCDetector>::iterator>
-        rangeIter;
+void LoopInstance::addMemAccess(long long memAddress, long long PC, int accessSize, MemAccessMode readOrWrite) {
+    pair<multimap<long long, PerPCDetector>::iterator, multimap<long long, PerPCDetector>::iterator> rangeIter;
     multimap<long long, PerPCDetector>::iterator iter;
 
     rangeIter = myPendingStrides.equal_range(PC);
@@ -45,12 +42,10 @@ void LoopInstance::addMemAccess(long long memAddress, long long PC,
 
             if (result == POINT) {
                 if (myPendingPoints->doesPointExist(memoryAddr, PC)) {
-                    myPendingPoints->updateExistingPoint(memoryAddr, PC,
-                                                         readOrWrite);
+                    myPendingPoints->updateExistingPoint(memoryAddr, PC, readOrWrite);
                 } else {
                     // Create new point
-                    myPendingPoints->addNewPoint(memoryAddr, PC, 1, accessSize,
-                                                 readOrWrite);
+                    myPendingPoints->addNewPoint(memoryAddr, PC, 1, accessSize, readOrWrite);
                 }
 
                 if (lastType == UNKNOWN) {
@@ -59,21 +54,16 @@ void LoopInstance::addMemAccess(long long memAddress, long long PC,
                     // as a POINT or a STRIDE and therefore hasn't been
                     // accounted for yet. This code should only happen when it
                     // is a fixed address.
-                    myPendingPoints->updateExistingPoint(memoryAddr, PC,
-                                                         readOrWrite);
+                    myPendingPoints->updateExistingPoint(memoryAddr, PC, readOrWrite);
                 }
             } else if (result == STRIDE) {
                 int stride = iter->second.detector->getStride();
 
                 if (lastType == UNKNOWN) {
-                    long long baseAddr =
-                        iter->second.detector->getFirstMemAddr();
-                    myPendingStrides->addNewStride(PC, baseAddr, memoryAddr,
-                                                   stride, 2, accessSize,
-                                                   readOrWrite);
+                    long long baseAddr = iter->second.detector->getFirstMemAddr();
+                    myPendingStrides->addNewStride(PC, baseAddr, memoryAddr, stride, 2, accessSize, readOrWrite);
                 } else {
-                    myPendingStrides->updateExistingStride(PC, memoryAddr,
-                                                           stride, readOrWrite);
+                    myPendingStrides->updateExistingStride(PC, memoryAddr, stride, readOrWrite);
                 }
             } else {
                 // This would be UNKNOWN.  It is when we can't make a

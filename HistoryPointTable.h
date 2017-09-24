@@ -11,8 +11,7 @@ class HistoryPointTable {
   public:
     HistoryPointTable(){};
 
-    void addNewPoint(long long memAddress, long long PC,
-                     long long numAccesses = 1, long long accessSize = 4,
+    void addNewPoint(long long memAddress, long long PC, long long numAccesses = 1, long long accessSize = 4,
                      MemAccessMode readOrWrite = READ);
 
     bool doesPointExist(long long memAddress);

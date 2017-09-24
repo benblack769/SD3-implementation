@@ -1,7 +1,6 @@
 #include "HistoryPointTable.h"
 
-void HistoryPointTable::addNewPoint(long long memAddress, long long PC,
-                                    long long numAccesses, long long accessSize,
+void HistoryPointTable::addNewPoint(long long memAddress, long long PC, long long numAccesses, long long accessSize,
                                     MemAccessMode readOrWrite) {
     Point *temp;
     temp = new Point(memAddress, PC, numAccesses, accessSize, readOrWrite);
@@ -10,9 +9,7 @@ void HistoryPointTable::addNewPoint(long long memAddress, long long PC,
 }
 
 bool HistoryPointTable::doesPointExist(long long memAddress) {
-    pair<multimap<long long, Point *>::iterator,
-         multimap<long long, Point *>::iterator>
-        rangeIter;
+    pair<multimap<long long, Point *>::iterator, multimap<long long, Point *>::iterator> rangeIter;
     multimap<long long, Point *>::iterator iter;
 
     rangeIter = myPoints.equal_range(memAddress);
@@ -27,9 +24,7 @@ bool HistoryPointTable::doesPointExist(long long memAddress) {
 list<Point *> HistoryPointTable::getPoints(long long memAddress) {
     list<Point *> results;
 
-    pair<multimap<long long, Point *>::iterator,
-         multimap<long long, Point *>::iterator>
-        rangeIter;
+    pair<multimap<long long, Point *>::iterator, multimap<long long, Point *>::iterator> rangeIter;
     multimap<long long, Point *>::iterator iter;
 
     rangeIter = myPoints.equal_range(memAddress);

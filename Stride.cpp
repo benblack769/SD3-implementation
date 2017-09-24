@@ -5,8 +5,7 @@
 
 // The assumption is that the stride distance is the difference between the two
 // addresses and the number of accesses is by default 2.
-Stride::Stride(long long lowAddress, long long highAddress,
-               long long accessSize, MemAccessMode readOrWrite) {
+Stride::Stride(long long lowAddress, long long highAddress, long long accessSize, MemAccessMode readOrWrite) {
     myLowAddress = lowAddress;
     myHighAddress = highAddress;
     myStrideLength = (highAddress - lowAddress);
@@ -15,8 +14,7 @@ Stride::Stride(long long lowAddress, long long highAddress,
     myAccessSize = accessSize;
 }
 
-Stride::Stride(long long lowAddress, long long highAddress, int strideLength,
-               int numAccesses, long long accessSize,
+Stride::Stride(long long lowAddress, long long highAddress, int strideLength, int numAccesses, long long accessSize,
                MemAccessMode readOrWrite) {
     myLowAddress = lowAddress;
     myHighAddress = highAddress;
@@ -61,8 +59,7 @@ bool Stride::hasBeenAccessed(long long address) {
 }
 
 void Stride::print() {
-    cout << "[" << myLowAddress << "," << myHighAddress << "] Stride: " << dec
-         << myStrideLength;
+    cout << "[" << myLowAddress << "," << myHighAddress << "] Stride: " << dec << myStrideLength;
     cout << " #Accesses: " << myNumAccesses << " Size: " << myAccessSize;
     cout << " Mode: " << myAccessMode;
     cout << endl;

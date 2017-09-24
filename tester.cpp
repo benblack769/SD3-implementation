@@ -15,8 +15,7 @@ PendingStrideTable *pendingStrideTable = NULL;
 PendingPointTable *pendingPointTable = NULL;
 map<long long, StrideDetector *> stridePerPCMap; // "Stride detector per PC" map
 
-void handleStrideDetectorResult(long long pc, long long memAddr,
-                                MemAccessType result, StrideDetector *strDet) {
+void handleStrideDetectorResult(long long pc, long long memAddr, MemAccessType result, StrideDetector *strDet) {
     // This method assumes the pendingTables have already been initialized
 
     if (result == UNKNOWN) {
@@ -66,20 +65,16 @@ void handleStrideDetectorResult(long long pc, long long memAddr,
         }
     } else if (result == STRIDE) {
         int strideLength = strDet->getStride();
-        if (pendingStrideTable->doesStrideExist(
-                pc, memAddr, strideLength,
-                READ)) { // just hard coding R/W for now
-            pendingStrideTable->updateExistingStride(pc, memAddr, strideLength,
-                                                     READ);
+        if (pendingStrideTable->doesStrideExist(pc, memAddr, strideLength,
+                                                READ)) { // just hard coding R/W for now
+            pendingStrideTable->updateExistingStride(pc, memAddr, strideLength, READ);
         } else {
-            pendingStrideTable->addNewStride(
-                pc, strDet->getFirstMemAddr(), strDet->getPrevMemAddr(),
-                strideLength, 3, 4,
-                READ); // hard coding R/W and access Size for testing
+            pendingStrideTable->addNewStride(pc, strDet->getFirstMemAddr(), strDet->getPrevMemAddr(), strideLength, 3,
+                                             4,
+                                             READ); // hard coding R/W and access Size for testing
         }
     } else {
-        cerr << "RESULT FOR " << hex << memAddr << dec << " is UNDEFINED"
-             << endl;
+        cerr << "RESULT FOR " << hex << memAddr << dec << " is UNDEFINED" << endl;
         exit(1);
     }
 }
@@ -140,10 +135,8 @@ void purgeStrideDetectorState() {
  * false
  */
 
-bool isStrideDetectInstPresent(
-    map<long long, StrideDetector *> &strideDetectorInstMap, long long PCAdd) {
-    map<long long, StrideDetector *>::iterator it =
-        strideDetectorInstMap.begin();
+bool isStrideDetectInstPresent(map<long long, StrideDetector *> &strideDetectorInstMap, long long PCAdd) {
+    map<long long, StrideDetector *>::iterator it = strideDetectorInstMap.begin();
 
     it = strideDetectorInstMap.find(PCAdd);
 
@@ -175,8 +168,7 @@ int main() {
 
     MemAccessType currentResult = UNKNOWN;
 
-    StrideDetector
-        *strideDetectorPerPC; // Used only for the very first PC address
+    StrideDetector *strideDetectorPerPC; // Used only for the very first PC address
 
     pendingStrideTable = new PendingStrideTable();
     pendingPointTable = new PendingPointTable();
@@ -185,8 +177,7 @@ int main() {
         while (myfile >> fileLine) {
             if (PCAdd != 0) {
                 if (isStrideDetectInstPresent(stridePerPCMap, PCAdd) == false) {
-                    strideDetectorPerPC =
-                        new StrideDetector(); // local stride detector instance
+                    strideDetectorPerPC = new StrideDetector(); // local stride detector instance
                     cout << " Inserting new PCAdd " << PCAdd << endl;
                     stridePerPCMap[PCAdd] = strideDetectorPerPC;
                 } else {
@@ -194,27 +185,22 @@ int main() {
                 }
             }
 
-            if (fileLine >
-                400000) // If line is a PC address, then store it in PC
-                        // address variable //
+            if (fileLine > 400000) // If line is a PC address, then store it in PC
+                                   // address variable //
             {
-                prevPC =
-                    PCAdd; // used to check if PCAdd is the first PCAdd or not
+                prevPC = PCAdd; // used to check if PCAdd is the first PCAdd or not
 
                 PCAdd = fileLine; // storing new PC address into PCAdd
                 cout << "PC: " << PCAdd << endl;
             } else {
                 long long memAddr = fileLine;
                 currentResult = strideDetectorPerPC->addAccess(memAddr);
-                handleStrideDetectorResult(PCAdd, memAddr, currentResult,
-                                           strideDetectorPerPC);
+                handleStrideDetectorResult(PCAdd, memAddr, currentResult, strideDetectorPerPC);
                 cout << "Address: " << memAddr << endl;
                 cout << "Result: " << currentResult << endl;
-                cout << "Current State: " << strideDetectorPerPC->getState()
-                     << endl;
+                cout << "Current State: " << strideDetectorPerPC->getState() << endl;
                 ;
-                cout << "Current Stride: " << strideDetectorPerPC->getStride()
-                     << endl;
+                cout << "Current Stride: " << strideDetectorPerPC->getStride() << endl;
                 ;
                 cout << endl;
             }

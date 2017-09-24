@@ -2,23 +2,10 @@
 #define STRIDEDETECTOR_H
 
 // Unknown is when you have observed first address only.
-enum MemAccessType {
-    UNDEFINED = -1,
-    UNKNOWN = 0,
-    LOSTPOINT = 1,
-    NEWPOINT = 2,
-    POINT = 3,
-    STRIDE = 4
-};
+enum MemAccessType { UNDEFINED = -1, UNKNOWN = 0, LOSTPOINT = 1, NEWPOINT = 2, POINT = 3, STRIDE = 4 };
 
 // States of Stride Detector FSM
-enum FSMState {
-    Start = 0,
-    FirstObserved = 1,
-    StrideLearned = 2,
-    WeakStride = 3,
-    StrongStride = 4
-};
+enum FSMState { Start = 0, FirstObserved = 1, StrideLearned = 2, WeakStride = 3, StrongStride = 4 };
 
 // This represents a Finite State Machine used to detect strides for a given PC.
 // It keeps track of the current state, last address being considered for part

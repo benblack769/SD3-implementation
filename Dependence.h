@@ -7,8 +7,7 @@ class Dependence {
   public:
     Dependence();
 
-    Dependence(long long memoryAddr, long long earlierPC,
-               MemAccessMode earlierAccessMode, long long laterPC,
+    Dependence(long long memoryAddr, long long earlierPC, MemAccessMode earlierAccessMode, long long laterPC,
                MemAccessMode laterAccessMode);
 
     DependenceType getDependenceType() { return myDependenceType; };

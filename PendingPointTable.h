@@ -17,17 +17,14 @@ class PendingPointTable {
     // table.  Returns true if information is added, false if memory address is
     // already killed.  If this access is a write, the point is turned to
     // "killed"
-    bool addNewPoint(long long memAddress, long long PC,
-                     long long numAccesses = 1, long long accessSize = 4,
+    bool addNewPoint(long long memAddress, long long PC, long long numAccesses = 1, long long accessSize = 4,
                      MemAccessMode readOrWrite = READ);
 
     // If memory address already is in table and is not killed, updates number
     // of accesses. Returns true if update of number of accesses occurs.
-    bool updateExistingPoint(long long memAddress, long long PC,
-                             MemAccessMode readOrWrite);
+    bool updateExistingPoint(long long memAddress, long long PC, MemAccessMode readOrWrite);
 
-    bool doesPointExist(long long memAddress, long long PC,
-                        MemAccessMode readOrWrite = READ);
+    bool doesPointExist(long long memAddress, long long PC, MemAccessMode readOrWrite = READ);
 
     bool isPointKilled(long long memAddress);
 

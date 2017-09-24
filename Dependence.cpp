@@ -7,8 +7,7 @@ Dependence::Dependence() {
     myEarlierAccessMode = myLaterAccessMode = READ;
 }
 
-Dependence::Dependence(long long memoryAddr, long long earlierPC,
-                       MemAccessMode earlierAccessMode, long long laterPC,
+Dependence::Dependence(long long memoryAddr, long long earlierPC, MemAccessMode earlierAccessMode, long long laterPC,
                        MemAccessMode laterAccessMode) {
     myMemoryAddr = memoryAddr;
     myEarlierPC = earlierPC;

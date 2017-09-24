@@ -14,11 +14,9 @@ class Stride {
   public:
     // The assumption is that the stride distance is the difference between the
     // two addresses and the number of accesses is by default 2.
-    Stride(long long lowAddress, long long highAddress,
-           long long accessSize = 4, MemAccessMode readOrWrite = READ);
+    Stride(long long lowAddress, long long highAddress, long long accessSize = 4, MemAccessMode readOrWrite = READ);
 
-    Stride(long long lowAddress, long long highAddress, int strideLength,
-           int numAccesses, long long accessSize = 4,
+    Stride(long long lowAddress, long long highAddress, int strideLength, int numAccesses, long long accessSize = 4,
            MemAccessMode readOrWrite = READ);
 
     // This method will update the low or high address as appropriate.  However,

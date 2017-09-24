@@ -11,8 +11,8 @@ class Point {
   public:
     // Create a new point including its memory address and the PC that made the
     // memory access
-    Point(long long memAddress, long long PC, long long numAccesses = 1,
-          long long accessSize = 4, MemAccessMode readOrWrite = READ);
+    Point(long long memAddress, long long PC, long long numAccesses = 1, long long accessSize = 4,
+          MemAccessMode readOrWrite = READ);
 
     // Return the PC associated with this memory access
     long long getPC() { return myPC; };

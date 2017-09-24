@@ -29,8 +29,7 @@ MemAccessType StrideDetector::addAccess(long long address) {
     // FSM
     int change = determineStateChange(address);
 
-    std::cout << "\t ADDR " << address << " change " << change << " distance "
-              << myStrideDist << std::endl;
+    std::cout << "\t ADDR " << address << " change " << change << " distance " << myStrideDist << std::endl;
 
     // This is the first access, so we don't know if it is a Point or a Stride
     if (myPrevState == Start) {

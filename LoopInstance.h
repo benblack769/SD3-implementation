@@ -13,8 +13,7 @@ class LoopInstance {
 
     void endCurrentIteration();
 
-    void addMemAccess(long long memAddress, long long PC, int accessSize = 4,
-                      MemAccessMode readOrWrite = READ);
+    void addMemAccess(long long memAddress, long long PC, int accessSize = 4, MemAccessMode readOrWrite = READ);
 
     long long getStartPC() { return myLoopStartPC; };
     long long getEndPC() { return myLoopEndPC; };

@@ -15,8 +15,7 @@ Interval::Interval(long long lower, long long upper) {
     myStride = NULL;
 }
 
-Interval::Interval(long long lowerBound, long long upperBound,
-                   IntervalType type, Point *point, Stride *stride) {
+Interval::Interval(long long lowerBound, long long upperBound, IntervalType type, Point *point, Stride *stride) {
     myLowerBound = lowerBound;
     myUpperBound = upperBound;
     myType = type;
