@@ -1,61 +1,61 @@
 #ifndef __LOOPINSTANCE_H__
 #define __LOOPINSTANCE_H__
 
-#include "PendingPointTable.h"
-#include "PendingStrideTable.h"
 #include "HistoryPointTable.h"
 #include "HistoryStrideTable.h"
+#include "PendingPointTable.h"
+#include "PendingStrideTable.h"
 
-class LoopInstance
-{
- public:
-  LoopInstance(long long startPC, long long endPC);
-  ~LoopInstance(){};
+class LoopInstance {
+  public:
+    LoopInstance(long long startPC, long long endPC);
+    ~LoopInstance(){};
 
-  void endCurrentIteration();
-  
-  void addMemAccess(long long memAddress, long long PC, int accessSize=4, MemAccessMode readOrWrite=READ);
+    void endCurrentIteration();
 
-  long long getStartPC(){ return myLoopStartPC; };
-  long long getEndPC() { return myLoopEndPC; };
-  ConflictTable * getConflicts() { return myConflicts; };
+    void addMemAccess(long long memAddress, long long PC, int accessSize = 4,
+                      MemAccessMode readOrWrite = READ);
 
- private:
-  PendingPointTable *myPendingPoints;
-  PendingStrideTable *myPendingStrides;
-  HistoryPointTable *myHistoryPoints;
-  HistoryStrideTable *myHistoryStrides;
+    long long getStartPC() { return myLoopStartPC; };
+    long long getEndPC() { return myLoopEndPC; };
+    ConflictTable *getConflicts() { return myConflicts; };
 
-  int myNumIterations;
+  private:
+    PendingPointTable *myPendingPoints;
+    PendingStrideTable *myPendingStrides;
+    HistoryPointTable *myHistoryPoints;
+    HistoryStrideTable *myHistoryStrides;
 
-  long long myLoopStartPC;
-  long long myLoopEndPC;
+    int myNumIterations;
 
-  ConflictTable *myConflicts;
+    long long myLoopStartPC;
+    long long myLoopEndPC;
 
-  void checkForPointDependences();
+    ConflictTable *myConflicts;
 
-  void checkForStrideDepencences();
+    void checkForPointDependences();
 
-  void foldPendingPointsIntoHistory();
+    void checkForStrideDepencences();
 
-  void foldPendingStridesIntoHistory();
+    void foldPendingPointsIntoHistory();
 
-  // Stride detector for every PC
-  struct PerPCDetector{
-    StrideDetector *detector;
-    MemAccessMode mode;
-    MemAccessType lastType;
-    
-    PerPCDetector(MemAccessMode readOrWrite){
-      detector = new StrideDetector();
-      mode = readOrWrite;
-      lastType = UNDEFINED;
-    }
-  };
-      
-  // indexed by PC
-  multimap<long long, PerPCDetector> myStrideDetectors;
+    void foldPendingStridesIntoHistory();
+
+    // Stride detector for every PC
+    struct PerPCDetector {
+        StrideDetector *detector;
+        MemAccessMode mode;
+        MemAccessType lastType;
+
+        PerPCDetector(MemAccessMode readOrWrite) {
+            detector = new StrideDetector();
+            mode = readOrWrite;
+            lastType = UNDEFINED;
+        }
+    };
+
+    // indexed by PC
+    multimap<long long, PerPCDetector> myStrideDetectors;
 };
 
 #endif
