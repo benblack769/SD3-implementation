@@ -23,7 +23,7 @@ void handleStrideDetectorResult(long long pc, long long memAddr, MemAccessType r
 
   if(result == UNKNOWN){
     // Do nothing
- 
+
   }
   else if(result == LOSTPOINT){
     // Need to get previous last points and create points for them.
@@ -32,7 +32,7 @@ void handleStrideDetectorResult(long long pc, long long memAddr, MemAccessType r
 
     long long lost = strDet->getFirstLostPoint();
     if(pendingPointTable->doesPointExist(lost, pc, READ)){
-      pendingPointTable->updateExistingPoint(lost, pc, READ);    
+      pendingPointTable->updateExistingPoint(lost, pc, READ);
     }
     else{
       pendingPointTable->addNewPoint(lost, pc, 1, 4, READ);
@@ -41,7 +41,7 @@ void handleStrideDetectorResult(long long pc, long long memAddr, MemAccessType r
     long long lost2 = strDet->getSecondLostPoint();
     if(lost2!= 0){
       if(pendingPointTable->doesPointExist(lost2, pc, READ)){
-	pendingPointTable->updateExistingPoint(lost2, pc, READ);    
+	pendingPointTable->updateExistingPoint(lost2, pc, READ);
       }
       else{
 	pendingPointTable->addNewPoint(lost2, pc, 1, 4, READ);
@@ -103,14 +103,14 @@ void purgeStrideDetectorState()
   map<long long, StrideDetector*>::iterator iter;
 
   cout << "PURGE # of entries: " << stridePerPCMap.size() << endl;
-  
+
   for(iter = stridePerPCMap.begin(); iter != stridePerPCMap.end(); iter++){
     long long pc = iter->first;
     StrideDetector *strDet = iter->second;
 
     cout << "Purge PC : " << pc << " ";
     // Check to see if the StrideDetector is in a state that implies there are non-propagated
-    // values.  flush() returns true if that is the case.  We refer to these points as 
+    // values.  flush() returns true if that is the case.  We refer to these points as
     // "lost points".
     if(strDet->flush()){
 
@@ -118,17 +118,17 @@ void purgeStrideDetectorState()
       long long lost = strDet->getFirstLostPoint();
       cout << lost << " " ;
       if(pendingPointTable->doesPointExist(lost, pc, READ)){
-	pendingPointTable->updateExistingPoint(lost, pc, READ);    
+	         pendingPointTable->updateExistingPoint(lost, pc, READ);
       }
       else{
-	pendingPointTable->addNewPoint(lost, pc, 1, 4, READ);
+	         pendingPointTable->addNewPoint(lost, pc, 1, 4, READ);
       }
 
       long long lost2 = strDet->getSecondLostPoint();
       if(lost2 != 0){
 	cout << lost2 << endl;
 	if(pendingPointTable->doesPointExist(lost2, pc, READ)){
-	  pendingPointTable->updateExistingPoint(lost2, pc, READ);    
+	  pendingPointTable->updateExistingPoint(lost2, pc, READ);
 	}
 	else{
 	  pendingPointTable->addNewPoint(lost2, pc, 1, 4, READ);
@@ -176,10 +176,10 @@ bool isStrideDetectInstPresent(map<long long, StrideDetector*> & strideDetectorI
 
 
 /* Main method
-* 
+*
 * Reads in values from the file and passes them as agruments for the memAdd parameter in PointOrStride method.
 * Stores the current phase of the FSM and passes it as an argument for the recursive call of the PointOrStride method.
-* Prints out the pending tables for both point addresses and stride addresses. 
+* Prints out the pending tables for both point addresses and stride addresses.
 */
 
 int main()
@@ -190,48 +190,45 @@ int main()
     long long PCAdd = 0;
     long long prevPC;
 
-
     MemAccessType currentResult = UNKNOWN;
 
     StrideDetector *strideDetectorPerPC; // Used only for the very first PC address
-    
+
     pendingStrideTable = new PendingStrideTable();
     pendingPointTable = new PendingPointTable();
 
     if( myfile.is_open() )
     {
         while( myfile >> fileLine )
-        {	   
-	  if(PCAdd != 0){
-	    if(isStrideDetectInstPresent(stridePerPCMap, PCAdd) == false)
-	      {
-		strideDetectorPerPC = new StrideDetector(); // local stride detector instance
-		cout << " Inserting new PCAdd " << PCAdd << endl;
-		stridePerPCMap[PCAdd] = strideDetectorPerPC;
-	      }
-	    else{
-	      strideDetectorPerPC = stridePerPCMap[PCAdd];
-	    }
-	   
-	  }
-	  
-	  if(fileLine > 400000) // If line is a PC address, then store it in PC address variable // 
-	    {
-	      prevPC = PCAdd; // used to check if PCAdd is the first PCAdd or not
-	      
-	      PCAdd = fileLine; // storing new PC address into PCAdd
-	      cout <<"PC: " << PCAdd << endl;
-	    }
-	  else
-            {
-	      long long memAddr = fileLine;
-	      currentResult = strideDetectorPerPC->addAccess(memAddr);
-	      handleStrideDetectorResult(PCAdd, memAddr, currentResult, strideDetectorPerPC);
-	      cout <<"Address: " << memAddr << endl;
-	      cout <<"Result: " << currentResult << endl;
-	      cout <<"Current State: " << strideDetectorPerPC->getState() << endl;;
-	      cout <<"Current Stride: " << strideDetectorPerPC->getStride() << endl;;
-	      cout << endl;
+        {
+    	  if(PCAdd != 0){
+    	    if(isStrideDetectInstPresent(stridePerPCMap, PCAdd) == false)
+    	      {
+    		strideDetectorPerPC = new StrideDetector(); // local stride detector instance
+    		cout << " Inserting new PCAdd " << PCAdd << endl;
+    		stridePerPCMap[PCAdd] = strideDetectorPerPC;
+    	      }
+    	    else{
+    	      strideDetectorPerPC = stridePerPCMap[PCAdd];
+    	    }
+    	  }
+
+    	  if(fileLine > 400000) // If line is a PC address, then store it in PC address variable //
+    	  {
+    	      prevPC = PCAdd; // used to check if PCAdd is the first PCAdd or not
+
+    	      PCAdd = fileLine; // storing new PC address into PCAdd
+    	      cout <<"PC: " << PCAdd << endl;
+    	  }
+    	  else{
+    	      long long memAddr = fileLine;
+    	      currentResult = strideDetectorPerPC->addAccess(memAddr);
+    	      handleStrideDetectorResult(PCAdd, memAddr, currentResult, strideDetectorPerPC);
+    	      cout <<"Address: " << memAddr << endl;
+    	      cout <<"Result: " << currentResult << endl;
+    	      cout <<"Current State: " << strideDetectorPerPC->getState() << endl;;
+    	      cout <<"Current Stride: " << strideDetectorPerPC->getStride() << endl;;
+    	      cout << endl;
             }
         }
 
@@ -251,5 +248,3 @@ int main()
     pendingPointTable->print();
 
 }
-
-
