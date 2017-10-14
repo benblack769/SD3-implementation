@@ -1,5 +1,6 @@
 #ifndef __INTERVAL_H__
 #define __INTERVAL_H__
+#include "Types.h"
 
 using namespace std;
 
@@ -10,12 +11,12 @@ class Interval {
 
   public:
     Interval();
-    Interval(long long lowerBound, long long upperBound);
-    Interval(long long lowerBound, long long upperBound, IntervalType type, Point *point = NULL, Stride *stride = NULL);
+    Interval(int64_t lowerBound, int64_t upperBound);
+    Interval(int64_t lowerBound, int64_t upperBound, IntervalType type, Point *point = NULL, Stride *stride = NULL);
 
   private:
-    long long myLowerBound;
-    long long myUpperBound;
+    int64_t myLowerBound;
+    int64_t myUpperBound;
     IntervalType myType;
 
     Point *myPoint;

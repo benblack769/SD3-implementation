@@ -1,6 +1,7 @@
 #ifndef PENDINGPOINTTABLE_H
 #define PENDINGPOINTTABLE_H
 
+#include "Types.h"
 #include "Point.h"
 #include <iostream>
 #include <list>
@@ -17,16 +18,16 @@ class PendingPointTable {
     // table.  Returns true if information is added, false if memory address is
     // already killed.  If this access is a write, the point is turned to
     // "killed"
-    bool addNewPoint(long long memAddress, long long PC, long long numAccesses = 1, long long accessSize = 4,
+    bool addNewPoint(int64_t memAddress, int64_t PC, int64_t numAccesses = 1, int64_t accessSize = 4,
                      MemAccessMode readOrWrite = READ);
 
     // If memory address already is in table and is not killed, updates number
     // of accesses. Returns true if update of number of accesses occurs.
-    bool updateExistingPoint(long long memAddress, long long PC, MemAccessMode readOrWrite);
+    bool updateExistingPoint(int64_t memAddress, int64_t PC, MemAccessMode readOrWrite);
 
-    bool doesPointExist(long long memAddress, long long PC, MemAccessMode readOrWrite = READ);
+    bool doesPointExist(int64_t memAddress, int64_t PC, MemAccessMode readOrWrite = READ);
 
-    bool isPointKilled(long long memAddress);
+    bool isPointKilled(int64_t memAddress);
 
     //  list<Dependence> checkForPointDependences(HistoryPointTable ht);
 
@@ -42,7 +43,7 @@ class PendingPointTable {
         PointEntry() { killed = false; };
     };
 
-    map<long long, PointEntry> myPendingPoints;
+    map<int64_t, PointEntry> myPendingPoints;
 };
 
 #endif

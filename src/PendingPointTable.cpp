@@ -3,10 +3,10 @@
 // If memory address isn't killed, adds information about this access to table.
 // Returns true if information is added, false if memory address is already
 // killed.  If this access is a write, the point is turned to "killed"
-bool PendingPointTable::addNewPoint(long long memAddress, long long PC, long long numAccesses, long long accessSize,
+bool PendingPointTable::addNewPoint(int64_t memAddress, int64_t PC, int64_t numAccesses, int64_t accessSize,
                                     MemAccessMode readOrWrite) {
     // If memory address already killed, do not add new elements.
-    map<long long, PointEntry>::iterator iter = myPendingPoints.find(memAddress);
+    map<int64_t, PointEntry>::iterator iter = myPendingPoints.find(memAddress);
     if (iter != myPendingPoints.end()) {
         // Memory address already in table
         if (iter->second.killed == true) {
@@ -27,14 +27,14 @@ bool PendingPointTable::addNewPoint(long long memAddress, long long PC, long lon
             temp.killed = true;
         }
 
-        myPendingPoints.insert(pair<long long, PointEntry>(memAddress, temp));
+        myPendingPoints.insert(pair<int64_t, PointEntry>(memAddress, temp));
     }
 
     return true;
 }
 
-bool PendingPointTable::doesPointExist(long long memAddress, long long PC, MemAccessMode readOrWrite) {
-    map<long long, PointEntry>::iterator iter = myPendingPoints.find(memAddress);
+bool PendingPointTable::doesPointExist(int64_t memAddress, int64_t PC, MemAccessMode readOrWrite) {
+    map<int64_t, PointEntry>::iterator iter = myPendingPoints.find(memAddress);
 
     if (iter != myPendingPoints.end()) {
         for (list<Point *>::iterator liter = iter->second.points.begin(); liter != iter->second.points.end(); liter++) {
@@ -49,8 +49,8 @@ bool PendingPointTable::doesPointExist(long long memAddress, long long PC, MemAc
 
 // If memory address already is in table and is not killed, updates number of
 // accesses. Returns true if update of number of accesses occurs.
-bool PendingPointTable::updateExistingPoint(long long memAddress, long long PC, MemAccessMode readOrWrite) {
-    map<long long, PointEntry>::iterator iter = myPendingPoints.find(memAddress);
+bool PendingPointTable::updateExistingPoint(int64_t memAddress, int64_t PC, MemAccessMode readOrWrite) {
+    map<int64_t, PointEntry>::iterator iter = myPendingPoints.find(memAddress);
 
     if (iter != myPendingPoints.end()) {
         if (iter->second.killed == true) {
@@ -71,8 +71,8 @@ bool PendingPointTable::updateExistingPoint(long long memAddress, long long PC, 
     return false;
 }
 
-bool PendingPointTable::isPointKilled(long long memAddress) {
-    map<long long, PointEntry>::iterator iter = myPendingPoints.find(memAddress);
+bool PendingPointTable::isPointKilled(int64_t memAddress) {
+    map<int64_t, PointEntry>::iterator iter = myPendingPoints.find(memAddress);
 
     if (iter != myPendingPoints.end()) {
         if (iter->second.killed == true) {
@@ -89,7 +89,7 @@ bool PendingPointTable::isPointKilled(long long memAddress) {
   {
   list<Dependence> conflicts;
   
-  map<long long, PointEntry>::iterator iter = myPendingPoints.begin();
+  map<int64_t, PointEntry>::iterator iter = myPendingPoints.begin();
   for( ; iter!= myPendingParts.end(); iter++){
   for(list<Point*>::iterator liter = iter.second.points.begin(); liter !=
   iter.second.points.end(); liter++){ list<Point *> oldPoints =
@@ -115,7 +115,7 @@ bool PendingPointTable::isPointKilled(long long memAddress) {
   {
   map<Interval, PointEntry, IntervalLessThan> iMap;
   
-  map<long long, PointEntry>::iterator iter = myPendingPoints.begin();
+  map<int64_t, PointEntry>::iterator iter = myPendingPoints.begin();
   
   for( ; iter != myPendingPoints.end(); iter++){
   Interval i(iter.second->getMemoryAddr(), iter.second->getMemoryAddr());
@@ -126,7 +126,7 @@ bool PendingPointTable::isPointKilled(long long memAddress) {
 */
 
 void PendingPointTable::print() {
-    map<long long, PointEntry>::iterator iter;
+    map<int64_t, PointEntry>::iterator iter;
 
     for (iter = myPendingPoints.begin(); iter != myPendingPoints.end(); iter++) {
         list<Point *>::iterator liter;

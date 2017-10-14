@@ -18,7 +18,7 @@ StrideDetector::StrideDetector() {
 
 // Given an address, updates the FSM state appropriately.  Returns the type
 // of access (Unknown, POINT, STRIDE) this address was classified as.
-MemAccessType StrideDetector::addAccess(long long address) {
+MemAccessType StrideDetector::addAccess(int64_t address) {
     if (myLostPoint == true) {
         // We assume that the lost points were handled before the next access
         // was processed.
@@ -100,7 +100,7 @@ MemAccessType StrideDetector::addAccess(long long address) {
 // SD3.  I'm going to go with strictly increasing or decreasing and then
 // see what difference it makes to have this strict definition of a stride
 // in terms of memory compression.
-int StrideDetector::determineStateChange(long long address) {
+int StrideDetector::determineStateChange(int64_t address) {
     int diff = address - myPrevMemAddr;
 
     if (myState == Start) { // Start //

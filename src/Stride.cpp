@@ -5,7 +5,7 @@
 
 // The assumption is that the stride distance is the difference between the two
 // addresses and the number of accesses is by default 2.
-Stride::Stride(long long lowAddress, long long highAddress, long long accessSize, MemAccessMode readOrWrite) {
+Stride::Stride(int64_t lowAddress, int64_t highAddress, int64_t accessSize, MemAccessMode readOrWrite) {
     myLowAddress = lowAddress;
     myHighAddress = highAddress;
     myStrideLength = (highAddress - lowAddress);
@@ -14,7 +14,7 @@ Stride::Stride(long long lowAddress, long long highAddress, long long accessSize
     myAccessSize = accessSize;
 }
 
-Stride::Stride(long long lowAddress, long long highAddress, int strideLength, int numAccesses, long long accessSize,
+Stride::Stride(int64_t lowAddress, int64_t highAddress, int strideLength, int numAccesses, int64_t accessSize,
                MemAccessMode readOrWrite) {
     myLowAddress = lowAddress;
     myHighAddress = highAddress;
@@ -27,8 +27,8 @@ Stride::Stride(long long lowAddress, long long highAddress, int strideLength, in
 // This method will update the low or high address as appropriate.  However, it
 // will only do so if the distance beween the address and that low or high is
 // the stride length
-bool Stride::addAccess(long long address) {
-    long long diff = address - myHighAddress;
+bool Stride::addAccess(int64_t address) {
+    int64_t diff = address - myHighAddress;
 
     if (diff != myStrideLength) {
         return false;
@@ -41,13 +41,13 @@ bool Stride::addAccess(long long address) {
 
 // This method returns a boolean value indicating whether or not the specified
 // address has actually been accessed as part of this stride.
-bool Stride::hasBeenAccessed(long long address) {
+bool Stride::hasBeenAccessed(int64_t address) {
     if (address < myLowAddress || address > myHighAddress) {
         return false;
     }
 
     int stride = abs(myStrideLength);
-    long long currentAddress = myLowAddress;
+    int64_t currentAddress = myLowAddress;
 
     while (currentAddress <= myHighAddress) {
         if (currentAddress == address) {

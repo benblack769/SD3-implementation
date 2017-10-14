@@ -1,6 +1,7 @@
 #ifndef __HISTORYSTRIDETABLE_H__
 #define __HISTORYSTRIDETABLE_H__
 
+#include "Types.h"
 #include "Stride.h"
 #include <map>
 
@@ -13,19 +14,19 @@ class HistoryStrideTable {
   public:
     HistoryStrideTable(){};
 
-    void addNewStride(long long PC, Stride *stride);
+    void addNewStride(int64_t PC, Stride *stride);
 
-    void addNewStride(long long PCAddress, long long lowAddress, long long highAddress, long long strideLength,
-                      int numAccesses = 2, long long accessSize = 4, MemAccessMode readOrWrite = READ);
+    void addNewStride(int64_t PCAddress, int64_t lowAddress, int64_t highAddress, int64_t strideLength,
+                      int numAccesses = 2, int64_t accessSize = 4, MemAccessMode readOrWrite = READ);
 
-    bool doesStrideExist(long long PCAddress, long long memoryAddr, long long strideLength,
+    bool doesStrideExist(int64_t PCAddress, int64_t memoryAddr, int64_t strideLength,
                          MemAccessMode readOrWrite = READ);
 
-    bool updateExistingStride(long long PCAddress, long long memoryAddr, long long strideLength,
+    bool updateExistingStride(int64_t PCAddress, int64_t memoryAddr, int64_t strideLength,
                               MemAccessMode readOrWrite = READ);
 
   private:
-    std::multimap<long long, Stride *> myStrides; // (PC, Stride*)
+    std::multimap<int64_t, Stride *> myStrides; // (PC, Stride*)
 };
 
 #endif

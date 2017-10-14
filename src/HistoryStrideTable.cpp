@@ -1,22 +1,22 @@
 #include "HistoryStrideTable.h"
 
 // This method assumes that a stride does not already exist
-void HistoryStrideTable::addNewStride(long long PC, Stride *stride) {
-    myStrides.insert(pair<long long, Stride *>(PC, stride));
+void HistoryStrideTable::addNewStride(int64_t PC, Stride *stride) {
+    myStrides.insert(pair<int64_t, Stride *>(PC, stride));
 }
 
-void HistoryStrideTable::addNewStride(long long PC, long long lowAddress, long long highAddress, long long strideLength,
-                                      int numAccesses, long long accessSize, MemAccessMode readOrWrite) {
+void HistoryStrideTable::addNewStride(int64_t PC, int64_t lowAddress, int64_t highAddress, int64_t strideLength,
+                                      int numAccesses, int64_t accessSize, MemAccessMode readOrWrite) {
     Stride *temp;
     temp = new Stride(lowAddress, highAddress, strideLength, numAccesses, accessSize, readOrWrite);
 
-    myStrides.insert(pair<long long, Stride *>(PC, temp));
+    myStrides.insert(pair<int64_t, Stride *>(PC, temp));
 }
 
-bool HistoryStrideTable::doesStrideExist(long long PC, long long memoryAddr, long long strideLength,
+bool HistoryStrideTable::doesStrideExist(int64_t PC, int64_t memoryAddr, int64_t strideLength,
                                          MemAccessMode readOrWrite) {
-    pair<multimap<long long, Stride *>::iterator, multimap<long long, Stride *>::iterator> rangeIter;
-    multimap<long long, Stride *>::iterator iter;
+    pair<multimap<int64_t, Stride *>::iterator, multimap<int64_t, Stride *>::iterator> rangeIter;
+    multimap<int64_t, Stride *>::iterator iter;
 
     rangeIter = myStrides.equal_range(PC);
 
@@ -31,10 +31,10 @@ bool HistoryStrideTable::doesStrideExist(long long PC, long long memoryAddr, lon
     return false;
 }
 
-bool HistoryStrideTable::updateExistingStride(long long PC, long long memoryAddr, long long strideLength,
+bool HistoryStrideTable::updateExistingStride(int64_t PC, int64_t memoryAddr, int64_t strideLength,
                                               MemAccessMode readOrWrite) {
-    pair<multimap<long long, Stride *>::iterator, multimap<long long, Stride *>::iterator> rangeIter;
-    multimap<long long, Stride *>::iterator iter;
+    pair<multimap<int64_t, Stride *>::iterator, multimap<int64_t, Stride *>::iterator> rangeIter;
+    multimap<int64_t, Stride *>::iterator iter;
 
     rangeIter = myStrides.equal_range(PC);
 

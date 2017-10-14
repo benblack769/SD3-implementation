@@ -1,5 +1,6 @@
 #ifndef __LOOPINSTANCE_H__
 #define __LOOPINSTANCE_H__
+#include "Types.h"
 
 #include "HistoryPointTable.h"
 #include "HistoryStrideTable.h"
@@ -8,15 +9,15 @@
 
 class LoopInstance {
   public:
-    LoopInstance(long long startPC, long long endPC);
+    LoopInstance(int64_t startPC, int64_t endPC);
     ~LoopInstance(){};
 
     void endCurrentIteration();
 
-    void addMemAccess(long long memAddress, long long PC, int accessSize = 4, MemAccessMode readOrWrite = READ);
+    void addMemAccess(int64_t memAddress, int64_t PC, int accessSize = 4, MemAccessMode readOrWrite = READ);
 
-    long long getStartPC() { return myLoopStartPC; };
-    long long getEndPC() { return myLoopEndPC; };
+    int64_t getStartPC() { return myLoopStartPC; };
+    int64_t getEndPC() { return myLoopEndPC; };
     ConflictTable *getConflicts() { return myConflicts; };
 
   private:
@@ -27,8 +28,8 @@ class LoopInstance {
 
     int myNumIterations;
 
-    long long myLoopStartPC;
-    long long myLoopEndPC;
+    int64_t myLoopStartPC;
+    int64_t myLoopEndPC;
 
     ConflictTable *myConflicts;
 
@@ -54,7 +55,7 @@ class LoopInstance {
     };
 
     // indexed by PC
-    multimap<long long, PerPCDetector> myStrideDetectors;
+    multimap<int64_t, PerPCDetector> myStrideDetectors;
 };
 
 #endif

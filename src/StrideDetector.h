@@ -1,6 +1,7 @@
 #ifndef STRIDEDETECTOR_H
 #define STRIDEDETECTOR_H
 
+#include "Types.h"
 // Unknown is when you have observed first address only.
 enum MemAccessType { UNDEFINED = -1, UNKNOWN = 0, LOSTPOINT = 1, NEWPOINT = 2, POINT = 3, STRIDE = 4 };
 
@@ -33,14 +34,14 @@ class StrideDetector {
     int getStride() { return myStrideDist; }
 
     // Return memory address that will serve as base for any stride
-    long long getFirstMemAddr() { return myFirstMemAddr; }
+    int64_t getFirstMemAddr() { return myFirstMemAddr; }
 
     // Return memory address for last access by this PC
-    long long getPrevMemAddr() { return myPrevMemAddr; }
+    int64_t getPrevMemAddr() { return myPrevMemAddr; }
 
     // Given an address, updates the FSM state appropriately.  Returns the type
     // of access (Unknown, Point, Stride) this address was classified as.
-    MemAccessType addAccess(long long address);
+    MemAccessType addAccess(int64_t address);
 
     // It is only on the third memory access that a stride will be detected.
     // Before that third access, two memory accesses may have been processed by
@@ -48,8 +49,8 @@ class StrideDetector {
     // determined yet.  When either the stride detector has been flushed or the
     // stride detector has returned a LOSTPOINT state, the missing point(s) will
     // be accessible via these two methods.
-    long long getFirstLostPoint() { return myLostPoints[0]; }
-    long long getSecondLostPoint() { return myLostPoints[1]; }
+    int64_t getFirstLostPoint() { return myLostPoints[0]; }
+    int64_t getSecondLostPoint() { return myLostPoints[1]; }
 
     // When tracking finishes, there may still be two memory accesses that have
     // not been put into a stride or point yet.  This method moves them to
@@ -63,11 +64,11 @@ class StrideDetector {
     // Returns a number representing the change in state.  Negative means
     // the current address didn't fit into the current stride.  Positive means
     // the current address reinforced the current stride.
-    int determineStateChange(long long address);
+    int determineStateChange(int64_t address);
 
-    long long myFirstMemAddr;
-    long long myPrevMemAddr;
-    long long myStrideDist;
+    int64_t myFirstMemAddr;
+    int64_t myPrevMemAddr;
+    int64_t myStrideDist;
 
     bool myLastAccessUnknown; // before we get to WeakStride
 
@@ -81,7 +82,7 @@ class StrideDetector {
     // previously at >= WeakStride and then the state moved backwards.  We want
     // to make sure that the addresses in the StrideDetector are not reprocessed
     // as Points as they have already been processed as part of a Stride
-    long long myLostPoints[2];
+    int64_t myLostPoints[2];
     bool myLostPoint;
     bool myStateAlreadyProcessed;
     void setLostPoints();

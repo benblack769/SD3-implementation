@@ -7,7 +7,7 @@ Interval::Interval() {
     myStride = NULL;
 }
 
-Interval::Interval(long long lower, long long upper) {
+Interval::Interval(int64_t lower, int64_t upper) {
     myLowerBound = lower;
     myUpperBound = upper;
     myType = UndefinedInterval;
@@ -15,7 +15,7 @@ Interval::Interval(long long lower, long long upper) {
     myStride = NULL;
 }
 
-Interval::Interval(long long lowerBound, long long upperBound, IntervalType type, Point *point, Stride *stride) {
+Interval::Interval(int64_t lowerBound, int64_t upperBound, IntervalType type, Point *point, Stride *stride) {
     myLowerBound = lowerBound;
     myUpperBound = upperBound;
     myType = type;

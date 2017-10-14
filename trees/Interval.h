@@ -14,13 +14,13 @@ class Interval {
 
   public:
     Interval();
-    //  Interval(long long lowerBound, long long upperBound, IntervalType type,
+    //  Interval(int64_t lowerBound, int64_t upperBound, IntervalType type,
     //  Point *point=NULL, Stride *stride=NULL);
-    Interval(long long lowerBound, long long upperBound);
+    Interval(int64_t lowerBound, int64_t upperBound);
 
   private:
-    long long myLowerBound;
-    long long myUpperBound;
+    int64_t myLowerBound;
+    int64_t myUpperBound;
     //  IntervalType myType;
 
     //  Point * myPoint;

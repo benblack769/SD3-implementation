@@ -14,21 +14,21 @@ class Stride {
   public:
     // The assumption is that the stride distance is the difference between the
     // two addresses and the number of accesses is by default 2.
-    Stride(long long lowAddress, long long highAddress, long long accessSize = 4, MemAccessMode readOrWrite = READ);
+    Stride(int64_t lowAddress, int64_t highAddress, int64_t accessSize = 4, MemAccessMode readOrWrite = READ);
 
-    Stride(long long lowAddress, long long highAddress, int strideLength, int numAccesses, long long accessSize = 4,
+    Stride(int64_t lowAddress, int64_t highAddress, int strideLength, int numAccesses, int64_t accessSize = 4,
            MemAccessMode readOrWrite = READ);
 
     // This method will update the low or high address as appropriate.  However,
     // it will only do so if the distance beween the address and that low or
     // high is the stride length
-    bool addAccess(long long address);
+    bool addAccess(int64_t address);
 
     // Returns the lowest address
-    long long getLowAddress() { return myLowAddress; };
+    int64_t getLowAddress() { return myLowAddress; };
 
     // Return the highest address
-    long long getHighAddress() { return myHighAddress; };
+    int64_t getHighAddress() { return myHighAddress; };
 
     // Return the length of the stride
     int getStride() { return myStrideLength; };
@@ -41,16 +41,16 @@ class Stride {
 
     // This method returns a boolean value indicating whether or not the
     // specified address has actually been accessed as part of this stride.
-    bool hasBeenAccessed(long long address);
+    bool hasBeenAccessed(int64_t address);
 
     void print();
 
   private:
-    long long myLowAddress;
-    long long myHighAddress;
+    int64_t myLowAddress;
+    int64_t myHighAddress;
     int myStrideLength;
-    long long myAccessSize;
-    long long myNumAccesses;
+    int64_t myAccessSize;
+    int64_t myNumAccesses;
     MemAccessMode myAccessMode; // read or write
 };
 

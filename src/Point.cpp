@@ -4,7 +4,7 @@
 
 // Create a new point including its memory address and the PC that made the
 // memory access
-Point::Point(long long memAddress, long long PC, long long numAccesses, long long accessSize,
+Point::Point(int64_t memAddress, int64_t PC, int64_t numAccesses, int64_t accessSize,
              MemAccessMode readOrWrite) {
     myPC = PC;
     myMemAddress = memAddress;

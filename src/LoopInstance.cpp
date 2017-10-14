@@ -1,6 +1,6 @@
 #include "LoopIntance.cpp"
 
-LoopInstance::LoopInstance(long long startPC, long long endPC) {
+LoopInstance::LoopInstance(int64_t startPC, int64_t endPC) {
     myPendingPoints = new PendingPointTable();
     myPendingStrides = new PendingStrideTable();
     myHistoryPoints = new HistoryPointTable();
@@ -29,9 +29,9 @@ void LoopInstance::endCurrentIteration() {
     // clear pending tables
 }
 
-void LoopInstance::addMemAccess(long long memAddress, long long PC, int accessSize, MemAccessMode readOrWrite) {
-    pair<multimap<long long, PerPCDetector>::iterator, multimap<long long, PerPCDetector>::iterator> rangeIter;
-    multimap<long long, PerPCDetector>::iterator iter;
+void LoopInstance::addMemAccess(int64_t memAddress, int64_t PC, int accessSize, MemAccessMode readOrWrite) {
+    pair<multimap<int64_t, PerPCDetector>::iterator, multimap<int64_t, PerPCDetector>::iterator> rangeIter;
+    multimap<int64_t, PerPCDetector>::iterator iter;
 
     rangeIter = myPendingStrides.equal_range(PC);
 
@@ -60,7 +60,7 @@ void LoopInstance::addMemAccess(long long memAddress, long long PC, int accessSi
                 int stride = iter->second.detector->getStride();
 
                 if (lastType == UNKNOWN) {
-                    long long baseAddr = iter->second.detector->getFirstMemAddr();
+                    int64_t baseAddr = iter->second.detector->getFirstMemAddr();
                     myPendingStrides->addNewStride(PC, baseAddr, memoryAddr, stride, 2, accessSize, readOrWrite);
                 } else {
                     myPendingStrides->updateExistingStride(PC, memoryAddr, stride, readOrWrite);
@@ -84,10 +84,10 @@ void LoopInstance::checkForPointDependences() {
     map<Interval, bool>::iterator hiter = history.begin();
 
     for (; piter != pending.end(); piter++) {
-        long long pendingAddr = piter.first.myLowerBound;
+        int64_t pendingAddr = piter.first.myLowerBound;
 
         for (; hiter != history.end(); hiter++) {
-            long long historyAddr = hiter.first.myLowerBound;
+            int64_t historyAddr = hiter.first.myLowerBound;
 
             if (pendingAddr == historyAddr) {
                 toCheck.insert(piter.first);

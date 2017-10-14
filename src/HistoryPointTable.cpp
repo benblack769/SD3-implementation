@@ -1,16 +1,16 @@
 #include "HistoryPointTable.h"
 
-void HistoryPointTable::addNewPoint(long long memAddress, long long PC, long long numAccesses, long long accessSize,
+void HistoryPointTable::addNewPoint(int64_t memAddress, int64_t PC, int64_t numAccesses, int64_t accessSize,
                                     MemAccessMode readOrWrite) {
     Point *temp;
     temp = new Point(memAddress, PC, numAccesses, accessSize, readOrWrite);
 
-    myPoints.insert(pair<long long, Point *>(memAddress, temp));
+    myPoints.insert(pair<int64_t, Point *>(memAddress, temp));
 }
 
-bool HistoryPointTable::doesPointExist(long long memAddress) {
-    pair<multimap<long long, Point *>::iterator, multimap<long long, Point *>::iterator> rangeIter;
-    multimap<long long, Point *>::iterator iter;
+bool HistoryPointTable::doesPointExist(int64_t memAddress) {
+    pair<multimap<int64_t, Point *>::iterator, multimap<int64_t, Point *>::iterator> rangeIter;
+    multimap<int64_t, Point *>::iterator iter;
 
     rangeIter = myPoints.equal_range(memAddress);
 
@@ -21,11 +21,11 @@ bool HistoryPointTable::doesPointExist(long long memAddress) {
     return false;
 }
 
-list<Point *> HistoryPointTable::getPoints(long long memAddress) {
+list<Point *> HistoryPointTable::getPoints(int64_t memAddress) {
     list<Point *> results;
 
-    pair<multimap<long long, Point *>::iterator, multimap<long long, Point *>::iterator> rangeIter;
-    multimap<long long, Point *>::iterator iter;
+    pair<multimap<int64_t, Point *>::iterator, multimap<int64_t, Point *>::iterator> rangeIter;
+    multimap<int64_t, Point *>::iterator iter;
 
     rangeIter = myPoints.equal_range(memAddress);
 
@@ -39,7 +39,7 @@ list<Point *> HistoryPointTable::getPoints(long long memAddress) {
 map<Interval, bool> HistoryPointTable::getIntervalMap() {
     map<Interval, bool, IntervalLessThan> iMap;
 
-    multimap<long long, Point *>::iterator iter = myPoints.begin();
+    multimap<int64_t, Point *>::iterator iter = myPoints.begin();
 
     for (; iter != myPoints.end(); iter++) {
         Interval i(iter.second->getMemoryAddr(), iter.second->getMemoryAddr);
