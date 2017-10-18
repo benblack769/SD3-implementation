@@ -3,5 +3,5 @@
 
 enum MemAccessMode { READ = 0, WRITE = 1 };
 typedef long long int64_t;
-typedef unsigned int64_t uint64_t;
+typedef unsigned long long uint64_t;
 #endif
