@@ -65,8 +65,7 @@ bool PendingStrideTable::updateExistingStride(int64_t PC, int64_t memoryAddr, in
     return false;
 }
 
-bool PendingStrideTable::killStride(int64_t PC, int64_t memoryAddr, int64_t strideLength,
-                                    MemAccessMode readOrWrite) {
+bool PendingStrideTable::killStride(int64_t PC, int64_t memoryAddr, int64_t strideLength, MemAccessMode readOrWrite) {
     pair<multimap<int64_t, StrideEntry>::iterator, multimap<int64_t, StrideEntry>::iterator> rangeIter;
     multimap<int64_t, StrideEntry>::iterator iter;
 

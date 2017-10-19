@@ -1,8 +1,8 @@
 #ifndef __HISTORYPOINTTABLE_H__
 #define __HISTORYPOINTTABLE_H__
 
-#include "Types.h"
 #include "Point.h"
+#include "Types.h"
 #include <map>
 
 using namespace std;

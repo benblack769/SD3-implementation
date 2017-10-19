@@ -1,8 +1,8 @@
 #ifndef __HISTORYSTRIDETABLE_H__
 #define __HISTORYSTRIDETABLE_H__
 
-#include "Types.h"
 #include "Stride.h"
+#include "Types.h"
 #include <map>
 
 using namespace std;
@@ -19,8 +19,7 @@ class HistoryStrideTable {
     void addNewStride(int64_t PCAddress, int64_t lowAddress, int64_t highAddress, int64_t strideLength,
                       int numAccesses = 2, int64_t accessSize = 4, MemAccessMode readOrWrite = READ);
 
-    bool doesStrideExist(int64_t PCAddress, int64_t memoryAddr, int64_t strideLength,
-                         MemAccessMode readOrWrite = READ);
+    bool doesStrideExist(int64_t PCAddress, int64_t memoryAddr, int64_t strideLength, MemAccessMode readOrWrite = READ);
 
     bool updateExistingStride(int64_t PCAddress, int64_t memoryAddr, int64_t strideLength,
                               MemAccessMode readOrWrite = READ);

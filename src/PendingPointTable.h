@@ -1,8 +1,8 @@
 #ifndef PENDINGPOINTTABLE_H
 #define PENDINGPOINTTABLE_H
 
-#include "Types.h"
 #include "Point.h"
+#include "Types.h"
 #include <iostream>
 #include <list>
 #include <map>

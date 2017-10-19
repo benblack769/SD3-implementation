@@ -1,8 +1,8 @@
 #include __CONFLICTTABLE_H__
 #define __CONFLICTTABLE_H__
 
-#include <list>
 #include "Types.h"
+#include <list>
 
 using namespace std;
 
