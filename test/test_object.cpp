@@ -11,15 +11,16 @@ bool testtestfail();
 bool testtesterror();
 
 // gcd tests
-bool test_num_overlap();
-bool test_block_intersect();
+bool test_num_overlap_stride_stride();
+bool test_num_overlap_stride_block();
+bool test_num_overlap_block_block();
 bool test_gcd();
 
 void TestObj::run_all() {
     bool has_failed = false;
     for (int i = 0; i < tests.size(); i++) {
         run_func(tests[i]);
-        has_failed = has_failed & test_valid;
+        has_failed = has_failed || !test_valid;
     }
     if (has_failed) {
         cout << "\n\nSOME TESTS DID NOT PASS!!!\n" << endl;
@@ -73,8 +74,9 @@ inline void TestObj::collect_tests() {
     _add_test(testtesterror);
 #endif
     _add_test(test_gcd);
-    _add_test(test_num_overlap);
-    _add_test(test_block_intersect);
+    _add_test(test_num_overlap_stride_stride);
+    _add_test(test_num_overlap_stride_block);
+    _add_test(test_num_overlap_block_block);
 #undef _add_test
 }
 

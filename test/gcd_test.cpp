@@ -3,10 +3,6 @@
 #include <cassert>
 #include <iostream>
 
-int64_t gcd(int64_t a, int64_t b);
-
-int64_t num_overlap(SparseStride one, SparseStride other);
-
 void test_gcd() {
     t_assert(gcd(110, 5) == 5);
     t_assert(gcd(113, 5) == 1);
@@ -14,11 +10,6 @@ void test_gcd() {
     t_assert(gcd(99, 121) == 11);
     t_assert(gcd(3, 1) == 1);
     t_assert(gcd(1, 1) == 1);
-}
-void test_block_intersect() {
-    Block b1 = {10, 12 + 1, 5};
-    Block b2 = {11, 15 + 1, 8};
-    num_conflict_b(b1, b2);
 }
 
 void print_stride(SparseStride stride) {
@@ -36,15 +27,25 @@ void debug_print_test_overlap(SparseStride stride1, SparseStride stride2) {
     print_stride(stride1);
     print_stride(stride2);
 
-    int64_t num = num_overlap(stride1, stride2);
-
-    t_assert(true);
+    cout << "num overlap calculated = " << num_overlap_locations(stride1, stride2) << endl;
 }
-void test_num_overlap() {
+void test_num_overlap_stride_stride() {
     SparseStride stride1(12, 4, 7, 4);
     SparseStride stride2(4, 4, 16, 4);
     debug_print_test_overlap(stride1, stride2);
-    SparseStride stride3();
-    SparseStride stride4();
-    t_assert(num_overlap(stride1, stride2));
+    t_assert(num_overlap_locations(stride1, stride2) == 4);
+}
+void test_num_overlap_stride_block() {
+    Block stride1(5, 15 + 1);
+    SparseStride stride2(4, 4, 16, 4);
+    t_assert(num_overlap_locations(stride2, stride1) == 4);
+}
+void test_num_overlap_block_block() {
+    Block b1(10, 12 + 1);
+    Block b2(11, 15 + 1);
+    Block b3(12, 14 + 1);
+    t_assert(num_overlap_locations(b1, b2) == 2);
+    t_assert(num_overlap_locations(b2, b1) == 2);
+    t_assert(num_overlap_locations(b3, b2) == 3);
+    t_assert(num_overlap_locations(b2, b3) == 3);
 }

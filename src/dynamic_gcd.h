@@ -9,6 +9,8 @@ class Block {
     int64_t _begin;
     int64_t _end; // past end
   public:
+    Block(int64_t begin, int64_t end) : _begin(begin), _end(end) {}
+
     int64_t length() const { return _end - _begin; }
     int64_t begin() const { return _begin; }
     int64_t end() const { return _end; }
@@ -44,6 +46,6 @@ int64_t num_overlap_locations(SparseStride stride, Block block);
 int64_t num_overlap_locations(Block one, Block other);
 
 inline int64_t ceil_div(int64_t num, int64_t denom) { return (num + denom - 1) / denom; }
-int64_t locations_to_accesses(int64_t location_overlap, int64_t total_locations, int64_t total_acccesses) {
+inline int64_t locations_to_accesses(int64_t location_overlap, int64_t total_locations, int64_t total_acccesses) {
     return ceil_div(total_acccesses * location_overlap, total_locations);
 }

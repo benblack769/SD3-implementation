@@ -12,10 +12,21 @@ int64_t gcd(int64_t a, int64_t b) {
     return max_v;
 }
 int64_t num_overlap_locations(Block one, Block other) {
-    int64_t overlap_one = other.end - one.begin;
-    int64_t overlap_two = one.end - other.begin;
-    int64_t items_overlap = min(min(overlap_one, overlap_two), int64_t(0));
-    return items_overlap;
+    int64_t overlap_between1 = other.end() - one.begin();
+    int64_t overlap_between2 = one.end() - other.begin();
+    int64_t overlap_inner_1 = one.end() - one.begin();
+    int64_t overlap_inner_2 = other.end() - other.begin();
+    int64_t inner_min = min(overlap_inner_1,overlap_inner_2);
+    int64_t between_min = min(overlap_between1,overlap_between2);
+    if(between_min > inner_min){
+        return inner_min;
+    }
+    else if(between_min > 0){
+        return between_min;
+    }
+    else{
+        return 0;
+    }
 }
 
 int64_t num_overlap_locations(SparseStride stride, Block block) {

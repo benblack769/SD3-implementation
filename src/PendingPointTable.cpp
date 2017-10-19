@@ -88,13 +88,13 @@ bool PendingPointTable::isPointKilled(int64_t memAddress) {
   PendingPointTable::checkForPointDependences(HistoryPointTable ht)
   {
   list<Dependence> conflicts;
-  
+  
   map<int64_t, PointEntry>::iterator iter = myPendingPoints.begin();
   for( ; iter!= myPendingParts.end(); iter++){
   for(list<Point*>::iterator liter = iter.second.points.begin(); liter !=
   iter.second.points.end(); liter++){ list<Point *> oldPoints =
   ht->getPoints(liter->getMemAddress());
-  
+  
   MemAccessMode pendMode = liter->getAccessMode();
   for(list<Point*>::iterator piter = oldPoints.begin(); piter !=
   oldPoints.end(); piter++){ MemAccessMode oldMode = piter->getAccessMode();
@@ -102,7 +102,7 @@ bool PendingPointTable::isPointKilled(int64_t memAddress) {
   Dependence d(liter->getMemoryAddr(), piter->getPC(), oldMode, liter->getPC(),
   pendMode); conflicts.insert(d);
   }
-  
+  
   }
   }
   }
@@ -114,9 +114,9 @@ bool PendingPointTable::isPointKilled(int64_t memAddress) {
   map<Interval, PointEntry> PendingPointTable::getIntervalMap()
   {
   map<Interval, PointEntry, IntervalLessThan> iMap;
-  
+  
   map<int64_t, PointEntry>::iterator iter = myPendingPoints.begin();
-  
+  
   for( ; iter != myPendingPoints.end(); iter++){
   Interval i(iter.second->getMemoryAddr(), iter.second->getMemoryAddr());
   iMap[i] = iter.second;
