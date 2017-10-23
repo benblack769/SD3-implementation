@@ -4,6 +4,14 @@
 #include <ostream>
 using namespace std;
 
+struct overlap_locs{
+    bool exactly;
+    int64_t count;
+    overlap_locs(bool in_exactly,int64_t in_count):
+        exactly(in_exactly),
+        count(in_count){}
+};
+
 class Block {
   protected:
     int64_t _begin;
@@ -33,15 +41,17 @@ class SparseStride {
     int64_t block_size() const { return _block_size; }
     int64_t stride() const { return _stride; }
     int64_t end() const { return _first + _size * _stride; }
-
-    bool is_in_stride(int item);
+    
+    bool is_in_stride(int64_t access);
+    Block block(int64_t access);
+    int64_t locations_after_access(int64_t access);
     void print_in_stride_from_zero();
 };
 std::ostream &operator<<(std::ostream &os, const SparseStride &obj);
 
 int64_t gcd(int64_t a, int64_t b);
 
-int64_t num_overlap_locations(SparseStride one, SparseStride other);
+overlap_locs num_overlap_locations(SparseStride one, SparseStride other);
 int64_t num_overlap_locations(SparseStride stride, Block block);
 int64_t num_overlap_locations(Block one, Block other);
 

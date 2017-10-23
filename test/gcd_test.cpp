@@ -27,18 +27,22 @@ void debug_print_test_overlap(SparseStride stride1, SparseStride stride2) {
     print_stride(stride1);
     print_stride(stride2);
 
-    cout << "num overlap calculated = " << num_overlap_locations(stride1, stride2) << endl;
+    cout << "num overlap calculated = " << num_overlap_locations(stride1, stride2).count << endl;
 }
 void test_num_overlap_stride_stride() {
     SparseStride stride1(12, 4, 7, 4);
     SparseStride stride2(4, 4, 16, 4);
     debug_print_test_overlap(stride1, stride2);
-    t_assert(num_overlap_locations(stride1, stride2) == 4);
+    t_assert(num_overlap_locations(stride1, stride2).count == 4);
 }
 void test_num_overlap_stride_block() {
-    Block stride1(5, 15 + 1);
-    SparseStride stride2(4, 4, 16, 4);
-    t_assert(num_overlap_locations(stride2, stride1) == 4);
+    Block b1(5, 12 + 1);
+    Block b2(5, 24 + 1);
+    Block b3(0, 24 + 1);
+    SparseStride stride1(4, 4, 7, 4);
+    t_assert(num_overlap_locations(stride1, b1) == 5);
+    t_assert(num_overlap_locations(stride1, b2) == 11);
+    t_assert(num_overlap_locations(stride1, b3) == 12);
 }
 void test_num_overlap_block_block() {
     Block b1(10, 12 + 1);
