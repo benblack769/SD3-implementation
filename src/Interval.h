@@ -1,10 +1,12 @@
 #ifndef __INTERVAL_H__
 #define __INTERVAL_H__
 #include "Types.h"
+#include "Point.h"
+#include "Stride.h"
 
 using namespace std;
 
-enum IntervalType { UndefinedInteraval = -1, PointInterval = 0, StrideInterval = 1 };
+enum IntervalType { UndefinedInterval = -1, PointInterval = 0, StrideInterval = 1 };
 
 class Interval {
     friend class IntervalLessThan;
@@ -34,5 +36,6 @@ class IntervalLessThan {
             return false;
     }
 };
+
 
 #endif
