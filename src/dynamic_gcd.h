@@ -1,6 +1,7 @@
 #pragma once
 #include "Types.h"
 #include <algorithm>
+#include <iostream>
 #include <ostream>
 using namespace std;
 
@@ -20,9 +21,18 @@ class Block {
     Block(int64_t begin, int64_t end) : _begin(begin), _end(end) {}
 
     int64_t length() const { return _end - _begin; }
+    int64_t first() const { return _begin; }
     int64_t begin() const { return _begin; }
     int64_t end() const { return _end; }
+    int64_t last() const { return _end-1; }
+    
+    bool is_in(int64_t x){ return x >= begin() && x < end(); }
+    void print_in_stride_from_zero();
+    bool operator == (Block other)const{
+        return this->begin() == other.begin() && this->end() == other.end();
+    }
 };
+std::ostream &operator<<(std::ostream &os, const Block &obj);
 
 class SparseStride {
   protected:
@@ -42,11 +52,23 @@ class SparseStride {
     int64_t stride() const { return _stride; }
     int64_t end() const { return _first + _size * _stride; }
     
-    bool is_in_stride(int64_t access);
+    bool is_in(int64_t access);
     Block block(int64_t access);
     int64_t locations_after_access(int64_t access);
-    void print_in_stride_from_zero();
 };
+
+template<class IntervalType>
+inline void print_is_in_from_zero(IntervalType interval) {
+    cout << interval << endl;
+    for (int i = 0; i < interval.end(); i++) {
+        if (interval.is_in(i)) {
+            cout << "X";
+        } else {
+            cout << "O";
+        }
+    }
+    cout << endl;
+}
 std::ostream &operator<<(std::ostream &os, const SparseStride &obj);
 
 int64_t gcd(int64_t a, int64_t b);

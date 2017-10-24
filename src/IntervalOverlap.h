@@ -19,24 +19,33 @@ struct LastLessThan {
 
 
 template<class IntTy>
-void sort_by_first(vector<IntTy> & intervals){
-    sort(intervals.begin(),intervals.end(), FirstLessThan<IntTy,IntTy>);
+inline void sort_by_first(vector<IntTy> & intervals){
+    sort(intervals.begin(),intervals.end(), FirstLessThan<IntTy,IntTy>());
 }
 
 template<class IntTy>
-void sort_by_last(vector<IntTy> & intervals){
-    sort(intervals.begin(),intervals.end(), LastLessThan<IntTy,IntTy>);
+inline void sort_by_last(vector<IntTy> & intervals){
+    sort(intervals.begin(),intervals.end(), LastLessThan<IntTy,IntTy>());
+}
+inline bool is_between_inclusive(int64_t in,int64_t low,int64_t high){
+    return in >= low && in <= high;
 }
 
 template<class IntTy1,class IntTy2>
-inline vector<pair<IntTy1,IntTy2>> check_overlap(vector<IntTy1> intervals1, vector<IntTy2> intervals2){
+inline bool is_overlap(IntTy1 one, IntTy2 other){
+    return is_between_inclusive(one.first(),other.first(),other.last()) ||
+           is_between_inclusive(one.last(), other.first(),other.last());
+}
+
+template<class IntTy1,class IntTy2>
+inline vector<pair<IntTy1,IntTy2> > check_overlap(vector<IntTy1> intervals1, vector<IntTy2> intervals2){
     sort_by_first(intervals1);
     vector<IntTy2> sorted_first = intervals2;
     vector<IntTy2> sorted_last = intervals2;
     sort_by_first(sorted_first);
     sort_by_last(sorted_last);
     
-    vector<pair<IntTy1,IntTy2>> overlap;
+    vector<pair<IntTy1,IntTy2> > overlap;
     size_t ifirst = 0;
     size_t ilast = 0;
     size_t size_1 = intervals1.size();
@@ -57,19 +66,15 @@ inline vector<pair<IntTy1,IntTy2>> check_overlap(vector<IntTy1> intervals1, vect
         
         //merge two lists of conflicts for unique elements
         if(ifirst != s_first || ilast != s_last){
-            //size_t max_union_size = s_first + s_last - ifirst - ilast;
-            //vector<IntTy2> union_result(max_union_size);
-            //vector<IntTy2> last_conflicts(sorted_last.begin() + ilast, sorted_last.begin() + s_last);            
-            //sort_by_first(last_conflicts);
-            //set_union(last_conflicts.begin(),last_conflicts.end(),
-            //          sorted_first.begin()+ifirst,sorted_first.begin()+s_first,)
             for(int k = ilast; k < s_last; k++){
+                cout << "added_last" << item << sorted_last[k] << "   " << k << endl;
                 overlap.push_back(make_pair(item,sorted_last[k]));
             }
             for(int k = ifirst; k < s_first; k++){
                 //PERFORMANCE WARNING! O(n^2) performance
-                if(find(sorted_last.begin(),sorted_last.end(),sorted_first[k]) != sorted_last.end()){
-                    overlap.push_back(make_pair(item,sorted_last[k]));
+                if(find(sorted_last.begin()+ilast,sorted_last.begin()+s_last,sorted_first[k]) == sorted_last.begin()+s_last){
+                    cout << "added_first" << item << sorted_first[k] << endl;
+                    overlap.push_back(make_pair(item,sorted_first[k]));
                 }
             }
         }

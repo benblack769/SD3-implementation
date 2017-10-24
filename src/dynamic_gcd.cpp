@@ -32,7 +32,7 @@ int64_t num_overlap_locations(Block one, Block other) {
 int64_t SparseStride::locations_after_access(int64_t access){
     int64_t num_locs = 0;
     //counts access in same block as `access`
-    if(is_in_stride(access)){
+    if(is_in(access)){
         Block b = block(access);
         num_locs += b.end() - access;
     }
@@ -44,8 +44,6 @@ int64_t SparseStride::locations_after_access(int64_t access){
 }
 
 int64_t num_overlap_locations(SparseStride stride, Block block) {
-    cout << stride.locations_after_access(block.begin()) << endl;
-    cout << stride.locations_after_access(block.end()) << endl;
     return stride.locations_after_access(block.begin()) - stride.locations_after_access(block.end());
 }
 
@@ -97,7 +95,7 @@ overlap_locs num_overlap_locations(SparseStride one, SparseStride other) {
         return overlap_locs(false,cap_overlap);
     }
 }
-bool SparseStride::is_in_stride(int64_t access) {
+bool SparseStride::is_in(int64_t access) {
     int64_t begin_offset = access - first();
     if (begin_offset < 0) {
         return false;
@@ -107,7 +105,7 @@ bool SparseStride::is_in_stride(int64_t access) {
 }
 
 Block SparseStride::block(int64_t access) {
-    assert(is_in_stride(access) && "block method requires access to be in some block");
+    assert(is_in(access) && "block method requires access to be in some block");
     
     int64_t begin_offset = access - first();
     int64_t block_number = begin_offset / stride();
@@ -121,14 +119,7 @@ std::ostream &operator<<(std::ostream &os, const SparseStride &obj) {
     return os;
 }
 
-void SparseStride::print_in_stride_from_zero() {
-    cout << "stride: " << *this << endl;
-    for (int i = 0; i < end(); i++) {
-        if (is_in_stride(i)) {
-            cout << "X";
-        } else {
-            cout << "O";
-        }
-    }
-    cout << endl;
+std::ostream &operator<<(std::ostream &os, const Block &obj){
+    os << " { 'begin':" << obj.begin() << ", 'end':" << obj.end() << " } ";
+    return os;
 }
