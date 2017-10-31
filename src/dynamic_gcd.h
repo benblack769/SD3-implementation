@@ -25,7 +25,7 @@ class Block {
     int64_t begin() const { return _begin; }
     int64_t end() const { return _end; }
     int64_t last() const { return _end-1; }
-    
+
     bool is_in(int64_t x){ return x >= begin() && x < end(); }
     void print_in_stride_from_zero();
     bool operator == (Block other)const{
@@ -51,7 +51,9 @@ class SparseStride {
     int64_t block_size() const { return _block_size; }
     int64_t stride() const { return _stride; }
     int64_t end() const { return _first + _size * _stride; }
-    
+    bool is_dense()const{ return _stride == _block_size; }
+    Block dense_block()const{ return Block(first(),end()); }
+
     bool is_in(int64_t access);
     Block block(int64_t access);
     int64_t locations_after_access(int64_t access);
@@ -76,6 +78,11 @@ int64_t gcd(int64_t a, int64_t b);
 overlap_locs num_overlap_locations(SparseStride one, SparseStride other);
 int64_t num_overlap_locations(SparseStride stride, Block block);
 int64_t num_overlap_locations(Block one, Block other);
+
+bool contains(Block block, SparseStride stride);
+bool contains(SparseStride stride, Block block);
+bool contains(Block b1, Block b2);
+bool contains(SparseStride s1, SparseStride s2);
 
 inline int64_t ceil_div(int64_t num, int64_t denom) { return (num + denom - 1) / denom; }
 inline int64_t locations_to_accesses(int64_t location_overlap, int64_t total_locations, int64_t total_acccesses) {

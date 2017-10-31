@@ -8,6 +8,8 @@ using namespace std;
 
 enum IntervalType { UndefinedInterval = -1, PointInterval = 0, StrideInterval = 1 };
 
+
+
 class Interval {
     friend class IntervalLessThan;
 

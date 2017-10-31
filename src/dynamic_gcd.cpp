@@ -43,6 +43,31 @@ int64_t SparseStride::locations_after_access(int64_t access){
     return num_locs;
 }
 
+bool contains(Block block, SparseStride stride){
+    return contains(block,stride.dense_block());
+}
+bool contains(SparseStride stride, Block block){
+    if(!stride.is_in(block.begin())){
+        return false;
+    }
+    return contains(stride.block(block.begin()),block);
+}
+
+bool contains(Block b1, Block b2){
+    return b1.begin() >= b2.begin() && b1.end() <= b2.end();
+}
+
+bool contains(SparseStride s1, SparseStride s2){
+    if(s1.is_dense()){
+        return contains(s1.dense_block(), s2);
+    }
+    else{
+        return contains(s1.dense_block(),s2.dense_block()) && 
+                s2.stride() % s1.stride() == 0 && 
+                s1.block_size() == s2.block_size(); 
+    }
+}
+
 int64_t num_overlap_locations(SparseStride stride, Block block) {
     return stride.locations_after_access(block.begin()) - stride.locations_after_access(block.end());
 }
@@ -69,13 +94,14 @@ overlap_locs num_overlap_locations(SparseStride one, SparseStride other) {
         }
     } 
     else if (one.stride() % other.stride() == 0 || other.stride() % one.stride() == 0) {
-
+        
     }
     else if(one.block_size() == other.block_size()){
         if(gcd_stride % delta != 0){
             return overlap_locs(true,0);
         }
         else{
+            assert(false);
             // TODO: this currently does not implement gcd test corretly. gives a
             // worst case upper bound analysis
             // we can get away with bad solutions here because there aren't many
@@ -88,6 +114,7 @@ overlap_locs num_overlap_locations(SparseStride one, SparseStride other) {
         }
     }
     else{
+        assert(false);
         // this case is really bad, so just return that you don't exactly know what to do.
         int64_t overlap1 = num_overlap_locations(one,Block(other.first(),other.end()));
         int64_t overlap2 = num_overlap_locations(other,Block(one.first(),one.end()));

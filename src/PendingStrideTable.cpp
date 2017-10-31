@@ -1,27 +1,22 @@
 #include "PendingStrideTable.h"
 
+typedef typename multimap<int64_t, Stride *>::iterator stride_map_iterator;
+
 // This method assumes that a stride does not already exist
 void PendingStrideTable::addNewStride(int64_t PC, Stride *stride) {
-    StrideEntry temp;
-    temp.stride = stride;
-    temp.killed = false;
-
-    myPendingStrides.insert(pair<int64_t, StrideEntry>(PC, temp));
+    myPendingStrides.insert(pair<int64_t, Stride *>(PC, stride));
 }
 
 void PendingStrideTable::addNewStride(int64_t PC, int64_t lowAddress, int64_t highAddress, int64_t strideLength,
                                       int numAccesses, int64_t accessSize, MemAccessMode readOrWrite) {
-    StrideEntry temp;
-    temp.stride = new Stride(lowAddress, highAddress, strideLength, numAccesses, accessSize, readOrWrite);
-    temp.killed = false;
-
-    myPendingStrides.insert(pair<int64_t, StrideEntry>(PC, temp));
+    Stride * stride = new Stride(lowAddress, highAddress, strideLength, numAccesses, accessSize, readOrWrite);
+    addNewStride(PC, stride);
 }
 
 bool PendingStrideTable::doesStrideExist(int64_t PC, int64_t memoryAddr, int64_t strideLength,
                                          MemAccessMode readOrWrite) {
-    pair<multimap<int64_t, StrideEntry>::iterator, multimap<int64_t, StrideEntry>::iterator> rangeIter;
-    multimap<int64_t, StrideEntry>::iterator iter;
+    pair<stride_map_iterator, stride_map_iterator> rangeIter;
+    stride_map_iterator iter;
 
     rangeIter = myPendingStrides.equal_range(PC);
 
@@ -49,8 +44,8 @@ bool PendingStrideTable::doesStrideExist(int64_t PC, int64_t memoryAddr, int64_t
 
 bool PendingStrideTable::updateExistingStride(int64_t PC, int64_t memoryAddr, int64_t strideLength,
                                               MemAccessMode readOrWrite) {
-    pair<multimap<int64_t, StrideEntry>::iterator, multimap<int64_t, StrideEntry>::iterator> rangeIter;
-    multimap<int64_t, StrideEntry>::iterator iter;
+    pair<stride_map_iterator, stride_map_iterator> rangeIter;
+    stride_map_iterator iter;
 
     rangeIter = myPendingStrides.equal_range(PC);
 
@@ -66,8 +61,8 @@ bool PendingStrideTable::updateExistingStride(int64_t PC, int64_t memoryAddr, in
 }
 
 bool PendingStrideTable::killStride(int64_t PC, int64_t memoryAddr, int64_t strideLength, MemAccessMode readOrWrite) {
-    pair<multimap<int64_t, StrideEntry>::iterator, multimap<int64_t, StrideEntry>::iterator> rangeIter;
-    multimap<int64_t, StrideEntry>::iterator iter;
+    pair<stride_map_iterator, stride_map_iterator> rangeIter;
+    stride_map_iterator iter;
 
     rangeIter = myPendingStrides.equal_range(PC);
 
@@ -85,7 +80,7 @@ bool PendingStrideTable::killStride(int64_t PC, int64_t memoryAddr, int64_t stri
 }
 
 void PendingStrideTable::print() {
-    multimap<int64_t, StrideEntry>::iterator iter;
+    stride_map_iterator iter;
 
     for (iter = myPendingStrides.begin(); iter != myPendingStrides.end(); iter++) {
         cout << "PC: " << iter->first;

@@ -14,36 +14,32 @@ class PendingPointTable {
   public:
     PendingPointTable(){};
 
-    // If memory address isn't killed, adds information about this access to
-    // table.  Returns true if information is added, false if memory address is
-    // already killed.  If this access is a write, the point is turned to
-    // "killed"
+    //adds point to table
     bool addNewPoint(int64_t memAddress, int64_t PC, int64_t numAccesses = 1, int64_t accessSize = 4,
                      MemAccessMode readOrWrite = READ);
 
     // If memory address already is in table and is not killed, updates number
     // of accesses. Returns true if update of number of accesses occurs.
-    bool updateExistingPoint(int64_t memAddress, int64_t PC, MemAccessMode readOrWrite);
+    //bool updateExistingPoint(int64_t memAddress, int64_t PC, MemAccessMode readOrWrite);
 
-    bool doesPointExist(int64_t memAddress, int64_t PC, MemAccessMode readOrWrite = READ);
+    //bool doesPointExist(int64_t memAddress, int64_t PC, MemAccessMode readOrWrite = READ);
 
-    bool isPointKilled(int64_t memAddress);
+    //bool isPointKilled(int64_t memAddress);
 
     //  list<Dependence> checkForPointDependences(HistoryPointTable ht);
 
-    //  map<Interval, PointEntry> getIntervalMap();
+    //  map<Interval, Point *> getIntervalMap();
+
+    //joins tables. does not do anything with killed bits
+    void merge(PendingPointTable other);
 
     void print();
 
+    //sorted_elements
+    vector<PointerInterval<Point *> > intervals(MemAccessMode access_mode);
+
   private:
-    struct PointEntry {
-        list<Point *> points;
-        bool killed;
-
-        PointEntry() { killed = false; };
-    };
-
-    map<int64_t, PointEntry> myPendingPoints;
+    access_mode_pair<multi_map<int64_t, Point *>> myPendingPoints;
 };
 
 #endif

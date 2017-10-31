@@ -2,45 +2,36 @@
 #define POINT_H
 
 #include "Types.h"
+#include "PC_ID.h"
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-class Point {
+class Point:
+    public Block{
   public:
     // Create a new point including its memory address and the PC that made the
     // memory access
-    Point(int64_t memAddress, int64_t PC, int64_t numAccesses = 1, int64_t accessSize = 4,
+    Point(int64_t memAddress, int64_t PC, int64_t accessSize = 4,
           MemAccessMode readOrWrite = READ);
 
     // Return the PC associated with this memory access
-    int64_t getPC() { return myPC; };
+    PC_ID getPC_ID() { return myPC; };
 
     // Return this point's memory address
-    int64_t getMemAddress() { return myMemAddress; };
-
-    // Return the number of times this memory address has been accessed by this
-    // PC
-    int64_t getNumAccesses() { return myNumAccesses; };
+    int64_t getMemAddress() { return first(); };
 
     // Return the size of the memory access
-    int64_t getAccessSize() { return myAccessSize; };
+    int64_t getAccessSize() { return this->length(); };
 
-    // Return the access mode (read or  write)
-    MemAccessMode getAccessMode() { return myAccessMode; };
-
-    // Increment the number of accesses
-    void addAccess() { myNumAccesses++; };
+    void set_killed(bool value){killed = value;}
 
     void print();
 
   private:
-    int64_t myPC;
-    int64_t myMemAddress;
-    int64_t myNumAccesses;
-    int64_t myAccessSize;
-    MemAccessMode myAccessMode; // read or write
+    bool killed;
+    PC_ID myPC;
 };
 
 #endif

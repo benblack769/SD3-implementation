@@ -2,6 +2,7 @@
 #define STRIDE_H
 
 #include "Types.h"
+#include "PC_ID.h"
 #include <iostream>
 #include <string>
 
@@ -43,15 +44,14 @@ class Stride {
     // specified address has actually been accessed as part of this stride.
     bool hasBeenAccessed(int64_t address);
 
+    void set_killed(bool value){killed = value;}
+
     void print();
 
   private:
-    int64_t myLowAddress;
-    int64_t myHighAddress;
-    int myStrideLength;
-    int64_t myAccessSize;
-    int64_t myNumAccesses;
-    MemAccessMode myAccessMode; // read or write
+      SparseStride stride;
+      PC_ID pc;
+      bool killed;
 };
 
 #endif
