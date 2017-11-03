@@ -16,13 +16,13 @@ void debug_print_test_overlap(SparseStride stride1, SparseStride stride2) {
     print_is_in_from_zero(stride1);
     print_is_in_from_zero(stride2);
 
-    cout << "num overlap calculated = " << num_overlap_locations(stride1, stride2).count << endl;
+    cout << "num overlap calculated = " << has_overlap(stride1, stride2) << endl;
 }
 void test_num_overlap_stride_stride() {
     SparseStride stride1(12, 4, 7, 4);
     SparseStride stride2(4, 4, 16, 4);
     debug_print_test_overlap(stride1, stride2);
-    t_assert(num_overlap_locations(stride1, stride2).count == 4);
+    t_assert(has_overlap(stride1, stride2) == 4);
 }
 void test_num_overlap_stride_block() {
     Block b1(5, 12 + 1);

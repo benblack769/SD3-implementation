@@ -26,6 +26,7 @@ class Point:
     int64_t getAccessSize() { return this->length(); };
 
     void set_killed(bool value){killed = value;}
+    bool is_killed(){return killed;}
 
     void print();
 

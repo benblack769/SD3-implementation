@@ -1,6 +1,7 @@
-#include "Interval.h"
+//#include "Interval.h"
 #include <algorithm>
 #include <vector>
+#include "dynamic_gcd.h"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ class CachedInterval:
 protected:
     IntervalType * ptr;
 public:
-    PointerInterval(IntervalType * in_ptr):
+    CachedInterval(IntervalType * in_ptr):
         Block(in_ptr->first(),in_ptr->end()){}
 };
 

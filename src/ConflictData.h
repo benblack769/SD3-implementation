@@ -161,36 +161,46 @@ public:
 };
 template<class IntervalTy>
 class CompressedData {
-public:
+protected:
     //typedef  CachedInterval<Point*> point_interval;
     //typedef  CachedInterval<Stride*> stride_interval;
     //typedef multi_set<point_interval, FirstLessThan<point_interval,point_interval> > interval_set;
-    typedef PC_Data<IntervalTy> PC_Data_ty;
-    map<PC_ID,PC_Data_ty> pc_table;//unordered_map
-    typedef map<PC_ID,PC_Data_ty>::iterator pc_table_iterator;
+
     //access_mode_pair<multi_set<CachedInterval<Point*> > > points; //ordered_map (maybe shift to unordered)
     //access_mode_pair<multi_set<CachedInterval<Stride*> > > strides; //ordered_map
 
-    vector<CachedInterval<IntervalTy> > sorted_intervals(MemAccessMode mode){
-        vector<CachedInterval<IntervalTy> > strides;
+    typedef PC_Data<IntervalTy> PC_Data_ty;
+    map<PC_ID,PC_Data_ty> pc_table;//unordered_map
+    typedef map<PC_ID,PC_Data_ty>::iterator pc_table_iterator;
+public:
+    void add(IntervalTy * interval){
+        pc_table[interval->getPC_ID()].add(interval);
+    }
+    void set_killed_bits_false(){
+
+    }
+    //bool contains(IntervalTy * interval){
+    //    return pc_table[interval->getPC_ID()].contains(interval);
+    //}
+    friend overlap(CompressedData<Point*> ,CompressedData<Point*>);
+    friend overlap(CompressedData<Point*> ,CompressedData<Stride*>);
+    friend overlap(CompressedData<Stride*> ,CompressedData<Point*>);
+    friend overlap(CompressedData<Stride*> ,CompressedData<Stride*>);
+protected:
+    vector<CachedInterval<IntervalTy> > sorted_intervals(MemAccessMode mode, bool only_killed){
+        vector<CachedInterval<IntervalTy> > intervals;
         for(pc_table_iterator it = pc_table.begin(); it != pc_table.end(); ++it){
             if(it->first.accessmode == mode){
                 PC_Data & pc_data = it->second;
                 for(PC_Data::stride_map_it s_it = pc_data.strides.begin(); s_it != pc_data.strides.end(); ++s_it){
-                    strides.push_back(CachedInterval<IntervalTy>(s_it->second));
+                    IntervalTy * interval = s_it->second;
+                    if(!(only_killed && !interval->is_killed())){
+                        intervals.push_back(CachedInterval<IntervalTy>(interval));
+                    }
                 }
             }
         }
-        return strides;
-    }
-    void remove(IntervalTy * interval){
-        pc_table[interval->getPC_ID()].remove(interval);
-    }
-    void add(IntervalTy * interval){
-        pc_table[interval->getPC_ID()].add(interval);
-    }
-    bool contains(IntervalTy * interval){
-        return pc_table[interval->getPC_ID()].contains(interval);
+        return intervals;
     }
 };
 typedef CompressedData<Point*> PointTable;
@@ -205,51 +215,50 @@ public:
         return killedbits.count(addr);
     }
 }
-/*
-class StrideDetectorData{
-    StrideDetector detector;
-    PC_ID pc;
-    int64_t access_size;
-    bool has_stride(){
-        return detector.getState() == STRIDE;
-    }
-    Stride get_stride(){
-        return
-    }
-    bool has_point_1(){
-        return detector.getState() == NEWPOINT || detector.getState() == LOSTPOINT || result == POINT;
-    }
-    Point get_point_1(){
-        return
-    }
-    bool has_point_2(){
-        return
-    }
-    Point get_point_2(){
-        return
-    }
-
-    void update(){
-
-    }
-    void reset(){
-        detector = StrideDetector();
-    }
-};*/
 class LoopData {
     map<PC_ID,StrideDetector> detectors;
     PointTable pending_points;
     StrideTable pending_strides;
+
     PointTable history_points;
     StrideTable history_strides;
-    KillBitsSet killbits;
+
+    int64_t loop_count;
 
     void addMemAccess(Point point){
-        //add detector
-        //
+        //1. find overlap with killed bits of pending_tables using isKilled
+        //2. if some overlap, then return without proceding
+        //3. if new pc, add detector
+        //4. add point to detetor
+        //5. if detector released some points, add them to history tables (handleStrideDetectorResult)
     }
-    void flush_killed(){
-
+    bool isKilled(Point point){
+        //1. construct PointTable with just the single item
+        //2. Find overlap between this table and the pendingtables killed bits
+        //3. return true if these overlaps have a containment of the point that is killed
     }
-
+    void merge_history_pending(PointTable points, PointTable strides){
+        //1. find 4-way overlap between points and strides
+        //2. if killed bits don't completely overlap, then add point/stride to pendingtables
+    }
+    void iteration_end(){
+        //1. increment loop_count
+        //2. set all kill bits to false in pendingTables
+        //3. merge_pending_history
+        //4. add conflicts to table
+    }
+    pair<PointTable, StrideTable> stride_detector_info(){
+        //1. go through strides, use purgeStrideDetectorState ideas o get info stored only in stridedetectors
+        //2. return that info in new tables
+    }
+    void conflict_check_pending_history(PointTable points, StrideTable strides){
+        //1. create new Point/Stride tables for detectors using stride_detector_info
+        //2. find conflicts between them and pending points, strides
+        //3. find conflicts between history tables and pending points, strides
+        //4. add RAW conflicts to conflict table
+    }
+    void loop_end(){
+        // must be called directly after iteration_end
+        //1. flush stridedetectors out to history_tables by merging
+    }
 };

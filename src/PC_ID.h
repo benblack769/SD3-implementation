@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <cassert>
 #include "Types.h"
 using namespace std;
 
@@ -19,7 +20,7 @@ protected:
     ItemType read;
     ItemType write;
 public:
-    ItemType & get(AccessMode mode){
+    ItemType & get(MemAccessMode mode){
         if(mode == READ){
             return read;
         }
@@ -30,7 +31,7 @@ public:
             assert(false && "bad mode");
         }
     }
-    ItemType & operator[](AccessMode mode){
+    ItemType & operator[](MemAccessMode mode){
         return get(mode);
     }
 };

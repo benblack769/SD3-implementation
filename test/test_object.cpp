@@ -10,6 +10,9 @@ bool testtestpass();
 bool testtestfail();
 bool testtesterror();
 
+//bitset test
+bool compressed_bits_test();
+
 // gcd tests
 bool test_num_overlap_stride_stride();
 bool test_num_overlap_stride_block();
@@ -82,6 +85,8 @@ inline void TestObj::collect_tests() {
     _add_test(test_num_overlap_block_block);
     //interval_overlap_test
     _add_test(test_overlap);
+    //compressed bits test
+    _add_test(compressed_bits_test);
 #undef _add_test
 }
 

@@ -45,6 +45,7 @@ class Stride {
     bool hasBeenAccessed(int64_t address);
 
     void set_killed(bool value){killed = value;}
+    bool is_killed(){return killed;}
 
     void print();
 

@@ -72,7 +72,48 @@ int64_t num_overlap_locations(SparseStride stride, Block block) {
     return stride.locations_after_access(block.begin()) - stride.locations_after_access(block.end());
 }
 
-overlap_locs num_overlap_locations(SparseStride one, SparseStride other) {
+bool has_overlap(SparseStride stride, Block block){
+    return num_overlap_locations(stride,block) > 0;
+}
+
+bool has_overlap(Block one, Block other){
+    return num_overlap_locations(one,other) > 0;
+}
+
+struct StrideIterator{
+    SparseStride stride;
+    int64_t cur_step;
+    Block operator * (){
+        int64_t begin = stride.first()+stride.stride()*cur_step;
+        return Block(begin,begin+stride.block_size());
+    }
+    void operator ++(){
+        cur_step++;
+    }
+    bool at_end(){
+        return cur_step >= stride.size();
+    }
+    
+};
+
+bool slow_has_overlap (StrideIterator one, StrideIterator other){
+  while (one.at_end() && other.at_end())
+  {
+      if(has_overlap(*one,*other)){
+          return true;
+      }
+      else if((*one).first() < (*other).first()) ++one;
+      else if((*other).first() < (*one).first()) ++other;
+      else{
+          assert(false && "condition should not occcur");
+      }
+  }
+  return false;
+}
+
+
+
+bool has_overlap(SparseStride one, SparseStride other) {
     // ensures one.first < other.first always
     if (one.first() > other.first()) {
         SparseStride tmp = one;
@@ -84,23 +125,22 @@ overlap_locs num_overlap_locations(SparseStride one, SparseStride other) {
     int64_t gcd_stride = gcd(one.stride(),other.stride());
 
     if (overlap_size < 0) {
-        return overlap_locs(true,0);
+        return false;
     }
     else if (one.stride() == other.stride()) {
         if (delta % one.stride() == 0) {
-            return overlap_locs(true,overlap_size / one.stride());
-        } else {
-            return overlap_locs(true,0);
-        }
+            return true;
+        } 
     } 
     else if (one.stride() % other.stride() == 0 || other.stride() % one.stride() == 0) {
         
     }
     else if(one.block_size() == other.block_size()){
         if(gcd_stride % delta != 0){
-            return overlap_locs(true,0);
+            return true;
         }
         else{
+            //slow_has_overlap()
             assert(false);
             // TODO: this currently does not implement gcd test corretly. gives a
             // worst case upper bound analysis
@@ -110,7 +150,7 @@ overlap_locs num_overlap_locations(SparseStride one, SparseStride other) {
             int64_t overlap1 = num_overlap_locations(one,Block(other.first(),other.end()));
             int64_t overlap2 = num_overlap_locations(other,Block(one.first(),one.end()));
             int64_t cap_overlap = min(overlap1,overlap2);            
-            return overlap_locs(false,-1);
+            return false;//overlap_locs(false,-1);
         }
     }
     else{
@@ -119,7 +159,7 @@ overlap_locs num_overlap_locations(SparseStride one, SparseStride other) {
         int64_t overlap1 = num_overlap_locations(one,Block(other.first(),other.end()));
         int64_t overlap2 = num_overlap_locations(other,Block(one.first(),one.end()));
         int64_t cap_overlap = min(overlap1,overlap2);
-        return overlap_locs(false,cap_overlap);
+        return false;//overlap_locs(false,cap_overlap);
     }
 }
 bool SparseStride::is_in(int64_t access) {
