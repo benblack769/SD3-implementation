@@ -231,16 +231,19 @@ protected:
         }
         
         mem_addr_it greater = into.upper_bound(key);
-        mem_addr_it lower_eq_it = greater;
-        --lower_eq_it;
         
-        Stride lower_eq_stride = lower_eq_it->second;
-        //merge in lower or equal vals simply by extending last(), no changes to map
-        if(lower_eq_stride.end() >= merge_stride.first()){
-            lower_eq_it->second = merge_strides(lower_eq_stride,merge_stride);
+        if(greater != into.begin()){
+            mem_addr_it lower_eq_it = greater;
+            --lower_eq_it;
+            
+            Stride lower_eq_stride = lower_eq_it->second;
+            //merge in lower or equal vals simply by extending last(), no changes to map
+            if(lower_eq_stride.end() >= merge_stride.first()){
+                lower_eq_it->second = merge_strides(lower_eq_stride,merge_stride);
+            }
         }
         
-        for(;greater != into.end() && merge_stride.end() <= greater->second.first(); greater++){
+        for(;greater != into.end() && merge_stride.end() >= greater->second.first(); greater++){
             Stride greater_stride = greater->second;
             //need to change map key (first()), so remove old value from map, then add
             into.erase(greater);
@@ -301,7 +304,7 @@ protected:
     vector<IntervalTy> sorted_intervals(bool filter = false,MemAccessMode mode = WRITE){
         vector<IntervalTy> intervals;
         for(pc_table_iterator it = pc_table.begin(); it != pc_table.end(); ++it){
-            if(filter && it->first.get_acc_mode() == mode){
+            if(!(filter && it->first.get_acc_mode() == mode)){
                 PC_Data_ty & pc_data = it->second;
                 pc_data.append_to(intervals);
             }

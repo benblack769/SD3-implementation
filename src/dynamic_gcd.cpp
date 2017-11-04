@@ -200,13 +200,8 @@ SparseStride ordered_merge(SparseStride lower_eq, SparseStride upper){
     int64_t total_size = (end - first) / stride;
     return SparseStride(first,total_size,stride,upper.block_size());    
 }
-void asasdasd(SparseStride one,SparseStride other){
-    assert(mergeable(one,other));
-    
-}
 
 SparseStride merge(SparseStride one,SparseStride other){
-    int t = 0;
-    asasdasd(one, other);
+    assert(mergeable(one,other));
     return one.first() < other.first() ? ordered_merge(one,other) : ordered_merge(other,one);
 }
