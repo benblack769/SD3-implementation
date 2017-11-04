@@ -1,3 +1,4 @@
+#include <cassert>
 #include "CompressedBits.h"
 
 void BlockSet::add(int64_t element){
@@ -16,6 +17,7 @@ bool BlockSet::any(){
 int64_t BlockSet::count(){
     return bits.count();
 }
+
 
 void CompressedBits::add(int64_t element){
     data[element / BLOCK_SIZE].add(element % BLOCK_SIZE);

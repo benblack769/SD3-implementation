@@ -7,11 +7,15 @@ using namespace std;
 enum MemAccessMode { READ = 0, WRITE = 1 };
 class PC_ID{
 public:
-    int64_t pc;
-    MemAccessMode accessmode;
+    PC_ID(int64_t in_pc, MemAccessMode in_acc_mode):
+        pc(in_pc),
+        accessmode(in_acc_mode){}
     bool operator < (PC_ID other) const{
         return pc < other.pc || (pc == other.pc && accessmode < other.accessmode);
     }
+protected:
+    int64_t pc;
+    MemAccessMode accessmode;
 };
 
 template<class ItemType>

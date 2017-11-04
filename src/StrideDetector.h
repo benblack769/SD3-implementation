@@ -3,7 +3,7 @@
 
 #include "Types.h"
 // Unknown is when you have observed first address only.
-enum MemAccessType { UNDEFINED = -1, UNKNOWN = 0, LOSTPOINT = 1, NEWPOINT = 2, POINT = 3, STRIDE = 4 };
+enum MemAccessType { UNDEFINED = -1, POINT = 0, STRIDE = 1};
 
 // States of Stride Detector FSM
 enum FSMState { Start = 0, FirstObserved = 1, StrideLearned = 2, WeakStride = 3, StrongStride = 4 };
@@ -33,30 +33,9 @@ class StrideDetector {
     // Returns current stride distance
     int getStride() { return myStrideDist; }
 
-    // Return memory address that will serve as base for any stride
-    int64_t getFirstMemAddr() { return myFirstMemAddr; }
-
-    // Return memory address for last access by this PC
-    int64_t getPrevMemAddr() { return myPrevMemAddr; }
-
     // Given an address, updates the FSM state appropriately.  Returns the type
     // of access (Unknown, Point, Stride) this address was classified as.
     MemAccessType addAccess(int64_t address);
-
-    // It is only on the third memory access that a stride will be detected.
-    // Before that third access, two memory accesses may have been processed by
-    // the stride detector but not had their state as points or strides
-    // determined yet.  When either the stride detector has been flushed or the
-    // stride detector has returned a LOSTPOINT state, the missing point(s) will
-    // be accessible via these two methods.
-    int64_t getFirstLostPoint() { return myLostPoints[0]; }
-    int64_t getSecondLostPoint() { return myLostPoints[1]; }
-
-    // When tracking finishes, there may still be two memory accesses that have
-    // not been put into a stride or point yet.  This method moves them to
-    // be viewed as lost points, so the lost points methods can be used to
-    // access those memory references.
-    bool flush();
 
   private:
     // Method determines the change in FSM, updating stride distance and address
@@ -69,27 +48,8 @@ class StrideDetector {
     int64_t myFirstMemAddr;
     int64_t myPrevMemAddr;
     int64_t myStrideDist;
-
-    bool myLastAccessUnknown; // before we get to WeakStride
-
-    // When in StrideLearned, you have seen 2 accesses but won't know if they
-    // are a stride until the third access.  If the third access does not have a
-    // matching stride, it will be considered the first access of a new
-    // potential stride (going back to FirstObserved).  We want to make sure we
-    // don't lose the two points that occurred. myStateAlreadyProcessed is used
-    // to keep track of whether or not information stored in the StrideDetector
-    // has already been processed as a Stride.  This occurs when the state was
-    // previously at >= WeakStride and then the state moved backwards.  We want
-    // to make sure that the addresses in the StrideDetector are not reprocessed
-    // as Points as they have already been processed as part of a Stride
-    int64_t myLostPoints[2];
-    bool myLostPoint;
-    bool myStateAlreadyProcessed;
-    void setLostPoints();
-    void clearLostPoints();
-
+    
     FSMState myState;
-    FSMState myPrevState;
 };
 
 #endif
