@@ -4,20 +4,29 @@
 #include "Types.h"
 using namespace std;
 
-enum MemAccessMode { READ = 0, WRITE = 1 };
+enum MemAccessMode { INVALID=-1, READ = 0, WRITE = 1 };
 class PC_ID{
 public:
     PC_ID(int64_t in_pc, MemAccessMode in_acc_mode):
         pc(in_pc),
         accessmode(in_acc_mode){}
-    bool operator < (PC_ID other) const{
+    bool operator < (PC_ID other) const {
         return pc < other.pc || (pc == other.pc && accessmode < other.accessmode);
     }
+    bool operator == (PC_ID other) const {
+        return pc == other.pc && accessmode == other.accessmode;
+    }
+    bool is_invalid(){
+        return this->pc == INVALID;
+    }
+    MemAccessMode get_acc_mode()const{return accessmode;}
 protected:
     int64_t pc;
     MemAccessMode accessmode;
 };
+PC_ID null_id(-1,INVALID);
 
+/*
 template<class ItemType>
 class access_mode_pair{
 protected:
@@ -38,7 +47,7 @@ public:
     ItemType & operator[](MemAccessMode mode){
         return get(mode);
     }
-};
+};*/
 /*
 template<class DataType>
 class PC_Data{

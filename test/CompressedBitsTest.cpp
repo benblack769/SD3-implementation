@@ -1,7 +1,10 @@
 #include "test_object.h"
 #include "CompressedBits.h"
+#include "Point.h"
+#include "IntervalOverlap.h"
 
 bool compressed_bits_test(){
+    cout << sizeof(CachedInterval<Stride>) << endl;
     CompressedBits bits1;
     for(int i = 0;i < 1000; i+= 133){
         bits1.add(i);

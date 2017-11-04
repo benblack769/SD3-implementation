@@ -21,6 +21,8 @@ class PC_info{
 public:
     PC_info(PC_ID in_pc):
         myPC(in_pc){}
+    PC_info():
+        myPC(null_id){}
     PC_ID getPC_ID() { return myPC; }
 protected:
     PC_ID myPC;
@@ -39,11 +41,12 @@ class Point:
     Point(Block in_block, PC_ID access_id):
         Block(in_block),
         PC_info(access_id){}
+    Point(){}
 };
 class Stride:
     public SparseStride,
-    public KilledSpot,
-    public PC_info{
+    public PC_info,
+    public KilledSpot{
   public:
     // Create a new point including its memory address and the PC that made the
     // memory access
@@ -54,4 +57,5 @@ class Stride:
     Stride(SparseStride in_stride, PC_ID access_id):
         SparseStride(in_stride),
         PC_info(access_id){}
+    Stride(){}
 };

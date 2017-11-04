@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <ostream>
+#include <cassert>
 using namespace std;
 
 class Block {
@@ -11,6 +12,7 @@ class Block {
     int64_t _end; // past end
   public:
     Block(int64_t begin, int64_t end) : _begin(begin), _end(end) {}
+    Block():_begin(0), _end(0){}
 
     int64_t length() const { return _end - _begin; }
     int64_t first() const { return _begin; }
@@ -35,7 +37,11 @@ class SparseStride {
 
   public:
     SparseStride(int64_t in_first, int64_t in_size, int64_t in_stride, int64_t in_block_size)
-        : _first(in_first), _size(in_size), _stride(in_stride), _block_size(in_block_size) {}
+        : _first(in_first), _size(in_size), _stride(in_stride), _block_size(in_block_size) {
+        assert(_stride > 0 && "merging requires strides to be of only positive stride");
+    }
+    SparseStride()
+        : _first(0), _size(0), _stride(0), _block_size(0){}
 
     int64_t last() const { return _first + (_size - 1) * _stride; }
     int64_t first() const { return _first; }
@@ -45,7 +51,7 @@ class SparseStride {
     int64_t end() const { return _first + _size * _stride; }
     bool is_dense()const{ return _stride == _block_size; }
     Block dense_block()const{ return Block(first(),end()); }
-
+    
     bool is_in(int64_t access);
     Block block(int64_t access);
     int64_t locations_after_access(int64_t access);
@@ -84,3 +90,15 @@ inline int64_t ceil_div(int64_t num, int64_t denom) { return (num + denom - 1) /
 inline int64_t locations_to_accesses(int64_t location_overlap, int64_t total_locations, int64_t total_acccesses) {
     return ceil_div(total_acccesses * location_overlap, total_locations);
 }
+inline int64_t inclusive_between(int64_t middle, int64_t low, int64_t high){
+    return low <= middle && middle <= high;
+}
+
+inline bool mergeable(SparseStride one,SparseStride other){
+    return one.block_size() == other.block_size() && 
+            one.stride() == other.stride() && 
+            abs(one.first() - other.first()) % one.stride() == 0 &&
+            inclusive_between(one.first(),other.first(),other.last());
+}
+
+SparseStride merge(SparseStride one,SparseStride other);

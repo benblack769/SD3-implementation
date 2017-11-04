@@ -190,3 +190,23 @@ std::ostream &operator<<(std::ostream &os, const Block &obj){
     os << " { 'begin':" << obj.begin() << ", 'end':" << obj.end() << " } ";
     return os;
 }
+
+SparseStride ordered_merge(SparseStride lower_eq, SparseStride upper){
+    //strides and block_size are enforced equal
+    int64_t first = lower_eq.first();
+    int64_t stride = upper.stride();
+    int64_t end = max(lower_eq.end(),upper.end());
+    assert((end - first) % stride == 0);
+    int64_t total_size = (end - first) / stride;
+    return SparseStride(first,total_size,stride,upper.block_size());    
+}
+void asasdasd(SparseStride one,SparseStride other){
+    assert(mergeable(one,other));
+    
+}
+
+SparseStride merge(SparseStride one,SparseStride other){
+    int t = 0;
+    asasdasd(one, other);
+    return one.first() < other.first() ? ordered_merge(one,other) : ordered_merge(other,one);
+}
