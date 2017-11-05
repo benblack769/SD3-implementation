@@ -10,10 +10,15 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 include_directories("${CPP_SOURCE_DIR}")
 
-#add_executable(test ${CPP_TEST_DIR}/tester.cpp ${CPP_SOURCE_DIR}/StrideDetector.cpp  ${CPP_SOURCE_DIR}/PendingStrideTable.cpp ${CPP_SOURCE_DIR}/PendingPointTable.cpp ${CPP_SOURCE_DIR}/Stride.cpp ${CPP_SOURCE_DIR}/Point.cpp ${CPP_SOURCE_DIR}/Types.h)
-#add_executable(test ${CPP_TEST_DIR}/stride-detector-tester.cpp ${CPP_SOURCE_DIR}/StrideDetector.cpp ${CPP_SOURCE_DIR}/dynamic_gcd.cpp ${CPP_SOURCE_DIR}/Point.h)
-#add_executable(test ${CPP_TEST_DIR}/merge_test.cpp ${CPP_SOURCE_DIR}/ConflictData.h ${CPP_SOURCE_DIR}/StrideDetector.cpp ${CPP_SOURCE_DIR}/dynamic_gcd.cpp ${CPP_SOURCE_DIR}/Point.h ${CPP_SOURCE_DIR}/IntervalOverlap.cpp ${CPP_SOURCE_DIR}/IntervalTypes.cpp)
-add_executable(unit_test ${CPP_TEST_DIR}/test_object.h ${CPP_TEST_DIR}/test_object.cpp ${CPP_TEST_DIR}/gcd_test.cpp ${CPP_SOURCE_DIR}/dynamic_gcd.h ${CPP_SOURCE_DIR}/dynamic_gcd.cpp ${CPP_TEST_DIR}/interval_overlap.cpp ${CPP_SOURCE_DIR}/IntervalOverlap.cpp ${CPP_SOURCE_DIR}/IntervalTypes.cpp ${CPP_SOURCE_DIR}/CompressedBits.cpp  ${CPP_SOURCE_DIR}/CompressedBits.h ${CPP_TEST_DIR}/CompressedBitsTest.cpp)
+add_executable(stride_detector_test ${CPP_TEST_DIR}/stride-detector-tester.cpp ${CPP_SOURCE_DIR}/StrideDetector.cpp ${CPP_SOURCE_DIR}/dynamic_gcd.cpp ${CPP_SOURCE_DIR}/Point.h ${CPP_SOURCE_DIR}/IntervalTypes.cpp)
+add_executable(merge_test ${CPP_TEST_DIR}/merge_test.cpp ${CPP_SOURCE_DIR}/ConflictData.h ${CPP_SOURCE_DIR}/StrideDetector.cpp ${CPP_SOURCE_DIR}/dynamic_gcd.cpp ${CPP_SOURCE_DIR}/Point.h ${CPP_SOURCE_DIR}/IntervalOverlap.h ${CPP_SOURCE_DIR}/IntervalTypes.cpp)
+add_executable(unit_test ${CPP_TEST_DIR}/test_object.h ${CPP_TEST_DIR}/test_object.cpp ${CPP_TEST_DIR}/gcd_test.cpp ${CPP_SOURCE_DIR}/dynamic_gcd.h ${CPP_SOURCE_DIR}/dynamic_gcd.cpp ${CPP_TEST_DIR}/interval_overlap.cpp ${CPP_SOURCE_DIR}/IntervalTypes.cpp ${CPP_SOURCE_DIR}/CompressedBits.cpp  ${CPP_SOURCE_DIR}/CompressedBits.h ${CPP_TEST_DIR}/CompressedBitsTest.cpp)
+
+set_property(TARGET stride_detector_test PROPERTY CXX_STANDARD 98)
+set_property(TARGET stride_detector_test PROPERTY CXX_STANDARD_REQUIRED ON)
+
+set_property(TARGET merge_test PROPERTY CXX_STANDARD 98)
+set_property(TARGET merge_test PROPERTY CXX_STANDARD_REQUIRED ON)
 
 set_property(TARGET unit_test PROPERTY CXX_STANDARD 98)
 set_property(TARGET unit_test PROPERTY CXX_STANDARD_REQUIRED ON)
