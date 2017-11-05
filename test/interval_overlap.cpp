@@ -4,6 +4,7 @@
 
 template<class IntTy1,class IntTy2>
 vector<pair<IntTy1,IntTy2> > naive_check_overlap(vector<IntTy1> intervals1, vector<IntTy2> intervals2){
+    //DOESN'T WORK!!!!!!!!!!!!!!!!!!!!!!!!!
     vector<pair<Block,Block> > overlap;
     for(int int1 = 0; int1 < intervals1.size(); int1++){
         for(int int2 = 0; int2 < intervals2.size(); int2++){
@@ -16,6 +17,7 @@ vector<pair<IntTy1,IntTy2> > naive_check_overlap(vector<IntTy1> intervals1, vect
 }
 template<class IntTy1,class IntTy2>
 bool overlaps_equal(vector<pair<IntTy1,IntTy2> > one, vector<pair<IntTy1,IntTy2> > other){
+    //DOESN'T WORK!!!!!!!!!!!!!!!!!!!!!!!!!
     if(one.size() != other.size()){
         return false;
     }
@@ -32,6 +34,20 @@ bool overlaps_equal(vector<pair<IntTy1,IntTy2> > one, vector<pair<IntTy1,IntTy2>
         }
     }
     return true;
+}
+
+template<class IntervalType>
+inline void print_is_in_from_zero(IntervalType interval) {
+    //allows visual inspection of strides
+    cout << interval << endl;
+    for (int i = 0; i < interval.end(); i++) {
+        if (interval.is_in(i)) {
+            cout << "X";
+        } else {
+            cout << "O";
+        }
+    }
+    cout << endl;
 }
 
 void test_overlap(){
@@ -56,10 +72,10 @@ void test_overlap(){
     }
     vector<pair<Block,Block> > overlap = check_overlap(vec1,vec2);
     vector<pair<Block,Block> > naive_overlap = naive_check_overlap(vec1,vec2);
-    
+
     cout << "number overlap = " << naive_overlap.size() << endl;
     for(int i = 0; i < overlap.size(); i++){
-        cout << "overlap "  << i << endl; 
+        cout << "overlap "  << i << endl;
         cout << "first: " << overlap[i].first << endl;
         cout << "second: " << overlap[i].second << endl;
     }

@@ -3,6 +3,20 @@
 #include <cassert>
 #include <iostream>
 
+template<class IntervalType>
+inline void print_is_in_from_zero(IntervalType interval) {
+    //allows visual inspection of strides
+    cout << interval << endl;
+    for (int i = 0; i < interval.end(); i++) {
+        if (interval.is_in(i)) {
+            cout << "X";
+        } else {
+            cout << "O";
+        }
+    }
+    cout << endl;
+}
+
 void test_gcd() {
     t_assert(gcd(110, 5) == 5);
     t_assert(gcd(113, 5) == 1);

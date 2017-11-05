@@ -10,6 +10,7 @@ bool compressed_bits_test(){
         bits1.add(i);
     }
     CompressedBits bits2;
+    t_assert(!bits1.any());
     for(int j = 0; j < 12123; j += 3){
         bits2.add(j);
     }

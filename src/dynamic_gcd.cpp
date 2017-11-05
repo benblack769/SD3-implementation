@@ -29,19 +29,6 @@ int64_t num_overlap_locations(Block one, Block other) {
         return 0;
     }
 }
-int64_t SparseStride::locations_after_access(int64_t access){
-    int64_t num_locs = 0;
-    //counts access in same block as `access`
-    if(is_in(access)){
-        Block b = block(access);
-        num_locs += b.end() - access;
-    }
-    //counts accesses after `access`
-    int64_t after = end() - access;
-    int64_t num = (after-1) / stride();
-    num_locs += num * block_size();
-    return num_locs;
-}
 
 bool contains(Block block, SparseStride stride){
     return contains(block,stride.dense_block());
@@ -62,9 +49,9 @@ bool contains(SparseStride s1, SparseStride s2){
         return contains(s1.dense_block(), s2);
     }
     else{
-        return contains(s1.dense_block(),s2.dense_block()) && 
-                s2.stride() % s1.stride() == 0 && 
-                s1.block_size() == s2.block_size(); 
+        return contains(s1.dense_block(),s2.dense_block()) &&
+                s2.stride() % s1.stride() == 0 &&
+                s1.block_size() == s2.block_size();
     }
 }
 
@@ -93,7 +80,7 @@ struct StrideIterator{
     bool at_end(){
         return cur_step >= stride.size();
     }
-    
+
 };
 
 bool slow_has_overlap (StrideIterator one, StrideIterator other){
@@ -130,10 +117,10 @@ bool has_overlap(SparseStride one, SparseStride other) {
     else if (one.stride() == other.stride()) {
         if (delta % one.stride() == 0) {
             return true;
-        } 
-    } 
+        }
+    }
     else if (one.stride() % other.stride() == 0 || other.stride() % one.stride() == 0) {
-        
+
     }
     else if(one.block_size() == other.block_size()){
         if(gcd_stride % delta != 0){
@@ -149,7 +136,7 @@ bool has_overlap(SparseStride one, SparseStride other) {
             // overlapping strides of differnet lengths that do not divide each othe
             int64_t overlap1 = num_overlap_locations(one,Block(other.first(),other.end()));
             int64_t overlap2 = num_overlap_locations(other,Block(one.first(),one.end()));
-            int64_t cap_overlap = min(overlap1,overlap2);            
+            int64_t cap_overlap = min(overlap1,overlap2);
             return false;//overlap_locs(false,-1);
         }
     }
@@ -162,35 +149,6 @@ bool has_overlap(SparseStride one, SparseStride other) {
         return false;//overlap_locs(false,cap_overlap);
     }
 }
-bool SparseStride::is_in(int64_t access) {
-    int64_t begin_offset = access - first();
-    if (begin_offset < 0) {
-        return false;
-    }
-    int64_t stride_offset = begin_offset % stride();
-    return stride_offset < block_size();
-}
-
-Block SparseStride::block(int64_t access) {
-    assert(is_in(access) && "block method requires access to be in some block");
-    
-    int64_t begin_offset = access - first();
-    int64_t block_number = begin_offset / stride();
-    int64_t block_start = first() + block_number * stride();
-    return Block(block_start, block_start + block_size());
-}
-
-std::ostream &operator<<(std::ostream &os, const SparseStride &obj) {
-    os << " { 'F':" << obj.first() << ", 'L':" << obj.last() << ", 'S':" << obj.stride()
-       << ", 'BS':" << obj.block_size() << " } ";
-    return os;
-}
-
-std::ostream &operator<<(std::ostream &os, const Block &obj){
-    os << " { 'begin':" << obj.begin() << ", 'end':" << obj.end() << " } ";
-    return os;
-}
-
 SparseStride ordered_merge(SparseStride lower_eq, SparseStride upper){
     //strides and block_size are enforced equal
     int64_t first = lower_eq.first();
@@ -198,7 +156,7 @@ SparseStride ordered_merge(SparseStride lower_eq, SparseStride upper){
     int64_t end = max(lower_eq.end(),upper.end());
     assert((end - first) % stride == 0);
     int64_t total_size = (end - first) / stride;
-    return SparseStride(first,total_size,stride,upper.block_size());    
+    return SparseStride(first,total_size,stride,upper.block_size());
 }
 
 SparseStride merge(SparseStride one,SparseStride other){
