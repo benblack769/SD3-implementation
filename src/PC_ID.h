@@ -7,6 +7,9 @@ using namespace std;
 enum MemAccessMode { INVALID=-1, READ = 0, WRITE = 1 };
 class PC_ID{
 public:
+    PC_ID():
+        pc(-1),
+        accessmode(INVALID){}
     PC_ID(int64_t in_pc, MemAccessMode in_acc_mode):
         pc(in_pc),
         accessmode(in_acc_mode){}

@@ -6,6 +6,7 @@ class Program:
         self.new_mem_loc = 0
         self.instruction_ids = dict()
         self.cur_instr_alloc = 100000
+        self.loop_id_counter = 0
     def mem_access_occured(self,loc_id,instruction,was_read):
         if loc_id != NULL_LOC_ID:
             read_str = "READ" if was_read else "WRITE"
@@ -23,10 +24,13 @@ class Program:
     def new_list(self,size):
         return [self.new() for i in range(size)]
     def loop_start(self):
-        self.locations.append("START")
+        old_loop_counter = self.loop_id_counter
+        self.locations.append("START {}".format(old_loop_counter))
+        self.loop_id_counter += 1
     def loop_end(self):
-        self.locations.append("END")
-    def bin_op(instruction_id,mem_loc1,mem_loc2):
+        self.locations.append("END {}".format(self.loop_id_counter))
+        self.loop_id_counter -= 1
+    def bin_op(self,instruction_id,mem_loc1,mem_loc2):
         self.read_occured(mem_loc1,self.instruction(instruction_id))
         self.read_occured(mem_loc2,self.instruction(instruction_id+0xcccccccc))
         return MemLocation(self,NULL_LOC_ID)
@@ -40,6 +44,8 @@ class Program:
             self.cur_instr_alloc += 1
             self.instruction_ids[instr_id] = self.cur_instr_alloc
             return self.instruction_ids[instr_id]
+    def constant(self):
+        return MemLocation(self,NULL_LOC_ID)
 
 class MemLocation:
     def __init__(self,program,loc_id):

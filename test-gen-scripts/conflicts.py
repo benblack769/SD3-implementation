@@ -34,25 +34,31 @@ def sd3_example():
 
     prog.generate_file(output_relative_path+"sd3_example.txt")
 
-'''
-def read_conflicts_only():
-    program  = Program()
-    size = 4
-    A = program.new_list(size)
-    sum = program.new()
 
-    for i in range(size-1):
-        program.loop_start()
-        A[i].assign(A[i].bin_op(A[j],))
-        program.loop_end()
+def mat_mul():
+    prog  = Program()
+    size = 50
+    A = [prog.new_list(size)  for x in range(size)]
+    B = [prog.new_list(size)  for x in range(size)]
+    R = [prog.new_list(size)  for x in range(size)]
 
-    program.generate_file("sd3_example.txt")
-'''
+    for i in range(size):
+        prog.loop_start()
+        for j in range(size):
+            prog.loop_start()
+            R[i][j].assign(1,prog.constant())
+            for k in range(size):
+                prog.loop_start()
+                R[i][j].assign(2,prog.bin_op(3,B[k][j],prog.bin_op(4,A[i][k],R[i][j])))
+                prog.loop_end()
+            prog.loop_end()
+        prog.loop_end()
+
+    prog.generate_file(output_relative_path+"mat_mul.txt")
+
 
 sd3_example()
-
-
-
+mat_mul()
 
 
 #

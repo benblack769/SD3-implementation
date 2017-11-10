@@ -1,6 +1,4 @@
-#include __CONFLICTTABLE_H__
-#define __CONFLICTTABLE_H__
-
+#pragma once
 #include "Types.h"
 #include <list>
 
@@ -19,5 +17,3 @@ ConflictTable {
 
     list<Dependence> myDependences;
 };
-
-#endif

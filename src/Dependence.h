@@ -1,29 +1,42 @@
-#include __DEPENDENCE_H__
-#define __DEPENDENCE_H__
+#pragma once
 #include "Types.h"
+#include "IntervalTypes.h"
 
 enum DependenceType { NODEP = -1, RAW = 0, WAR = 1, WAW = 2 };
 
 class Dependence {
-  public:
-    Dependence();
+public:
+    Dependence(){
+        myDependenceType = NODEP;
+    }
 
-    Dependence(int64_t memoryAddr, int64_t earlierPC, MemAccessMode earlierAccessMode, int64_t laterPC,
-               MemAccessMode laterAccessMode);
+    Dependence(PC_ID earlier, PC_ID later,int64_t mem_addr){
+        earlier_instr = earlier;
+        later_instr = later;
 
-    DependenceType getDependenceType() { return myDependenceType; };
+        mem_addr = myMemoryAddr;
 
-    int64_t getMemoryAddress() { return myMemoryAddr; };
+        //sets deppendence mode based on reads and write pattern
+        if (earlier_instr.get_acc_mode() == READ) {
+            if (later_instr.get_acc_mode() == WRITE) {
+                myDependenceType = RAW;
+            }
+        } else {
+            if (later_instr.get_acc_mode() == READ) {
+                myDependenceType = WAR;
+            } else {
+                myDependenceType = WAW;
+            }
+        }
+    }
+
+    DependenceType getDependenceType() { return myDependenceType; }
+
+    int64_t getMemoryAddress() { return myMemoryAddr; }
 
   private:
+    PC_ID earlier_instr;
+    PC_ID later_instr;
     DependenceType myDependenceType;
     int64_t myMemoryAddr;
-
-    int64_t myEarlierPC;
-    MemAccessMode myEarlierAccessMode;
-
-    int64_t myLaterPC;
-    MemAccessMode myLaterAccessMode;
 };
-
-#endif

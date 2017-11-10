@@ -5,6 +5,7 @@
 #include "CompressedBits.h"
 #include "StrideDetector.h"
 #include "dynamic_gcd.h"
+#include "Dependence.h"
 /*
 class LoopInstance {
   public:
@@ -60,7 +61,7 @@ class LoopInstance {
 typedef CompressedData<Point*> PointTable;
 typedef CompressedData<Stride*> StrideTable;
 
-class LoopData {
+class LoopInstance {
     map<PC_ID,StrideDetector> detectors;
     PointTable pending_points;
     StrideTable pending_strides;
@@ -69,6 +70,12 @@ class LoopData {
     StrideTable history_strides;
 
     int64_t loop_count;
+    int64_t loop_id;
+public:
+    LoopInstance(int64_t in_loop_id){
+        loop_id = in_loop_id;
+        loop_count = 0;
+    }
 
     void addMemAccess(Point point){
         //1. find overlap with killed bits of pending_tables using isKilled
@@ -102,10 +109,11 @@ class LoopData {
         //3. find conflicts between history tables and pending points, strides
         //4. add RAW conflicts to conflict table
     }
-    void loop_end(){
+    void loop_end(vector<Dependence> & out_loop_dependences){
         // must be called directly after iteration_end
         //1. flush stridedetectors out to history_tables by merging
     }
+    int64_t get_loop_id(){return loop_id;}
 };
 
 
