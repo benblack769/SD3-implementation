@@ -7,3 +7,4 @@ CMakeCache.txt
 CMakeFiles
 bin
 CMakeLists.txt.user
+test-data/conflict
