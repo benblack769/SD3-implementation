@@ -1,4 +1,4 @@
-//#include <vector>
+#pragma once
 #include <map>
 #include <bitset>
 #include "Types.h"

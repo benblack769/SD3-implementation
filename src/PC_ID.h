@@ -24,7 +24,7 @@ protected:
     int64_t pc;
     MemAccessMode accessmode;
 };
-PC_ID null_id(-1,INVALID);
+const PC_ID null_id(-1,INVALID);
 
 /*
 template<class ItemType>

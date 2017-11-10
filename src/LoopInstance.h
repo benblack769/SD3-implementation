@@ -1,12 +1,11 @@
-#ifndef __LOOPINSTANCE_H__
-#define __LOOPINSTANCE_H__
+#pragma once
 #include "Types.h"
 
-#include "HistoryPointTable.h"
-#include "HistoryStrideTable.h"
-#include "PendingPointTable.h"
-#include "PendingStrideTable.h"
-
+#include "ConflictData.h"
+#include "CompressedBits.h"
+#include "StrideDetector.h"
+#include "dynamic_gcd.h"
+/*
 class LoopInstance {
   public:
     LoopInstance(int64_t startPC, int64_t endPC);
@@ -16,9 +15,9 @@ class LoopInstance {
 
     void addMemAccess(int64_t memAddress, int64_t PC, int accessSize = 4, MemAccessMode readOrWrite = READ);
 
-    int64_t getStartPC() { return myLoopStartPC; };
-    int64_t getEndPC() { return myLoopEndPC; };
-    ConflictTable *getConflicts() { return myConflicts; };
+    int64_t getStartPC() { return myLoopStartPC; }
+    int64_t getEndPC() { return myLoopEndPC; }
+    ConflictTable *getConflicts() { return myConflicts; }
 
   private:
     PendingPointTable *myPendingPoints;
@@ -57,7 +56,7 @@ class LoopInstance {
     // indexed by PC
     multimap<int64_t, PerPCDetector> myStrideDetectors;
 };
-
+*/
 typedef CompressedData<Point*> PointTable;
 typedef CompressedData<Stride*> StrideTable;
 
@@ -110,4 +109,3 @@ class LoopData {
 };
 
 
-#endif

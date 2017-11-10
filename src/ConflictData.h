@@ -1,3 +1,4 @@
+#pragma once
 #include "dynamic_gcd.h"
 #include "IntervalOverlap.h"
 #include "Point.h"

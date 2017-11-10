@@ -1,4 +1,4 @@
-//#include "Interval.h"
+#pragma once
 #include <algorithm>
 #include <vector>
 #include "dynamic_gcd.h"

@@ -1,5 +1,4 @@
-#ifndef STRIDEDETECTOR_H
-#define STRIDEDETECTOR_H
+#pragma once
 
 #include "Types.h"
 // Unknown is when you have observed first address only.
@@ -52,4 +51,3 @@ class StrideDetector {
     FSMState myState;
 };
 
-#endif
