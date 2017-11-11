@@ -10,6 +10,7 @@ Need to test these cases:
 Also need some stress tests
 '''
 import os
+import random
 from generator import Program
 
 
@@ -95,9 +96,29 @@ def false_read_write_dep():
     prog.generate_file(output_relative_path+"false_read_write_dep.txt")
 
 
+def many_points():
+    prog  = Program()
+    size = 100000
+    A = prog.new_list(size)
+
+    prog.loop_start()
+    for i in range(size):
+        prog.loop_start()
+        for j in range(10):
+            rand1 = random.randrange(i-5,size)
+            rand2 = random.randrange(i-5,size)
+            A[i].assign(2,prog.bin_op(1,A[rand1],A[rand2]))
+            prog.iter_end()
+        prog.loop_end()
+        prog.iter_end()
+    prog.loop_end()
+
+
+    prog.generate_file(output_relative_path+"many_points.txt")
+
 sd3_example()
 mat_mul()
 kill_bit_dep()
 false_read_write_dep()
-
+many_points()
 #

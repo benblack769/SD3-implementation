@@ -10,6 +10,10 @@
 typedef CompressedData<Point> PointTable;
 typedef CompressedData<Stride> StrideTable;
 
+#define HAS_DEP_LIMIT 4
+
+extern int64_t add_mem_time;
+
 class LoopInstance {
     map<PC_ID,StrideDetector> detectors;
     PointTable pending_points;
@@ -20,12 +24,12 @@ class LoopInstance {
 
     CompressedBits killed_bits;
     access_mode_pair<CompressedBits> pending_bits;
-
     access_mode_pair<CompressedBits> history_bits;
 
     vector<Dependence> my_dependencies;
 
     int64_t loop_count;
+    int64_t has_dep_count;
     int64_t loop_id;
     int64_t instance_num;
 public:

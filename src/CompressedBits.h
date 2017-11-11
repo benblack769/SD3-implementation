@@ -55,8 +55,8 @@ class CompressedBits{
         uses actual bit operations to find the outcome. 
     */
 protected:
-    typedef typename map<int64_t,BlockSet>::iterator set_iterator;
-    map<int64_t,BlockSet> data;
+    typedef typename unordered_map<int64_t,BlockSet>::iterator set_iterator;
+    unordered_map<int64_t,BlockSet> data;
 public:
     void add(int64_t element);
     void add_block(int64_t start,int64_t size);

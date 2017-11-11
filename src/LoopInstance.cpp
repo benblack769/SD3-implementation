@@ -1,34 +1,17 @@
 #include "LoopInstance.h"
+#include <ctime>
+
+int64_t add_mem_time = 0;
 
 typedef CompressedData<Point> PointTable;
 typedef CompressedData<Stride> StrideTable;
 
-template<class IntTy1,class IntTy2>
-void only_conflicts(vector<pair<IntTy1,IntTy2> > & in_overlap,vector<Dependence> & out_conflicts,int64_t loop_count,int64_t instance_num){
-    for(size_t i = 0; i < in_overlap.size(); i++){
-        pair<IntTy1,IntTy2> cur_data = in_overlap[i];
-        if(has_overlap(cur_data.first,cur_data.second)){
-            //only gets an approximate memory address for simplicity
-            out_conflicts.push_back(Dependence(cur_data.first.getPC_ID(),cur_data.second.getPC_ID(),cur_data.first.first(),loop_count,instance_num));
-        }
-    }
-}
-template<class IntTy1,class IntTy2>
-void conflicts(CompressedData<IntTy1> & first,CompressedData<IntTy2> & second,vector<Dependence> & out_conflicts,int64_t loop_count,int64_t instance_num){
-    vector<pair<IntTy1,IntTy2> > overlap;
-    vector<IntTy1> first_inters;
-    vector<IntTy2> second_inters;
-    first.intervals(first_inters,true,WRITE);
-    second.intervals(second_inters,true,READ);
-    sort_by_first(first_inters);
-    sort_by_first(second_inters);
-    check_overlap_sorted(first_inters,second_inters,overlap);
-    only_conflicts(overlap,out_conflicts,loop_count,instance_num);
-}
+
 LoopInstance::LoopInstance(int64_t in_loop_id,int64_t in_instance_num){
     loop_id = in_loop_id;
     instance_num = in_instance_num;
     loop_count = 0;
+    has_dep_count = 0;
 }
 
 void LoopInstance::addMemAccess(Block block,PC_ID identifier,StrideDetector & pc_detector){
@@ -65,9 +48,32 @@ bool LoopInstance::pending_history_bits_conflict(){
     conflict_bits &= history_bits[WRITE];
     return conflict_bits.any();
 }
+template<class IntTy1,class IntTy2>
+void only_conflicts(vector<pair<IntTy1,IntTy2> > & in_overlap,vector<Dependence> & out_conflicts,int64_t loop_count,int64_t instance_num){
+    for(size_t i = 0; i < in_overlap.size(); i++){
+        pair<IntTy1,IntTy2> cur_data = in_overlap[i];
+        if(has_overlap(cur_data.first,cur_data.second)){
+            //only gets an approximate memory address for simplicity
+            out_conflicts.push_back(Dependence(cur_data.first.getPC_ID(),cur_data.second.getPC_ID(),cur_data.first.first(),loop_count,instance_num));
+        }
+    }
+}
+template<class IntTy1,class IntTy2>
+void conflicts(CompressedData<IntTy1> & first,CompressedData<IntTy2> & second,vector<Dependence> & out_conflicts,int64_t loop_count,int64_t instance_num){
+    vector<pair<IntTy1,IntTy2> > overlap;
+    vector<IntTy1> first_inters;
+    vector<IntTy2> second_inters;
+    first.intervals(first_inters,true,WRITE);
+    second.intervals(second_inters,true,READ);
+    sort_by_first(first_inters);
+    sort_by_first(second_inters);
+    check_overlap_sorted(first_inters,second_inters,overlap);
+    only_conflicts(overlap,out_conflicts,loop_count,instance_num);
+}
 void LoopInstance::handle_conflicts(){
     //don't find conflicts if there aren't any
-    if(pending_history_bits_conflict()){
+    if(has_dep_count > HAS_DEP_LIMIT && pending_history_bits_conflict()){
+        has_dep_count++;
         //find 4-way overlap between points and strides
         conflicts(history_points,pending_points,my_dependencies,loop_count,instance_num);
         conflicts(history_points,pending_strides,my_dependencies,loop_count,instance_num);
@@ -78,11 +84,13 @@ void LoopInstance::handle_conflicts(){
 
 void LoopInstance::merge_pending_history(){
     //merge pending into history
+    int64_t start = my_clock();
     history_bits[READ] |= pending_bits[READ];
     history_bits[WRITE] |= pending_bits[WRITE];
     
     history_points.merge_into(pending_points);
     history_strides.merge_into(pending_strides);
+    add_mem_time += my_clock() - start;
     
     pending_bits[READ].clear();
     pending_bits[WRITE].clear();

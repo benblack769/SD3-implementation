@@ -29,6 +29,15 @@ protected:
     int64_t pc;
     MemAccessMode accessmode;
 };
+namespace std {
+  template <> struct hash<PC_ID>
+  {
+    size_t operator()(const PC_ID & x) const
+    {
+      return x.get_pc() ^ (int64_t(x.get_acc_mode()) << 16);
+    }
+  };
+}
 inline const char * MemAccessModeString(MemAccessMode type){
     switch(type){
     case INVALID:return "INVALID";

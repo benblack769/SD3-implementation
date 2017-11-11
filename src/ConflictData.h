@@ -3,7 +3,6 @@
 #include "IntervalOverlap.h"
 #include "Point.h"
 #include "Dependence.h"
-#define unordered_map map
 
 template<class IntervalTy>
 class PC_Data{
@@ -32,7 +31,7 @@ public:
     }
 };
 
-inline Stride merge_strides(Stride one, Stride other){
+inline Stride merge_strides(const Stride & one, const Stride & other){
     assert(one.getPC_ID() == other.getPC_ID());
     return Stride(merge(one,other),one.getPC_ID());
 }
@@ -49,10 +48,19 @@ public:
     bool operator == (len_offset other)const{
         return this->len == other.len &&  this->len == other.len;
     }
-protected:
     int64_t len;
     int64_t offset;
 };
+
+namespace std {
+  template <> struct hash<len_offset>
+  {
+    size_t operator()(const len_offset & x) const
+    {
+      return x.len ^ (int64_t(x.offset) << 16);
+    }
+  };
+}
 
 template<>
 class PC_Data<Stride>{
