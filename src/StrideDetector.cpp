@@ -50,7 +50,6 @@ int StrideDetector::determineStateChange(int64_t address) {
 
         myState = FirstObserved;
     } else if (myState == FirstObserved) { // First Observed //
-        diff = address - myFirstMemAddr;   // special case
         myStrideDist = diff;
 
         myPrevMemAddr = address;
