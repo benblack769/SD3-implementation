@@ -19,7 +19,7 @@ class Program:
         with open(filename,'w') as out_file:
             out_file.write("\n".join(self.locations))
     def new(self):
-        self.new_mem_loc += 1
+        self.new_mem_loc += 4
         return MemLocation(self,self.new_mem_loc)
     def new_list(self,size):
         return [self.new() for i in range(size)]

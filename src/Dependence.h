@@ -11,19 +11,22 @@ public:
         myDependenceType = NODEP;
     }
 
-    Dependence(PC_ID earlier, PC_ID later,int64_t mem_addr){
+    Dependence(PC_ID earlier, PC_ID later,int64_t mem_addr,int64_t iteration,int64_t instance){
+        loop_instance = instance;
+        loop_iteration = iteration;
+        
         earlier_instr = earlier;
         later_instr = later;
 
         mem_addr = myMemoryAddr;
 
-        //sets deppendence mode based on reads and write pattern
-        if (earlier_instr.get_acc_mode() == READ) {
-            if (later_instr.get_acc_mode() == WRITE) {
+        //sets dependence mode based on reads and write pattern
+        if (later_instr.get_acc_mode() == READ) {
+            if (earlier_instr.get_acc_mode() == WRITE) {
                 myDependenceType = RAW;
             }
         } else {
-            if (later_instr.get_acc_mode() == READ) {
+            if (earlier_instr.get_acc_mode() == READ) {
                 myDependenceType = WAR;
             } else {
                 myDependenceType = WAW;
@@ -36,11 +39,14 @@ public:
     
     PC_ID getEarlier()const {return earlier_instr;}
     PC_ID getLater()const {return later_instr;}
+    friend std::ostream &operator<<(std::ostream &os, const Dependence &obj);
   private:
     PC_ID earlier_instr;
     PC_ID later_instr;
     DependenceType myDependenceType;
     int64_t myMemoryAddr;
+    int64_t loop_iteration;
+    int64_t loop_instance;
 };
 
 inline const char * DependenceTypeString(DependenceType type){
@@ -57,6 +63,8 @@ inline std::ostream &operator<<(std::ostream &os, const Dependence &obj) {
     os << "Dependence: " << DependenceTypeString(obj.getDependenceType()) << 
           ", AproxMemAddr: " << obj.getApproxamateMemoryAddress() << 
           ", Earlier: " << obj.getEarlier() <<  
-          ", Later: " << obj.getLater();
+          ", Later: " << obj.getLater() << 
+          ", LoopIteration: " << obj.loop_iteration << 
+          ", LoopInstance: " << obj.loop_instance;
     return os;
 }

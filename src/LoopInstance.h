@@ -69,6 +69,7 @@ class LoopInstance {
     PointTable history_points;
     StrideTable history_strides;
     
+    CompressedBits killed_bits;
     access_mode_pair<CompressedBits> pending_bits;
     
     access_mode_pair<CompressedBits> history_bits;
@@ -77,10 +78,11 @@ class LoopInstance {
 
     int64_t loop_count;
     int64_t loop_id;
-    //int64_t instance_id;
+    int64_t instance_num;
 public:
-    LoopInstance(int64_t in_loop_id){
+    LoopInstance(int64_t in_loop_id,int64_t in_instance_num){
         loop_id = in_loop_id;
+        instance_num = in_instance_num;
         loop_count = 0;
     }
 
@@ -91,6 +93,9 @@ public:
         }
         //add point to pending bit tables
         pending_bits[identifier.get_acc_mode()].add_block(block.begin(),block.length());
+        if(!pending_bits[READ].has_any_in_block(block.begin(),block.length())){
+            killed_bits.add_block(block.begin(),block.length());
+        }
         
         //get pc detector result and add point/stride to tables
         int64_t mem_addr = block.begin();
@@ -107,8 +112,7 @@ public:
         }
     }
     bool isKilled(Block block){
-        return ((!pending_bits[READ].has_any_in_block(block.begin(),block.length())) && 
-                pending_bits[WRITE].has_all_block(block.begin(),block.length()));
+        return killed_bits.has_any_in_block(block.begin(),block.length());
     }
     bool pending_history_bits_conflict(){
         CompressedBits conflict_bits = pending_bits[READ];
@@ -136,6 +140,7 @@ public:
         
         pending_bits[READ].clear();
         pending_bits[WRITE].clear();
+        killed_bits.clear();
         
         pending_points.clear();
         pending_strides.clear();
@@ -174,8 +179,11 @@ public:
                 pending_strides.add(Stride(shortened,this_stride.getPC_ID()));
             }
         }
-        //merge in bits
+        //merge in bits 
+        otherloop.history_bits[READ].subtract(killed_bits);
+        otherloop.history_bits[WRITE].subtract(killed_bits);
         pending_bits[READ] |= otherloop.history_bits[READ];
+        pending_bits[WRITE] |= otherloop.history_bits[WRITE];
     }
 
     void loop_end(vector<Dependence> & out_loop_dependences){
@@ -184,6 +192,29 @@ public:
         history_strides.print();
     }
     int64_t get_loop_id(){return loop_id;}
+    
+    template<class IntTy1,class IntTy2>
+    void only_conflicts(vector<pair<IntTy1,IntTy2> > & in_overlap,vector<Dependence> & out_conflicts){
+        for(size_t i = 0; i < in_overlap.size(); i++){
+            pair<IntTy1,IntTy2> cur_data = in_overlap[i];
+            if(has_overlap(cur_data.first,cur_data.second)){
+                //only gets an approximate memory address for simplicity
+                out_conflicts.push_back(Dependence(cur_data.first.getPC_ID(),cur_data.second.getPC_ID(),cur_data.first.first(),this->loop_count,this->instance_num));
+            }
+        }
+    }
+    template<class IntTy1,class IntTy2>
+    void conflicts(CompressedData<IntTy1> & first,CompressedData<IntTy2> & second,vector<Dependence> & out_conflicts){
+        vector<pair<IntTy1,IntTy2> > overlap;
+        vector<IntTy1> first_inters;
+        vector<IntTy2> second_inters;
+        first.intervals(first_inters,true,WRITE);
+        second.intervals(second_inters,true,READ);
+        sort_by_first(first_inters);
+        sort_by_first(second_inters);
+        check_overlap_sorted(first_inters,second_inters,overlap);
+        only_conflicts(overlap,out_conflicts);
+    }
 };
 
 

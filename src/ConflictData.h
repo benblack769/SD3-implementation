@@ -179,32 +179,10 @@ public:
     }
     void intervals(vector<IntervalTy> & out_intervals,bool filter = false,MemAccessMode mode = WRITE){
         for(pc_table_iterator it = pc_table.begin(); it != pc_table.end(); ++it){
-            if(!(filter && it->first.get_acc_mode() == mode)){
+            if(!(filter && it->first.get_acc_mode() != mode)){
                 PC_Data_ty & pc_data = it->second;
                 pc_data.append_to(out_intervals);
             }
         }
     }
 };
-template<class IntTy1,class IntTy2>
-void only_conflicts(vector<pair<IntTy1,IntTy2> > & in_overlap,vector<Dependence> & out_conflicts){
-    for(size_t i = 0; i < in_overlap.size(); i++){
-        pair<IntTy1,IntTy2> cur_data = in_overlap[i];
-        if(has_overlap(cur_data.first,cur_data.second)){
-            //only gets an approximate memory address for simplicity
-            out_conflicts.push_back(Dependence(cur_data.first.getPC_ID(),cur_data.second.getPC_ID(),cur_data.first.first()));
-        }
-    }
-}
-template<class IntTy1,class IntTy2>
-void conflicts(CompressedData<IntTy1> & first,CompressedData<IntTy2> & second,vector<Dependence> & out_conflicts){
-    vector<pair<IntTy1,IntTy2> > overlap;
-    vector<IntTy1> first_inters;
-    vector<IntTy2> second_inters;
-    first.intervals(first_inters,true,WRITE);
-    second.intervals(second_inters,true,READ);
-    sort_by_first(first_inters);
-    sort_by_first(second_inters);
-    check_overlap_sorted(first_inters,second_inters,overlap);
-    only_conflicts(overlap,out_conflicts);
-}

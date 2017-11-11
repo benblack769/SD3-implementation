@@ -9,11 +9,14 @@ bool BlockSet::has(int64_t element){
     assert(element < BLOCK_SIZE);
     return bits[element];
 }
-void BlockSet::operator |= (BlockSet outer){
+void BlockSet::operator |= (const BlockSet &outer){
     bits |= outer.bits;
 }
-void BlockSet::operator &= (BlockSet outer){
+void BlockSet::operator &= (const BlockSet &  outer){
     bits &= outer.bits;
+}
+void BlockSet::subtract(const BlockSet & outer){
+    bits &= ~outer.bits;
 }
 bool BlockSet::any(){
     return bits.any();
@@ -51,13 +54,18 @@ bool CompressedBits::has_any_in_block(int64_t element,int64_t size){
         }
     }
     return false;
-}
-void CompressedBits::operator &=(CompressedBits & outer){
+}    
+void CompressedBits::and_with_optional_neg(CompressedBits & outer,bool neg){
     for(set_iterator iter = data.begin(); iter != data.end(); ++iter){
         int64_t key = iter->first;
         BlockSet & value = iter->second;
         if(outer.data.count(key)){
-            value &= outer.data[key];
+            if(!neg){
+                value &= outer.data[key];
+            }
+            else{
+                value.subtract(outer.data[key]);
+            }
             if(!value.any()){
                 //be careful, erases current element. 
                 data.erase(iter);
@@ -70,6 +78,13 @@ void CompressedBits::operator &=(CompressedBits & outer){
             break;
         }
     }
+}
+void CompressedBits::operator &=(CompressedBits & outer){
+    and_with_optional_neg(outer,false);
+}
+
+void CompressedBits::subtract(CompressedBits & outer){
+    and_with_optional_neg(outer,true);
 }
 void CompressedBits::operator|=(CompressedBits & outer){
     for(set_iterator iter = outer.data.begin(); iter != outer.data.end(); ++iter){

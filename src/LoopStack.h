@@ -10,13 +10,14 @@ class LoopStack{
 protected:
     list<LoopInstance> stack;
     unordered_map<int64_t, vector<Dependence> > loop_dependencies;
+    unordered_map<int64_t, int64_t > loop_instance_counts;
     typedef typename unordered_map<int64_t, vector<Dependence> >::iterator dependence_iterator;
     unordered_map<int64_t, StrideDetector> stride_detector;
 public:
     LoopStack(){
     }
     void addMemAccess(int64_t mem_addr,int64_t access_size,int64_t instr_address,MemAccessMode acc_mode){
-        stack.front().addMemAccess(Block(mem_addr,mem_addr+access_size),PC_ID(instr_address,acc_mode),stride_detector[instr_address]);
+        stack.back().addMemAccess(Block(mem_addr,mem_addr+access_size),PC_ID(instr_address,acc_mode),stride_detector[instr_address]);
     }
     void loop_end(int64_t loop_id){
         assert(stack.size() != 0);
@@ -27,7 +28,8 @@ public:
         stack.pop_back();
     }
     void loop_start(int64_t loop_id){
-        stack.push_back(LoopInstance(loop_id));
+        stack.push_back(LoopInstance(loop_id,loop_instance_counts[loop_id]));
+        loop_instance_counts[loop_id]++;
     }
     void iter_end(int64_t loop_id){
         assert(stack.back().get_loop_id() == loop_id);

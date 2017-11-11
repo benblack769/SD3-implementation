@@ -27,8 +27,9 @@ public:
     BlockSet(){}
     void add(int64_t element);
     bool has(int64_t element);
-    void operator |= (BlockSet outer);
-    void operator &= (BlockSet outer);
+    void operator |= (const BlockSet & outer);
+    void operator &= (const BlockSet & outer);
+    void subtract(const BlockSet &  outer);
     bool any();
     int64_t count();
 };
@@ -64,7 +65,10 @@ public:
     bool has_any_in_block(int64_t element,int64_t size);
     void operator &=(CompressedBits & outer);
     void operator|=(CompressedBits & outer);
+    void subtract(CompressedBits & outer);//boolean operator (x & !y)
     bool any();
     void clear();
     int64_t count();
+protected:
+    void and_with_optional_neg(CompressedBits & outer,bool neg);
 };
