@@ -18,7 +18,7 @@ public:
         earlier_instr = earlier;
         later_instr = later;
 
-        mem_addr = myMemoryAddr;
+        myMemoryAddr = mem_addr;
 
         //sets dependence mode based on reads and write pattern
         if (later_instr.get_acc_mode() == READ) {

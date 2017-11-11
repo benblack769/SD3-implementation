@@ -31,7 +31,7 @@ inline bool mergeable(SparseStride one,SparseStride other){
     return one.block_size() == other.block_size() &&
             one.stride() == other.stride() &&
             //difference allows merging
-            abs(one.first() - other.first()) % one.stride() == 0 &&
+            iabs(one.first() - other.first()) % one.stride() == 0 &&
             //first or last element of 1 can be appended to one end of other
             (inclusive_between(one.first(),other.first() - other.stride(),other.end()) ||
              inclusive_between(one.last(),other.first() - other.stride(),other.end()));

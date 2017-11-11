@@ -1,6 +1,7 @@
 #include "LoopStack.h"
 #include <fstream>
 #include <sstream>
+#include <cassert>
 using namespace std;
 
 string slice(string orig,size_t start,size_t end){
@@ -15,6 +16,7 @@ void single_loop_parser_run(char * filename){
     
     string cur_line;
     ifstream file(filename);
+    assert(file && "incorrect filename");
     while(getline(file,cur_line)){
         string line_id = slice(cur_line,0,3);
         int loop_id = atoi(slice_end(cur_line,3+1).c_str());
