@@ -17,7 +17,7 @@ MemAccessType StrideDetector::addAccess(int64_t address) {
     // FSM
     int change = determineStateChange(address);
 
-    std::cout << "\t ADDR " << address << " change " << change << " distance " << myStrideDist << std::endl;
+    //std::cout << "\t ADDR " << address << " change " << change << " distance " << myStrideDist << std::endl;
 
     switch(myState){
     case Start: return POINT;

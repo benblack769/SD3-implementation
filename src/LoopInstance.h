@@ -68,12 +68,12 @@ class LoopInstance {
 
     PointTable history_points;
     StrideTable history_strides;
-    
+
     CompressedBits killed_bits;
     access_mode_pair<CompressedBits> pending_bits;
-    
+
     access_mode_pair<CompressedBits> history_bits;
-    
+
     vector<Dependence> my_dependencies;
 
     int64_t loop_count;
@@ -96,7 +96,7 @@ public:
         if(!pending_bits[READ].has_any_in_block(block.begin(),block.length())){
             killed_bits.add_block(block.begin(),block.length());
         }
-        
+
         //get pc detector result and add point/stride to tables
         int64_t mem_addr = block.begin();
         int64_t access_size = block.length();
@@ -134,14 +134,14 @@ public:
         //merge pending into history
         history_bits[READ] |= pending_bits[READ];
         history_bits[WRITE] |= pending_bits[WRITE];
-        
+
         history_points.merge_into(pending_points);
         history_strides.merge_into(pending_strides);
-        
+
         pending_bits[READ].clear();
         pending_bits[WRITE].clear();
         killed_bits.clear();
-        
+
         pending_points.clear();
         pending_strides.clear();
     }
@@ -155,8 +155,8 @@ public:
         vector<Point> in_points;
         otherloop.history_strides.intervals(in_strides);
         otherloop.history_points.intervals(in_points);
-        
-        
+
+
         //merge in points
         for(size_t i = 0; i < in_points.size(); i++){
             Point this_point = in_points[i];
@@ -179,7 +179,7 @@ public:
                 pending_strides.add(Stride(shortened,this_stride.getPC_ID()));
             }
         }
-        //merge in bits 
+        //merge in bits
         otherloop.history_bits[READ].subtract(killed_bits);
         otherloop.history_bits[WRITE].subtract(killed_bits);
         pending_bits[READ] |= otherloop.history_bits[READ];
@@ -188,11 +188,9 @@ public:
 
     void loop_end(vector<Dependence> & out_loop_dependences){
         out_loop_dependences.insert(out_loop_dependences.begin(),my_dependencies.begin(),my_dependencies.end());
-        history_points.print();
-        history_strides.print();
     }
     int64_t get_loop_id(){return loop_id;}
-    
+
     template<class IntTy1,class IntTy2>
     void only_conflicts(vector<pair<IntTy1,IntTy2> > & in_overlap,vector<Dependence> & out_conflicts){
         for(size_t i = 0; i < in_overlap.size(); i++){
@@ -216,5 +214,3 @@ public:
         only_conflicts(overlap,out_conflicts);
     }
 };
-
-

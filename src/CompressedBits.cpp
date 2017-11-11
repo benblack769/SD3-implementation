@@ -56,7 +56,7 @@ bool CompressedBits::has_any_in_block(int64_t element,int64_t size){
     return false;
 }    
 void CompressedBits::and_with_optional_neg(CompressedBits & outer,bool neg){
-    for(set_iterator iter = data.begin(); iter != data.end(); ++iter){
+    for(set_iterator iter = data.begin(); iter != data.end(); ){
         int64_t key = iter->first;
         BlockSet & value = iter->second;
         if(outer.data.count(key)){
@@ -68,15 +68,18 @@ void CompressedBits::and_with_optional_neg(CompressedBits & outer,bool neg){
             }
             if(!value.any()){
                 //be careful, erases current element. 
-                data.erase(iter);
+                data.erase(iter++);
+            }
+            else{
+                ++iter;
             }
         }else{
             //be careful, erases current element.
-            data.erase(iter);
+            data.erase(iter++);
         }
-        if(data.size() == 0){
-            break;
-        }
+        //if(data.size() == 0){
+        //    break;
+        //}
     }
 }
 void CompressedBits::operator &=(CompressedBits & outer){
