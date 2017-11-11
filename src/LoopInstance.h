@@ -6,58 +6,7 @@
 #include "StrideDetector.h"
 #include "dynamic_gcd.h"
 #include "Dependence.h"
-/*
-class LoopInstance {
-  public:
-    LoopInstance(int64_t startPC, int64_t endPC);
-    ~LoopInstance(){};
 
-    void endCurrentIteration();
-
-    void addMemAccess(int64_t memAddress, int64_t PC, int accessSize = 4, MemAccessMode readOrWrite = READ);
-
-    int64_t getStartPC() { return myLoopStartPC; }
-    int64_t getEndPC() { return myLoopEndPC; }
-    ConflictTable *getConflicts() { return myConflicts; }
-
-  private:
-    PendingPointTable *myPendingPoints;
-    PendingStrideTable *myPendingStrides;
-    HistoryPointTable *myHistoryPoints;
-    HistoryStrideTable *myHistoryStrides;
-
-    int myNumIterations;
-
-    int64_t myLoopStartPC;
-    int64_t myLoopEndPC;
-
-    ConflictTable *myConflicts;
-
-    void checkForPointDependences();
-
-    void checkForStrideDepencences();
-
-    void foldPendingPointsIntoHistory();
-
-    void foldPendingStridesIntoHistory();
-
-    // Stride detector for every PC
-    struct PerPCDetector {
-        StrideDetector *detector;
-        MemAccessMode mode;
-        MemAccessType lastType;
-
-        PerPCDetector(MemAccessMode readOrWrite) {
-            detector = new StrideDetector();
-            mode = readOrWrite;
-            lastType = UNDEFINED;
-        }
-    };
-
-    // indexed by PC
-    multimap<int64_t, PerPCDetector> myStrideDetectors;
-};
-*/
 typedef CompressedData<Point> PointTable;
 typedef CompressedData<Stride> StrideTable;
 
@@ -93,7 +42,8 @@ public:
         }
         //add point to pending bit tables
         pending_bits[identifier.get_acc_mode()].add_block(block.begin(),block.length());
-        if(!pending_bits[READ].has_any_in_block(block.begin(),block.length())){
+        //if is write and no reads before it, set killed bits
+        if(identifier.get_pc() == WRITE && !pending_bits[READ].has_any_in_block(block.begin(),block.length())){
             killed_bits.add_block(block.begin(),block.length());
         }
 

@@ -62,9 +62,42 @@ def mat_mul():
 
     prog.generate_file(output_relative_path+"mat_mul.txt")
 
+def kill_bit_dep():
+    prog  = Program()
+    size = 50
+    A = prog.new_list(size)
+    b = prog.new()
+
+    prog.loop_start()
+    for i in range(size):
+        b.assign(0,prog.constant())
+        A[i].assign(1,prog.constant())
+        A[i].assign(3,prog.bin_op(2,A[i],b))
+        prog.iter_end()
+    prog.loop_end()
+
+    prog.generate_file(output_relative_path+"kill_bit_dep.txt")
+
+def false_read_write_dep():
+    prog  = Program()
+    size = 10
+    A = prog.new_list(size)
+    B = prog.new_list(size)
+    C = prog.new_list(size)
+
+    prog.loop_start()
+    for i in range(1,size):
+        A[i].assign(3,prog.un_op(2,B[i-1]))
+        B[i].assign(5,prog.un_op(4,C[i]))
+        prog.iter_end()
+    prog.loop_end()
+
+    prog.generate_file(output_relative_path+"false_read_write_dep.txt")
+
 
 sd3_example()
 mat_mul()
-
+kill_bit_dep()
+false_read_write_dep()
 
 #

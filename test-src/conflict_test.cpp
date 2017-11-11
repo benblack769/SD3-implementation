@@ -28,7 +28,7 @@ void single_loop_parser_run(char * filename){
             loopstack.iter_end(loop_id);
         }
         else{
-            istringstream  line_data(cur_line);
+            stringstream  line_data(cur_line);
             int64_t mem_access;
             int64_t instr;
             string read_string;

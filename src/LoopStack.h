@@ -44,9 +44,9 @@ public:
         for(dependence_iterator it = loop_dependencies.begin(); it != loop_dependencies.end(); it++){
             vector<Dependence> & cur_dep = it->second;
             int64_t lid = it->first;
-            cout << "LOOP " << lid << endl;
+            cout << "LOOP " << lid << "\n";
             for(size_t i = 0; i < cur_dep.size(); i++){
-                cout << '\t' << cur_dep[i] << '\n';
+                cout << '\t' << cur_dep[i] << "\n";
             }
         }
     }
