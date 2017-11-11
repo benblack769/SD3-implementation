@@ -57,7 +57,7 @@ public:
     int64_t offset;
 };
 
-namespace std {
+/*namespace std {
   template <> struct hash<len_offset>
   {
     size_t operator()(const len_offset & x) const
@@ -65,7 +65,7 @@ namespace std {
       return x.len ^ (int64_t(x.offset) << 16);
     }
   };
-}
+}*/
 
 template<>
 class PC_Data<Stride>{

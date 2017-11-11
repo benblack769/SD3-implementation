@@ -2,6 +2,7 @@
 #include <map>
 #include <bitset>
 #include "Types.h"
+#include <sparsehash/dense_hash_map>
 
 using namespace std;
 
@@ -16,7 +17,7 @@ class BlockSet{
     /*
     use:
         helper class for CompressedBits. Not particularly useful otherwise
-    
+
     implementation:
         Simply wraps over bitset for now. There are possible optimizations, though,
         so this provides a generic interface for those optimiziations.
@@ -38,21 +39,21 @@ class CompressedBits{
     /*
     use:
         Efficient bit operations on arbitrary integers
-        
-        The idea is you add, set individual bits, and then 
-        you can perform efficient basic binary bitwise operations across 
+
+        The idea is you add, set individual bits, and then
+        you can perform efficient basic binary bitwise operations across
         CompressedBit instances, and also can get fast summary statistics like
-        `count` and `any`. 
-    
+        `count` and `any`.
+
     implementation:
-        Uses BlockSet to fit all bits in one x/BLOCK_SIZE 
+        Uses BlockSet to fit all bits in one x/BLOCK_SIZE
         equivalence class.
-        
+
         Uses efficient arbitrary maps (should use hash tables, right now BST)
         to contains many BlockSets across a wide range of integers
-        
+
         &= and |= are implemented as set intersection and union, where only the middle
-        uses actual bit operations to find the outcome. 
+        uses actual bit operations to find the outcome.
     */
 protected:
     typedef typename unordered_map<int64_t,BlockSet>::iterator set_iterator;

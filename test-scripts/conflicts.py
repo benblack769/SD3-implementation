@@ -1,4 +1,3 @@
-
 '''
 Need to test these cases:
 
@@ -24,16 +23,16 @@ def sd3_example():
     A = [prog.new_list(size)  for x in range(size)]
     B = [prog.new_list(size)  for x in range(size)]
 
-    prog.loop_start()
+    prog.loop_start(1)
     for i in range(2):
-        prog.loop_start()
+        prog.loop_start(2)
         for j in range(2):
             A[i][j].assign(2,prog.un_op(1,A[i][j-1]))
             B[i][j].assign(4,prog.un_op(3,A[i+1][j]))
-            prog.iter_end()
-        prog.loop_end()
-        prog.iter_end()
-    prog.loop_end()
+            prog.iter_end(2)
+        prog.loop_end(2)
+        prog.iter_end(1)
+    prog.loop_end(1)
 
     prog.generate_file(output_relative_path+"sd3_example.txt")
 
@@ -45,20 +44,20 @@ def mat_mul():
     B = [prog.new_list(size)  for x in range(size)]
     R = [prog.new_list(size)  for x in range(size)]
 
-    prog.loop_start()
+    prog.loop_start(1)
     for i in range(size):
-        prog.loop_start()
+        prog.loop_start(2)
         for j in range(size):
-            prog.loop_start()
+            prog.loop_start(3)
             R[i][j].assign(1,prog.constant())
             for k in range(size):
                 R[i][j].assign(2,prog.bin_op(3,B[k][j],prog.bin_op(4,A[i][k],R[i][j])))
-                prog.iter_end()
-            prog.loop_end()
-            prog.iter_end()
-        prog.loop_end()
-        prog.iter_end()
-    prog.loop_end()
+                prog.iter_end(3)
+            prog.loop_end(3)
+            prog.iter_end(2)
+        prog.loop_end(2)
+        prog.iter_end(1)
+    prog.loop_end(1)
 
 
     prog.generate_file(output_relative_path+"mat_mul.txt")
@@ -69,13 +68,13 @@ def kill_bit_dep():
     A = prog.new_list(size)
     b = prog.new()
 
-    prog.loop_start()
+    prog.loop_start(1)
     for i in range(size):
         b.assign(0,prog.constant())
         A[i].assign(1,prog.constant())
         A[i].assign(3,prog.bin_op(2,A[i],b))
-        prog.iter_end()
-    prog.loop_end()
+        prog.iter_end(1)
+    prog.loop_end(1)
 
     prog.generate_file(output_relative_path+"kill_bit_dep.txt")
 
@@ -86,12 +85,12 @@ def false_read_write_dep():
     B = prog.new_list(size)
     C = prog.new_list(size)
 
-    prog.loop_start()
+    prog.loop_start(1)
     for i in range(1,size):
         A[i].assign(3,prog.un_op(2,B[i-1]))
         B[i].assign(5,prog.un_op(4,C[i]))
-        prog.iter_end()
-    prog.loop_end()
+        prog.iter_end(1)
+    prog.loop_end(1)
 
     prog.generate_file(output_relative_path+"false_read_write_dep.txt")
 
@@ -101,20 +100,20 @@ def many_points():
     size = 30000
     A = prog.new_list(size)
 
-    prog.loop_start()
+    prog.loop_start(1)
     for i in range(size):
         for l in range(3):
-            prog.loop_start()
+            prog.loop_start(l+101)
             for j in range(10):
                 for k in range(10):
                     rand1 = random.randrange(i-5,size)
                     rand2 = random.randrange(i-5,size)
                     rand3 = random.randrange(0,i+1)
                     A[rand3].assign(2+k,prog.bin_op(1+k,A[rand1],A[rand2]))
-                prog.iter_end()
-            prog.loop_end()
-        prog.iter_end()
-    prog.loop_end()
+                prog.iter_end(l+101)
+            prog.loop_end(l+101)
+        prog.iter_end(1)
+    prog.loop_end(1)
 
 
     prog.generate_file(output_relative_path+"many_points.txt")

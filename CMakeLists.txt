@@ -9,6 +9,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 
 include_directories("${CPP_SOURCE_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}")
 
 #add_executable(stride_detector_test ${CPP_TEST_DIR}/stride-detector-tester.cpp ${CPP_SOURCE_DIR}/StrideDetector.cpp ${CPP_SOURCE_DIR}/dynamic_gcd.cpp ${CPP_SOURCE_DIR}/Point.h ${CPP_SOURCE_DIR}/IntervalTypes.cpp)
 #add_executable(merge_test ${CPP_TEST_DIR}/merge_test.cpp ${CPP_SOURCE_DIR}/ConflictData.h ${CPP_SOURCE_DIR}/StrideDetector.cpp ${CPP_SOURCE_DIR}/dynamic_gcd.cpp ${CPP_SOURCE_DIR}/Point.h ${CPP_SOURCE_DIR}/IntervalOverlap.h ${CPP_SOURCE_DIR}/IntervalTypes.cpp)
@@ -24,5 +25,5 @@ add_executable(conflict_test ${CPP_TEST_DIR}/conflict_test.cpp ${CPP_SOURCE_DIR}
 #set_property(TARGET unit_test PROPERTY CXX_STANDARD 98)
 #set_property(TARGET unit_test PROPERTY CXX_STANDARD_REQUIRED ON)
 
-set_property(TARGET conflict_test PROPERTY CXX_STANDARD 11)
+set_property(TARGET conflict_test PROPERTY CXX_STANDARD 98)
 set_property(TARGET conflict_test PROPERTY CXX_STANDARD_REQUIRED ON)

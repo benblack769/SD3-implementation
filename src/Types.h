@@ -2,8 +2,8 @@
 #include <ctime>
 #ifdef _WIN32
 typedef long long int64_t;
-typedef unsigned long long uint64_t;
 #else
+typedef unsigned long long uint64_t;
 #include <cstdlib>
 #endif
 
