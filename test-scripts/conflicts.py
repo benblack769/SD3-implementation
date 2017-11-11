@@ -98,18 +98,21 @@ def false_read_write_dep():
 
 def many_points():
     prog  = Program()
-    size = 100000
+    size = 30000
     A = prog.new_list(size)
 
     prog.loop_start()
     for i in range(size):
-        prog.loop_start()
-        for j in range(10):
-            rand1 = random.randrange(i-5,size)
-            rand2 = random.randrange(i-5,size)
-            A[i].assign(2,prog.bin_op(1,A[rand1],A[rand2]))
-            prog.iter_end()
-        prog.loop_end()
+        for l in range(3):
+            prog.loop_start()
+            for j in range(10):
+                for k in range(10):
+                    rand1 = random.randrange(i-5,size)
+                    rand2 = random.randrange(i-5,size)
+                    rand3 = random.randrange(0,i+1)
+                    A[rand3].assign(2+k,prog.bin_op(1+k,A[rand1],A[rand2]))
+                prog.iter_end()
+            prog.loop_end()
         prog.iter_end()
     prog.loop_end()
 

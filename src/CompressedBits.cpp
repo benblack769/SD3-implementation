@@ -2,11 +2,11 @@
 #include "CompressedBits.h"
 
 void BlockSet::add(int64_t element){
-    assert(element < BLOCK_SIZE);
+    assert(element < BLOCK_SIZE && element >= 0);
     bits[element] = true;
 }
 bool BlockSet::has(int64_t element){
-    assert(element < BLOCK_SIZE);
+    assert(element < BLOCK_SIZE && element >= 0);
     return bits[element];
 }
 void BlockSet::operator |= (const BlockSet &outer){
@@ -27,7 +27,7 @@ int64_t BlockSet::count(){
 
 
 void CompressedBits::add(int64_t element){
-    data[element / BLOCK_SIZE].add(element % BLOCK_SIZE);
+    data[uint64_t(element) / BLOCK_SIZE].add(uint64_t(element) % BLOCK_SIZE);
 }
 
 void CompressedBits::add_block(int64_t element,int64_t size){
@@ -36,7 +36,7 @@ void CompressedBits::add_block(int64_t element,int64_t size){
     }
 }
 bool CompressedBits::has(int64_t element){
-    return data[element / BLOCK_SIZE].has(element % BLOCK_SIZE); 
+    return data[uint64_t(element) / BLOCK_SIZE].has(uint64_t(element) % BLOCK_SIZE); 
 }
 
 bool CompressedBits::has_all_block(int64_t element,int64_t size){

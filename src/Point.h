@@ -23,7 +23,7 @@ public:
         myPC(in_pc){}
     PC_info():
         myPC(null_id){}
-    PC_ID getPC_ID() { return myPC; }
+    PC_ID getPC_ID() const{ return myPC; }
 protected:
     PC_ID myPC;
 };

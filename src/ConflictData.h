@@ -37,9 +37,14 @@ inline Stride merge_strides(const Stride & one, const Stride & other){
 }
 class len_offset{
 public:
-    len_offset(int64_t stride_start,int64_t stride_len):
-        len(stride_len),offset(stride_start%stride_len){
-        assert(stride_start >= 0 && stride_len > 0);
+    len_offset(int64_t stride_start,int64_t stride_len){
+        assert(stride_len > 0);
+        
+        while(stride_start < 0){
+            stride_start += stride_len;
+        }
+        offset = stride_start%stride_len;
+        len = stride_len;
     }
     len_offset():len(-1),offset(-1){}
     bool operator < (len_offset other)const{
