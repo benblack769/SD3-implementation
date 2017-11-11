@@ -1,6 +1,7 @@
 #pragma once
 #include "Types.h"
 #include "IntervalTypes.h"
+#include "PC_ID.h"
 
 enum DependenceType { NODEP = -1, RAW = 0, WAR = 1, WAW = 2 };
 
@@ -29,14 +30,33 @@ public:
             }
         }
     }
+    DependenceType getDependenceType() const { return myDependenceType; }
 
-    DependenceType getDependenceType() { return myDependenceType; }
-
-    int64_t getMemoryAddress() { return myMemoryAddr; }
-
+    int64_t getApproxamateMemoryAddress() const { return myMemoryAddr; }
+    
+    PC_ID getEarlier()const {return earlier_instr;}
+    PC_ID getLater()const {return later_instr;}
   private:
     PC_ID earlier_instr;
     PC_ID later_instr;
     DependenceType myDependenceType;
     int64_t myMemoryAddr;
 };
+
+inline const char * DependenceTypeString(DependenceType type){
+    switch(type){
+    case NODEP:return "NODEP";
+    case RAW:return "RAW";
+    case WAR:return "WAR";
+    case WAW:return "WAW";
+    }
+    assert(false);
+}
+
+inline std::ostream &operator<<(std::ostream &os, const Dependence &obj) {
+    os << "Dependence: " << DependenceTypeString(obj.getDependenceType()) << 
+          ", AproxMemAddr: " << obj.getApproxamateMemoryAddress() << 
+          ", Earlier: " << obj.getEarlier() <<  
+          ", Later: " << obj.getLater();
+    return os;
+}

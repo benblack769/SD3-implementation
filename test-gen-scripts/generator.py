@@ -24,9 +24,10 @@ class Program:
     def new_list(self,size):
         return [self.new() for i in range(size)]
     def loop_start(self):
-        old_loop_counter = self.loop_id_counter
-        self.locations.append("START {}".format(old_loop_counter))
         self.loop_id_counter += 1
+        self.locations.append("STA {}".format(self.loop_id_counter))
+    def iter_end(self):
+        self.locations.append("ITR {}".format(self.loop_id_counter))
     def loop_end(self):
         self.locations.append("END {}".format(self.loop_id_counter))
         self.loop_id_counter -= 1

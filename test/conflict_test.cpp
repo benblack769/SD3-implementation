@@ -16,13 +16,16 @@ void single_loop_parser_run(char * filename){
     string cur_line;
     ifstream file(filename);
     while(getline(file,cur_line)){
-        if(slice(cur_line,0,5) == "START"){
-            int loop_id = atoi(slice_end(cur_line,5+1).c_str());
-            loopstack.iteration_start_signal(loop_id);
+        string line_id = slice(cur_line,0,3);
+        int loop_id = atoi(slice_end(cur_line,3+1).c_str());
+        if(line_id == "STA"){
+            loopstack.loop_start(loop_id);
         }
-        else if(slice(cur_line,0,3) == "END"){
-            int loop_id = atoi(slice_end(cur_line,3+1).c_str());
-            loopstack.iteration_end_signal(loop_id);
+        else if(line_id == "END"){
+            loopstack.loop_end(loop_id);
+        }
+        else if(line_id == "ITR"){
+            loopstack.iter_end(loop_id);
         }
         else{
             istringstream  line_data(cur_line);
@@ -31,9 +34,10 @@ void single_loop_parser_run(char * filename){
             string read_string;
             line_data >> mem_access >> instr >> read_string;
             MemAccessMode mode = read_string == "READ" ? READ : WRITE;
-            loopstack.addMemAccess(Point(mem_access,4,instr,mode));
+            loopstack.addMemAccess(mem_access,4,instr,mode);
         }
     }
+    loopstack.print_loop_dependencies();
 }
 
 int main(int argc,char ** argv){

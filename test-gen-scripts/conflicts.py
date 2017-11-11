@@ -23,14 +23,16 @@ def sd3_example():
     A = [prog.new_list(size)  for x in range(size)]
     B = [prog.new_list(size)  for x in range(size)]
 
+    prog.loop_start()
     for i in range(2):
         prog.loop_start()
         for j in range(2):
-            prog.loop_start()
             A[i][j].assign(2,prog.un_op(1,A[i][j-1]))
             B[i][j].assign(4,prog.un_op(3,A[i+1][j]))
-            prog.loop_end()
+            prog.iter_end()
         prog.loop_end()
+        prog.iter_end()
+    prog.loop_end()
 
     prog.generate_file(output_relative_path+"sd3_example.txt")
 
@@ -42,17 +44,21 @@ def mat_mul():
     B = [prog.new_list(size)  for x in range(size)]
     R = [prog.new_list(size)  for x in range(size)]
 
+    prog.loop_start()
     for i in range(size):
         prog.loop_start()
         for j in range(size):
             prog.loop_start()
             R[i][j].assign(1,prog.constant())
             for k in range(size):
-                prog.loop_start()
                 R[i][j].assign(2,prog.bin_op(3,B[k][j],prog.bin_op(4,A[i][k],R[i][j])))
-                prog.loop_end()
+                prog.iter_end()
             prog.loop_end()
+            prog.iter_end()
         prog.loop_end()
+        prog.iter_end()
+    prog.loop_end()
+
 
     prog.generate_file(output_relative_path+"mat_mul.txt")
 

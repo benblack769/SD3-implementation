@@ -26,6 +26,7 @@ protected:
 public:
     BlockSet(){}
     void add(int64_t element);
+    bool has(int64_t element);
     void operator |= (BlockSet outer);
     void operator &= (BlockSet outer);
     bool any();
@@ -57,9 +58,13 @@ protected:
     map<int64_t,BlockSet> data;
 public:
     void add(int64_t element);
+    void add_block(int64_t start,int64_t size);
     bool has(int64_t element);
+    bool has_all_block(int64_t element,int64_t size);
+    bool has_any_in_block(int64_t element,int64_t size);
     void operator &=(CompressedBits & outer);
     void operator|=(CompressedBits & outer);
     bool any();
+    void clear();
     int64_t count();
 };

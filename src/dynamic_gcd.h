@@ -15,6 +15,7 @@ inline bool inclusive_between(int64_t middle, int64_t low, int64_t high){
 bool has_overlap(SparseStride one, SparseStride other);
 bool has_overlap(SparseStride stride, Block block);
 bool has_overlap(Block one, Block other);
+inline bool has_overlap(Block block,SparseStride stride){ return has_overlap(stride,block); }
 
 bool contains(Block block, SparseStride stride);
 bool contains(SparseStride stride, Block block);

@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <cassert>
+#include <ostream>
 #include "Types.h"
 using namespace std;
 
@@ -22,14 +23,25 @@ public:
     bool is_invalid(){
         return this->pc == INVALID;
     }
-    MemAccessMode get_acc_mode()const{return accessmode;}
+    MemAccessMode get_acc_mode()const{return accessmode;} 
+    int64_t get_pc()const{return pc;}
 protected:
     int64_t pc;
     MemAccessMode accessmode;
 };
+inline const char * MemAccessModeString(MemAccessMode type){
+    switch(type){
+    case INVALID:return "INVALID";
+    case READ:return "READ";
+    case WRITE:return "WRITE";
+    }
+    assert(false);
+}
 const PC_ID null_id(-1,INVALID);
+inline std::ostream &operator<<(std::ostream &os, const PC_ID &obj) {
+    os << "PC_ID(" << obj.get_pc() << ", " << MemAccessModeString(obj.get_acc_mode()) << ")";
+}
 
-/*
 template<class ItemType>
 class access_mode_pair{
 protected:
@@ -50,7 +62,7 @@ public:
     ItemType & operator[](MemAccessMode mode){
         return get(mode);
     }
-};*/
+};
 /*
 template<class DataType>
 class PC_Data{

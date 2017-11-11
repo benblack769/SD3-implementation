@@ -101,11 +101,7 @@ inline bool is_overlap(IntTy1 one, IntTy2 other){
            is_between_inclusive(one.last(), other.first(),other.last());
 }
 template<class IntTy1,class IntTy2>
-inline vector<pair<IntTy1,IntTy2> > check_overlap(vector<IntTy1> intervals1, vector<IntTy2> intervals2){
-    sort_by_first(intervals1);
-    sort_by_first(intervals2);
-
-    vector<pair<IntTy1,IntTy2> > overlap;
+inline void check_overlap_sorted(const vector<IntTy1> & intervals1, const vector<IntTy2> & intervals2,vector<pair<IntTy1,IntTy2> > & out_overlap){
     size_t ib = 0;
     size_t size_2 = intervals2.size();
     vector<IntTy2> before_last;
@@ -129,12 +125,11 @@ inline vector<pair<IntTy1,IntTy2> > check_overlap(vector<IntTy1> intervals1, vec
         }
 
         for(size_t i = 0; i < before_last.size(); i++){
-            overlap.push_back(make_pair(interval,before_last[i]));
+            out_overlap.push_back(make_pair(interval,before_last[i]));
         }
 
         for(size_t ib2 = ib; ib2 < size_2 && intervals2[ib2].first() <= interval.last(); ib2++){
-            overlap.push_back(make_pair(interval,intervals2[ib2]));
+            out_overlap.push_back(make_pair(interval,intervals2[ib2]));
         }
     }
-    return overlap;
 }
