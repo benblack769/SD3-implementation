@@ -3,6 +3,25 @@
 #include "IntervalTypes.h"
 #include "PC_ID.h"
 
+/*
+  We want to output two kinds of data as dependency information:
+  
+  Instruction level data (for a single loop iteration)
+    * Conflicting instructions
+    * Approxamate memory access location of the dependence
+  
+  Loop instance level summary containing
+    * Number of loop iterations
+    * The number of iterations of the loop that had RAW dependencies
+    * A stat (average?) number of memory accesses which had RAW dependencies in a loop iteration
+  
+  Loop level summary (basically a simple summary of the differnet loop instance summaries)
+    * Number of loop instances
+    * Stat (average?) number of loop iterations
+    * Stat (average?) number of loop iterations with RAW dependencies
+    * Stat (average?) number of conflicting memory accesses in a single iteration for those that did have dependencies
+*/
+
 enum DependenceType { NODEP = -1, RAW = 0, WAR = 1, WAW = 2 };
 
 class Dependence {
