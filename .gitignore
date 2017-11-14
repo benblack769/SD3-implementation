@@ -10,3 +10,4 @@ CMakeLists.txt.user
 test-data/conflict
 test-data/conflict-out
 __pycache__
+Makefile
