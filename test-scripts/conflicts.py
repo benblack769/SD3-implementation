@@ -38,6 +38,11 @@ def sd3_example():
 
 
 def mat_mul():
+    '''
+    Outer two loops should be parrelelizable.
+    Also a good test that strides are being created and merging properly,
+    or this will take a lot of memory and time to process
+    '''
     prog  = Program()
     size = 50
     A = [prog.new_list(size)  for x in range(size)]
@@ -63,6 +68,7 @@ def mat_mul():
     prog.generate_file(output_relative_path+"mat_mul.txt")
 
 def kill_bit_dep():
+
     prog  = Program()
     size = 50
     A = prog.new_list(size)
@@ -79,6 +85,10 @@ def kill_bit_dep():
     prog.generate_file(output_relative_path+"kill_bit_dep.txt")
 
 def kill_bit_nested_loop():
+    '''
+    Kill bits must be translated through nested loops
+    propery for the outer loop to be parrelelizable.
+    '''
     prog  = Program()
     size = 10
     A = prog.new_list(size)
@@ -106,6 +116,10 @@ def kill_bit_nested_loop():
 
 
 def false_read_write_dep():
+    '''
+    A fairly simple test that has a read-write conflict,
+    but in theory is parrelellizable.
+    '''
     prog  = Program()
     size = 10
     A = prog.new_list(size)
@@ -123,6 +137,16 @@ def false_read_write_dep():
 
 
 def many_points():
+    '''
+    This is mainly a performance tests.  The idea
+    is to hit the code with as many bad things as possible:
+    1. Tons of points
+    2. Lots of instructions
+    3. Lots of loops
+    4. A few nested loops
+
+    Right now it has 1,2,3, but not 4.
+    '''
     prog  = Program()
     size = 1000
     A = prog.new_list(size)
