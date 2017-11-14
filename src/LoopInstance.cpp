@@ -7,9 +7,8 @@ typedef CompressedData<Point> PointTable;
 typedef CompressedData<Stride> StrideTable;
 
 
-LoopInstance::LoopInstance(int64_t in_loop_id,int64_t in_instance_num){
+LoopInstance::LoopInstance(int64_t in_loop_id){
     loop_id = in_loop_id;
-    instance_num = in_instance_num;
     loop_count = 0;
     has_dep_count = 0;
 }
@@ -43,23 +42,19 @@ void LoopInstance::addMemAccess(Block block,PC_ID identifier,StrideDetector & pc
 bool LoopInstance::isKilled(Block block){
     return killed_bits.has_any_in_block(block.begin(),block.length());
 }
-bool LoopInstance::pending_history_bits_conflict(){
-    CompressedBits conflict_bits = pending_bits[READ];
-    conflict_bits &= history_bits[WRITE];
-    return conflict_bits.any();
-}
 template<class IntTy1,class IntTy2>
-void only_conflicts(vector<pair<IntTy1,IntTy2> > & in_overlap,vector<Dependence> & out_conflicts,int64_t loop_count,int64_t instance_num){
+void only_conflicts(vector<pair<IntTy1,IntTy2> > & in_overlap,vector<InstrDependence> & out_conflicts){
     for(size_t i = 0; i < in_overlap.size(); i++){
         pair<IntTy1,IntTy2> cur_data = in_overlap[i];
         if(has_overlap(cur_data.first,cur_data.second)){
             //only gets an approximate memory address for simplicity
-            out_conflicts.push_back(Dependence(cur_data.first.getPC_ID(),cur_data.second.getPC_ID(),cur_data.first.first(),loop_count,instance_num));
+            int64_t num_mem_conflicts = 1;//simplify this process for now. Wrong, though
+            out_conflicts.push_back(InstrDependence(cur_data.first.getPC_ID(),cur_data.second.getPC_ID(),cur_data.first.first(),num_mem_conflicts));
         }
     }
 }
 template<class IntTy1,class IntTy2>
-void conflicts(CompressedData<IntTy1> & first,CompressedData<IntTy2> & second,vector<Dependence> & out_conflicts,int64_t loop_count,int64_t instance_num){
+void conflicts(CompressedData<IntTy1> & first,CompressedData<IntTy2> & second,vector<InstrDependence> & out_conflicts){
     vector<pair<IntTy1,IntTy2> > overlap;
     vector<IntTy1> first_inters;
     vector<IntTy2> second_inters;
@@ -68,17 +63,30 @@ void conflicts(CompressedData<IntTy1> & first,CompressedData<IntTy2> & second,ve
     sort_by_first(first_inters);
     sort_by_first(second_inters);
     check_overlap_sorted(first_inters,second_inters,overlap);
-    only_conflicts(overlap,out_conflicts,loop_count,instance_num);
+    only_conflicts(overlap,out_conflicts);
 }
 void LoopInstance::handle_conflicts(){
-    //don't find conflicts if there aren't any
-    if(has_dep_count > HAS_DEP_LIMIT && pending_history_bits_conflict()){
+    CompressedBits conflict_bits = pending_bits[READ];
+    conflict_bits &= history_bits[WRITE];
+    if(conflict_bits.any()){
+        int64_t conflict_count = conflict_bits.count();
+        if(has_dep_count > HAS_DEP_LIMIT){
+            my_dependencies.addIterationDepsNoInstrs(conflict_count);
+        }
+        else{
+            vector<InstrDependence> out_dependencies;
+            //find 4-way overlap between points and strides
+            conflicts(history_points,pending_points,out_dependencies);
+            conflicts(history_points,pending_strides,out_dependencies);
+            conflicts(history_strides,pending_points,out_dependencies);
+            conflicts(history_strides,pending_strides,out_dependencies);
+            
+            my_dependencies.addIterationDependencies(out_dependencies,conflict_count);
+        }
         has_dep_count++;
-        //find 4-way overlap between points and strides
-        conflicts(history_points,pending_points,my_dependencies,loop_count,instance_num);
-        conflicts(history_points,pending_strides,my_dependencies,loop_count,instance_num);
-        conflicts(history_strides,pending_points,my_dependencies,loop_count,instance_num);
-        conflicts(history_strides,pending_strides,my_dependencies,loop_count,instance_num);
+    }
+    else{
+        my_dependencies.addIterationDepsNoInstrs(0);
     }
 }
 
@@ -139,6 +147,6 @@ void LoopInstance::merge_history_pending(LoopInstance & otherloop){
     pending_bits[READ] |= otherloop.history_bits[READ];
     pending_bits[WRITE] |= otherloop.history_bits[WRITE];
 }
-void LoopInstance::loop_end(vector<Dependence> & out_loop_dependences){
-    out_loop_dependences.insert(out_loop_dependences.begin(),my_dependencies.begin(),my_dependencies.end());
+const LoopInstanceDep & LoopInstance::loop_end(){
+    return my_dependencies;
 }

@@ -26,23 +26,21 @@ class LoopInstance {
     access_mode_pair<CompressedBits> pending_bits;
     access_mode_pair<CompressedBits> history_bits;
 
-    vector<Dependence> my_dependencies;
+    LoopInstanceDep my_dependencies;
 
     int64_t loop_count;
     int64_t has_dep_count;
     int64_t loop_id;
-    int64_t instance_num;
 public:
-    LoopInstance(int64_t in_loop_id,int64_t in_instance_num);
+    LoopInstance(int64_t in_loop_id);
     void addMemAccess(Block block,PC_ID identifier,StrideDetector & pc_detector);
     bool isKilled(Block block);
     void iteration_end();
     void merge_history_pending(LoopInstance & otherloop);
 
-    void loop_end(vector<Dependence> & out_loop_dependences);
+    const LoopInstanceDep &loop_end();
     int64_t get_loop_id(){return loop_id;}
 protected:
-    bool pending_history_bits_conflict();
     void handle_conflicts();
 
     void merge_pending_history();

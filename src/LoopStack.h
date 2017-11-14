@@ -9,9 +9,8 @@ using namespace std;
 class LoopStack{
 protected:
     list<LoopInstance> stack;
-    unordered_map<int64_t, vector<Dependence> > loop_dependencies;
-    unordered_map<int64_t, int64_t > loop_instance_counts;
-    typedef typename unordered_map<int64_t, vector<Dependence> >::iterator dependence_iterator;
+    unordered_map<int64_t, LoopTotalSummary> loop_dependencies;
+    typedef typename unordered_map<int64_t, LoopTotalSummary>::iterator dependence_iterator;
     unordered_map<int64_t, StrideDetector> stride_detector;
 public:
     LoopStack();

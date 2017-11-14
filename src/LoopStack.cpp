@@ -17,7 +17,8 @@ void LoopStack::addMemAccess(int64_t mem_addr,int64_t access_size,int64_t instr_
 }
 void LoopStack::loop_end(int64_t loop_id){
     assert(stack.size() != 0);
-    stack.back().loop_end(loop_dependencies[stack.back().get_loop_id()]);
+    assert(stack.back().get_loop_id() == loop_id);
+    loop_dependencies[loop_id].addLoopInstanceSummary(stack.back().loop_end());
     if(stack.size() > 1){
         int64_t start = my_clock();
         second_from_top().merge_history_pending(stack.back());
@@ -26,8 +27,7 @@ void LoopStack::loop_end(int64_t loop_id){
     stack.pop_back();
 }
 void LoopStack::loop_start(int64_t loop_id){
-    stack.push_back(LoopInstance(loop_id,loop_instance_counts[loop_id]));
-    loop_instance_counts[loop_id]++;
+    stack.push_back(LoopInstance(loop_id));
 }
 void LoopStack::iter_end(int64_t loop_id){
     assert(stack.back().get_loop_id() == loop_id);
@@ -50,11 +50,8 @@ void LoopStack::print_loop_dependencies(){
     cout << "It end: " << it_end_timer << endl;
     
     for(dependence_iterator it = loop_dependencies.begin(); it != loop_dependencies.end(); it++){
-        vector<Dependence> & cur_dep = it->second;
         int64_t lid = it->first;
-        cout << "LOOP " << lid << "\n";
-        for(size_t i = 0; i < cur_dep.size(); i++){
-           // cout << '\t' << cur_dep[i] << "\n";
-        }
+        cout << "LOOP " << lid << "\n";        
+        cout << it->second << endl;
     }
 }
