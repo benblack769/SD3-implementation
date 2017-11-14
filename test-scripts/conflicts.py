@@ -86,6 +86,7 @@ def kill_bit_nested_loop():
 
     prog.loop_start(1)
     for i in range(size):
+        b.assign(0,prog.constant())
         prog.loop_start(2)
         for j in range(size):
             A[i].assign(1,prog.constant())

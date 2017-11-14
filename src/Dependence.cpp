@@ -107,7 +107,7 @@ void LoopInstanceDep::addIterationDepsNoInstrs(int64_t num_mem_conflicts_in_iter
 std::ostream &operator<<(std::ostream &os, const LoopInstanceDep &obj) {
     os << ", Loop iterations:" << obj.loop_iterations << 
           ", ConflictedIterations:" << obj.actual_conflict_iterations << 
-          ", TotalConflictsAccessed:" << obj.total_memory_conflicts 
+          ", TotalConflictingBytes:" << obj.total_memory_conflicts 
        << "\n";
     os << obj.instr_summary;
     os << endl;
@@ -132,7 +132,7 @@ std::ostream &operator<<(std::ostream &os, const LoopTotalSummary &obj) {
     os << "LoopInstances:" << obj.num_instances << 
           ", TotalLoopIterations:" << obj.total_iterations << 
           ", ConflictedIterations:" << obj.total_conflict_iterations << 
-          ", TotalConflictsAccessed:" << obj.total_mem_conflicts 
+          ", TotalConflictingBytes:" << obj.total_mem_conflicts 
        << "\n";
     os << obj.instr_summary;
     os << endl;
