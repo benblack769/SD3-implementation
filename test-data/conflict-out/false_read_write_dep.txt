@@ -1,11 +1,11 @@
 Timings:
-Total time: 1495000
-Add: 36000
-LoopInstaceMarker: 9000
+Total time: 319000
+Add: 34000
+LoopInstaceMarker: 7000
 Merge: 0
-It end: 48000
+It end: 43000
 LOOP 1
-LoopInstances:1, TotalLoopIterations:9, ConflictedIterations:8, TotalConflictingBytes:32
+LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:9, ConflictedIterations:8, TotalConflictingBytes:32
 Dependence: RAW, AproxMemAddr: 48, NumConflicts: 4, Earlier: PC_ID(5, WRITE), Later: PC_ID(100001, READ), NumConflictIters: 4     
 
 

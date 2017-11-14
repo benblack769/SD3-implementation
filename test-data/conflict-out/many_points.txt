@@ -1,11 +1,11 @@
 Timings:
-Total time: 1765455000
-Add: 582000000
-LoopInstaceMarker: 278913000
-Merge: 192377000
-It end: 416757000
+Total time: 1818214000
+Add: 598194000
+LoopInstaceMarker: 291299000
+Merge: 196408000
+It end: 433861000
 LOOP 1
-LoopInstances:1, TotalLoopIterations:1000, ConflictedIterations:978, TotalConflictingBytes:10496
+LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:1000, ConflictedIterations:978, TotalConflictingBytes:10496
 Dependence: RAW, AproxMemAddr: 12, NumConflicts: 1, Earlier: PC_ID(5, WRITE), Later: PC_ID(100001, READ), NumConflictIters: 1     
 Dependence: RAW, AproxMemAddr: 12, NumConflicts: 1, Earlier: PC_ID(4, WRITE), Later: PC_ID(100001, READ), NumConflictIters: 1     
 Dependence: RAW, AproxMemAddr: 12, NumConflicts: 1, Earlier: PC_ID(6, WRITE), Later: PC_ID(100001, READ), NumConflictIters: 1     
@@ -53,7 +53,7 @@ Dependence: RAW, AproxMemAddr: 28, NumConflicts: 2, Earlier: PC_ID(5, WRITE), La
 
 
 LOOP 101
-LoopInstances:1000, TotalLoopIterations:10000, ConflictedIterations:369, TotalConflictingBytes:1520
+LoopInstances:1000, ConflictingLoopInstances:227, TotalLoopIterations:10000, ConflictedIterations:369, TotalConflictingBytes:1520
 Dependence: RAW, AproxMemAddr: 20, NumConflicts: 3, Earlier: PC_ID(4, WRITE), Later: PC_ID(100009, READ), NumConflictIters: 3     
 Dependence: RAW, AproxMemAddr: 20, NumConflicts: 3, Earlier: PC_ID(8, WRITE), Later: PC_ID(100009, READ), NumConflictIters: 3     
 Dependence: RAW, AproxMemAddr: 20, NumConflicts: 3, Earlier: PC_ID(3, WRITE), Later: PC_ID(100009, READ), NumConflictIters: 3     
@@ -238,7 +238,7 @@ Dependence: RAW, AproxMemAddr: 3980, NumConflicts: 2, Earlier: PC_ID(7, WRITE), 
 
 
 LOOP 102
-LoopInstances:1000, TotalLoopIterations:10000, ConflictedIterations:337, TotalConflictingBytes:1384
+LoopInstances:1000, ConflictingLoopInstances:230, TotalLoopIterations:10000, ConflictedIterations:337, TotalConflictingBytes:1384
 Dependence: RAW, AproxMemAddr: 16, NumConflicts: 1, Earlier: PC_ID(4, WRITE), Later: PC_ID(100008, READ), NumConflictIters: 1     
 Dependence: RAW, AproxMemAddr: 16, NumConflicts: 4, Earlier: PC_ID(3, WRITE), Later: PC_ID(100008, READ), NumConflictIters: 4     
 Dependence: RAW, AproxMemAddr: 16, NumConflicts: 2, Earlier: PC_ID(5, WRITE), Later: PC_ID(100008, READ), NumConflictIters: 2     
@@ -425,7 +425,7 @@ Dependence: RAW, AproxMemAddr: 3980, NumConflicts: 1, Earlier: PC_ID(6, WRITE), 
 
 
 LOOP 103
-LoopInstances:1000, TotalLoopIterations:10000, ConflictedIterations:343, TotalConflictingBytes:1428
+LoopInstances:1000, ConflictingLoopInstances:236, TotalLoopIterations:10000, ConflictedIterations:343, TotalConflictingBytes:1428
 Dependence: RAW, AproxMemAddr: 16, NumConflicts: 2, Earlier: PC_ID(2, WRITE), Later: PC_ID(100006, READ), NumConflictIters: 2     
 Dependence: RAW, AproxMemAddr: 12, NumConflicts: 3, Earlier: PC_ID(3, WRITE), Later: PC_ID(100001, READ), NumConflictIters: 3     
 Dependence: RAW, AproxMemAddr: 12, NumConflicts: 4, Earlier: PC_ID(4, WRITE), Later: PC_ID(100001, READ), NumConflictIters: 4     

@@ -1,10 +1,10 @@
 Timings:
-Total time: 1581000
-Add: 114000
-LoopInstaceMarker: 22000
+Total time: 557000
+Add: 109000
+LoopInstaceMarker: 21000
 Merge: 0
-It end: 78000
+It end: 74000
 LOOP 1
-LoopInstances:1, TotalLoopIterations:50, ConflictedIterations:0, TotalConflictingBytes:0
+LoopInstances:1, ConflictingLoopInstances:0, TotalLoopIterations:50, ConflictedIterations:0, TotalConflictingBytes:0
 
 
