@@ -37,8 +37,8 @@ class SparseStride {
   protected:
     int64_t _first;
     int64_t _size;
-    int64_t _block_size;
     int64_t _stride;
+    int64_t _block_size;
 
   public:
     SparseStride(int64_t in_first, int64_t in_size, int64_t in_stride, int64_t in_block_size)

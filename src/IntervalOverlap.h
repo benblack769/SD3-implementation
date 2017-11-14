@@ -107,7 +107,7 @@ inline void check_overlap_sorted(const vector<IntTy1> & intervals1, const vector
     vector<IntTy2> before_last;
     vector<IntTy2> new_before_last;
 
-    for(int int1 = 0; int1 < intervals1.size(); int1++){
+    for(size_t int1 = 0; int1 < intervals1.size(); int1++){
         IntTy1 interval = intervals1[int1];
 
         new_before_last.clear();

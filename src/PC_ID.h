@@ -49,6 +49,7 @@ inline const char * MemAccessModeString(MemAccessMode type){
 const PC_ID null_id(-1,INVALID);
 inline std::ostream &operator<<(std::ostream &os, const PC_ID &obj) {
     os << "PC_ID(" << obj.get_pc() << ", " << MemAccessModeString(obj.get_acc_mode()) << ")";
+    return os;
 }
 
 template<class ItemType>

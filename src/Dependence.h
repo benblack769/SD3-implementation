@@ -53,7 +53,6 @@ protected:
 std::ostream &operator<<(std::ostream &os, const InstructionSetSummary &obj);
 
 
-  
 class LoopInstanceDep{
     /*
     Loop instance level summary containing

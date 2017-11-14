@@ -1,5 +1,6 @@
 #include "StrideDetector.h"
 #include <iostream>
+#include <cassert>
 
 // Creates a new FSM
 StrideDetector::StrideDetector() {
@@ -26,6 +27,8 @@ MemAccessType StrideDetector::addAccess(int64_t address) {
     case WeakStride: return STRIDE;
     case StrongStride: return STRIDE;
     }
+    assert(false);
+    return POINT;
 }
 
 // Method determines the change in FSM, updating stride distance and address
