@@ -92,6 +92,7 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const LoopTotalSummary &obj);
 protected:
     int64_t num_instances;
+    int64_t num_conflict_instances;
     int64_t total_iterations;
     int64_t total_conflict_iterations;
     int64_t total_mem_conflicts;

@@ -116,6 +116,7 @@ std::ostream &operator<<(std::ostream &os, const LoopInstanceDep &obj) {
 
 LoopTotalSummary::LoopTotalSummary(){
     num_instances = 0;
+    num_conflict_instances = 0;
     total_iterations = 0;
     total_conflict_iterations = 0;
     total_mem_conflicts = 0;
@@ -123,6 +124,7 @@ LoopTotalSummary::LoopTotalSummary(){
 
 void LoopTotalSummary::addLoopInstanceSummary(const LoopInstanceDep & add){
     num_instances += 1;
+    num_conflict_instances += add.total_memory_conflicts == 0 ? 0 : 1;
     total_iterations += add.loop_iterations;
     total_conflict_iterations += add.actual_conflict_iterations;
     total_mem_conflicts += add.total_memory_conflicts;
@@ -130,6 +132,7 @@ void LoopTotalSummary::addLoopInstanceSummary(const LoopInstanceDep & add){
 }
 std::ostream &operator<<(std::ostream &os, const LoopTotalSummary &obj) {
     os << "LoopInstances:" << obj.num_instances << 
+          ", ConflictingLoopInstances:" << obj.num_conflict_instances << 
           ", TotalLoopIterations:" << obj.total_iterations << 
           ", ConflictedIterations:" << obj.total_conflict_iterations << 
           ", TotalConflictingBytes:" << obj.total_mem_conflicts 
