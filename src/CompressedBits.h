@@ -2,7 +2,6 @@
 #include <map>
 #include <bitset>
 #include "Types.h"
-#include <sparsehash/dense_hash_map>
 
 using namespace std;
 

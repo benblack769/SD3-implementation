@@ -18,7 +18,7 @@ os.makedirs(output_relative_path, exist_ok=True)
 
 
 def sd3_example():
-    prog  = Program()
+    prog = Program()
     size = 4
     A = [prog.new_list(size)  for x in range(size)]
     B = [prog.new_list(size)  for x in range(size)]
@@ -78,6 +78,32 @@ def kill_bit_dep():
 
     prog.generate_file(output_relative_path+"kill_bit_dep.txt")
 
+def kill_bit_nested_loop():
+    prog  = Program()
+    size = 10
+    A = prog.new_list(size)
+    b = prog.new()
+
+    prog.loop_start(1)
+    for i in range(size):
+        prog.loop_start(2)
+        for j in range(size):
+            A[i].assign(1,prog.constant())
+            prog.iter_end(2)
+        prog.loop_end(2)
+
+        prog.loop_start(3)
+        for j in range(size):
+            b.assign(3,prog.bin_op(2,A[i],b))
+            prog.iter_end(3)
+        prog.loop_end(3)
+
+        prog.iter_end(1)
+    prog.loop_end(1)
+
+    prog.generate_file(output_relative_path+"kill_bit_nested_loop.txt")
+
+
 def false_read_write_dep():
     prog  = Program()
     size = 10
@@ -97,7 +123,7 @@ def false_read_write_dep():
 
 def many_points():
     prog  = Program()
-    size = 30000
+    size = 1000
     A = prog.new_list(size)
 
     prog.loop_start(1)
@@ -121,6 +147,7 @@ def many_points():
 sd3_example()
 mat_mul()
 kill_bit_dep()
+kill_bit_nested_loop()
 false_read_write_dep()
 many_points()
 #

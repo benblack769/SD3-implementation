@@ -32,7 +32,7 @@ void CompressedBits::add(int64_t element){
 
 void CompressedBits::add_block(int64_t element,int64_t size){
     for(int64_t i = 0; i < size; i++){
-        add(element+i);
+        this->add(element+i);
     }
 }
 bool CompressedBits::has(int64_t element){

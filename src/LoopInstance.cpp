@@ -18,12 +18,12 @@ void LoopInstance::addMemAccess(Block block,PC_ID identifier,StrideDetector & pc
     if(this->isKilled(block)){
         return;
     }
-    //add point to pending bit tables
-    pending_bits[identifier.get_acc_mode()].add_block(block.begin(),block.length());
     //if is write and no reads before it, set killed bits
-    if(identifier.get_pc() == WRITE && !pending_bits[READ].has_any_in_block(block.begin(),block.length())){
+    if(identifier.get_acc_mode() == WRITE && !pending_bits[READ].has_any_in_block(block.begin(),block.length())){
         killed_bits.add_block(block.begin(),block.length());
     }
+    //add point to pending bit tables
+    pending_bits[identifier.get_acc_mode()].add_block(block.begin(),block.length());    
     
     //get pc detector result and add point/stride to tables
     int64_t mem_addr = block.begin();
