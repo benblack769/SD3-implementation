@@ -53,8 +53,8 @@ def mat_mul():
     for i in range(size):
         prog.loop_start(2)
         for j in range(size):
-            prog.loop_start(3)
             R[i][j].assign(1,prog.constant())
+            prog.loop_start(3)
             for k in range(size):
                 R[i][j].assign(2,prog.bin_op(3,B[k][j],prog.bin_op(4,A[i][k],R[i][j])))
                 prog.iter_end(3)
