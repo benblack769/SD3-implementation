@@ -1,5 +1,5 @@
 #include "test_object.h"
-#include <exception>
+#include <stdexcept>
 #include <iostream>
 
 using namespace std;
