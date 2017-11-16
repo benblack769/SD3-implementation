@@ -146,6 +146,11 @@ void LoopInstance::merge_history_pending(LoopInstance & otherloop){
     otherloop.history_bits[WRITE].subtract(killed_bits);
     pending_bits[READ] |= otherloop.history_bits[READ];
     pending_bits[WRITE] |= otherloop.history_bits[WRITE];
+    
+    //add in new killed bits
+    CompressedBits new_kill_bits = otherloop.history_bits[WRITE];
+    new_kill_bits &= otherloop.history_bits[READ]; 
+    killed_bits |= new_kill_bits;
 }
 const LoopInstanceDep & LoopInstance::loop_end(){
     return my_dependencies;

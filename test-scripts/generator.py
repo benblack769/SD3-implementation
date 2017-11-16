@@ -50,4 +50,4 @@ class MemLocation:
         self.program = program
         self.loc_id = loc_id
     def assign(self,instruction,value_assign):
-        self.program.write_occured(self,instruction)
+        self.program.write_occured(self,self.program.instruction(instruction))

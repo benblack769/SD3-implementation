@@ -99,13 +99,13 @@ def kill_bit_nested_loop():
         b.assign(0,prog.constant())
         prog.loop_start(2)
         for j in range(size):
-            A[i].assign(1,prog.constant())
+            A[j].assign(1,prog.constant())
             prog.iter_end(2)
         prog.loop_end(2)
 
         prog.loop_start(3)
         for j in range(size):
-            b.assign(3,prog.bin_op(2,A[i],b))
+            b.assign(3,prog.bin_op(2,A[j],b))
             prog.iter_end(3)
         prog.loop_end(3)
 
@@ -113,6 +113,38 @@ def kill_bit_nested_loop():
     prog.loop_end(1)
 
     prog.generate_file(output_relative_path+"kill_bit_nested_loop.txt")
+
+
+def conflicts_nested_loop():
+    '''
+    Reads and writes must be translated through nested loops
+    propery for the outer loop to have conflicts.
+    '''
+    prog  = Program()
+    size = 10
+    A = prog.new_list(size)
+    b = prog.new()
+
+    prog.loop_start(1)
+    for i in range(size):
+        prog.loop_start(2)
+        for j in range(size):
+            b.assign(3,prog.bin_op(2,A[j],b))
+            A[j].assign(8,prog.un_op(9,b))
+            prog.iter_end(2)
+        prog.loop_end(2)
+
+        b.assign(0,prog.constant())
+        prog.loop_start(3)
+        for j in range(size):
+            A[j].assign(1,prog.constant())
+            prog.iter_end(3)
+        prog.loop_end(3)
+
+        prog.iter_end(1)
+    prog.loop_end(1)
+
+    prog.generate_file(output_relative_path+"conflicts_nested_loop.txt")
 
 
 def false_read_write_dep():
@@ -173,6 +205,7 @@ sd3_example()
 mat_mul()
 kill_bit_dep()
 kill_bit_nested_loop()
+conflicts_nested_loop()
 false_read_write_dep()
 many_points()
 #
