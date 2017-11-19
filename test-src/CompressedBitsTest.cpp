@@ -5,19 +5,19 @@
 
 bool compressed_bits_test(){
     cout << sizeof(CachedInterval<Stride>) << endl;
-    CompressedBits bits1;
+    CompressedSet bits1;
     for(int i = 0;i < 1000; i+= 133){
         bits1.add(i);
     }
-    CompressedBits bits2;
+    CompressedSet bits2;
     t_assert(!bits1.any());
     for(int j = 0; j < 12123; j += 3){
         bits2.add(j);
     }
-    CompressedBits andval = bits1;
-    andval &=  bits2;
-    CompressedBits orval = bits1;
-    orval |=  bits2;
+    CompressedSet andval = bits1;
+    andval.intersect(bits2);
+    CompressedSet orval = bits1;
+    orval.unite(bits2);
     t_assert(bits1.count() == 8);
     t_assert(bits1.any());
     t_assert(bits2.count() == 12123/3);

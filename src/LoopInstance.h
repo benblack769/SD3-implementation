@@ -22,9 +22,9 @@ class LoopInstance {
     PointTable history_points;
     StrideTable history_strides;
 
-    CompressedBits killed_bits;
-    access_mode_pair<CompressedBits> pending_bits;
-    access_mode_pair<CompressedBits> history_bits;
+    CompressedSet killed_bits;
+    access_mode_pair<CompressedSet> pending_bits;
+    access_mode_pair<CompressedSet> history_bits;
 
     LoopInstanceDep my_dependencies;
 

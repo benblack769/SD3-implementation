@@ -26,20 +26,20 @@ int64_t BlockSet::count(){
 }
 
 
-void CompressedBits::add(int64_t element){
+void CompressedSet::add(int64_t element){
     data[uint64_t(element) / BLOCK_SIZE].add(uint64_t(element) % BLOCK_SIZE);
 }
 
-void CompressedBits::add_block(int64_t element,int64_t size){
+void CompressedSet::add_block(int64_t element,int64_t size){
     for(int64_t i = 0; i < size; i++){
         this->add(element+i);
     }
 }
-bool CompressedBits::has(int64_t element){
+bool CompressedSet::has(int64_t element){
     return data[uint64_t(element) / BLOCK_SIZE].has(uint64_t(element) % BLOCK_SIZE); 
 }
 
-bool CompressedBits::has_all_block(int64_t element,int64_t size){
+bool CompressedSet::has_all_block(int64_t element,int64_t size){
     for(int64_t i = 0; i < size; i++){
         if(!has(i+element)){
             return false;
@@ -47,7 +47,7 @@ bool CompressedBits::has_all_block(int64_t element,int64_t size){
     }
     return true;
 }
-bool CompressedBits::has_any_in_block(int64_t element,int64_t size){
+bool CompressedSet::has_any_in_block(int64_t element,int64_t size){
     for(int64_t i = 0; i < size; i++){
         if(has(i+element)){
             return true;
@@ -55,7 +55,7 @@ bool CompressedBits::has_any_in_block(int64_t element,int64_t size){
     }
     return false;
 }    
-void CompressedBits::and_with_optional_neg(CompressedBits & outer,bool neg){
+void CompressedSet::and_with_optional_neg(CompressedSet & outer,bool neg){
     for(set_iterator iter = data.begin(); iter != data.end(); ){
         int64_t key = iter->first;
         BlockSet & value = iter->second;
@@ -82,14 +82,14 @@ void CompressedBits::and_with_optional_neg(CompressedBits & outer,bool neg){
         //}
     }
 }
-void CompressedBits::operator &=(CompressedBits & outer){
+void CompressedSet::intersect(CompressedSet & outer){
     and_with_optional_neg(outer,false);
 }
 
-void CompressedBits::subtract(CompressedBits & outer){
+void CompressedSet::subtract(CompressedSet & outer){
     and_with_optional_neg(outer,true);
 }
-void CompressedBits::operator|=(CompressedBits & outer){
+void CompressedSet::unite(CompressedSet & outer){
     for(set_iterator iter = outer.data.begin(); iter != outer.data.end(); ++iter){
         int64_t key = iter->first;
         if(this->data.count(key)){
@@ -101,7 +101,7 @@ void CompressedBits::operator|=(CompressedBits & outer){
     }
 }
 
-bool CompressedBits::any(){
+bool CompressedSet::any(){
     for(set_iterator iter = data.begin(); iter != data.end(); ++iter){
         if(iter->second.any()){
             return true;
@@ -109,13 +109,13 @@ bool CompressedBits::any(){
     }
     return false;
 }
-int64_t CompressedBits::count(){
+int64_t CompressedSet::count(){
     int64_t sum = 0;
     for(set_iterator iter = data.begin(); iter != data.end(); ++iter){
         sum += iter->second.count();
     }
     return sum;
 }
-void CompressedBits::clear(){
+void CompressedSet::clear(){
     data.clear();
 }

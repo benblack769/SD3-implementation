@@ -44,4 +44,4 @@ gives error messages about unit tests that do not pass.
 Other tests, not really appropriate for unit testing are the `stride_detector_test`
 and the `merge_test`.
 
-These take input files that are a list of memory accesses, and spit out how they processed them. The files `test-data/OldTestInputs` are somewhat appropriate for input.
+These take input files that are a list of memory accesses, and spit out how they processed them. The files in `single_pc_test_data` are for this. Also, the files `test-data/OldTestInputs` are somewhat appropriate for input.

@@ -34,7 +34,7 @@ public:
     int64_t count();
 };
 
-class CompressedBits{
+class CompressedSet{
     /*
     use:
         Efficient bit operations on arbitrary integers
@@ -63,12 +63,12 @@ public:
     bool has(int64_t element);
     bool has_all_block(int64_t element,int64_t size);
     bool has_any_in_block(int64_t element,int64_t size);
-    void operator &=(CompressedBits & outer);
-    void operator|=(CompressedBits & outer);
-    void subtract(CompressedBits & outer);//boolean operator (x & !y)
+    void intersect(CompressedSet & outer);
+    void unite(CompressedSet & outer);
+    void subtract(CompressedSet & outer);//boolean operator (x & !y)
     bool any();
     void clear();
     int64_t count();
 protected:
-    void and_with_optional_neg(CompressedBits & outer,bool neg);
+    void and_with_optional_neg(CompressedSet & outer,bool neg);
 };
