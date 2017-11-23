@@ -80,8 +80,11 @@ struct StrideIterator{
     bool at_end(){
         return cur_step >= stride.size();
     }
-
 };
+StrideIterator begin(SparseStride stride){
+    StrideIterator res = {stride,0};
+    return res;
+}
 
 bool slow_has_overlap (StrideIterator one, StrideIterator other){
   while (one.at_end() && other.at_end())
@@ -97,8 +100,42 @@ bool slow_has_overlap (StrideIterator one, StrideIterator other){
   }
   return false;
 }
+bool slow_has_overlap(SparseStride one, SparseStride other){
+    return slow_has_overlap(begin(one),begin(other));
+}
 
+struct ExtEuclidResult{
+    int64_t gcd_result;
+    int64_t a_value;
+    int64_t b_value;
+};
 
+// C function for extended Euclidean Algorithm
+//Taken from https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Extended_Euclidean_algorithm
+ExtEuclidResult xgcd(int64_t a, int64_t b){
+    int64_t aa[2]={1,0}, bb[2]={0,1}, q;
+    while(true) {
+        q = a / b; a = a % b;
+        aa[0] = aa[0] - q*aa[1];  bb[0] = bb[0] - q*bb[1];
+        if (a == 0) {
+            ExtEuclidResult result = {b,aa[1],bb[1]};
+            return result;
+        };
+        q = b / a; b = b % a;
+        aa[1] = aa[1] - q*aa[0];  bb[1] = bb[1] - q*bb[0];
+        if (b == 0) {
+            ExtEuclidResult result = {b,aa[0],bb[0]};
+            return result;
+        };
+    };
+}
+
+//bool ex_euclid_has_overlap(SparseStride one, SparseStride other){
+//    assert(one.block_size() == other.block_size() && 
+//           delta % one.block_size() == 0);
+    //ExtEuclidResult res = xgcd()
+    
+//}
 
 bool has_overlap(SparseStride one, SparseStride other) {
     // ensures one.first < other.first always
@@ -108,45 +145,38 @@ bool has_overlap(SparseStride one, SparseStride other) {
         other = tmp;
     }
     int64_t delta = other.first() - one.first();
-    int64_t overlap_size = one.last() - other.first();
-    int64_t gcd_stride = gcd(one.stride(),other.stride());
+    int64_t overlap_size = one.end() - other.first();
 
-    if (overlap_size < 0) {
+    if (overlap_size <= 0) {
         return false;
     }
-    else if (one.stride() == other.stride()) {
-        if (delta % one.stride() == 0) {
+    else if(one.is_dense() || other.is_dense()){
+        return true;
+    }
+    else if(one.stride() == other.stride()){
+        int64_t stride_offset = one.stride() % delta;
+        if(stride_offset == 0){
             return true;
         }
-    }
-    else if (one.stride() % other.stride() == 0 || other.stride() % one.stride() == 0) {
-
-    }
-    else if(one.block_size() == other.block_size()){
-        if(gcd_stride % delta != 0){
-            return true;
+        else if(one.block_size() == other.block_size() &&
+                delta % one.block_size() == 0){
+            return false;
         }
         else{
-            //slow_has_overlap()
-            assert(false);
-            // TODO: this currently does not implement gcd test corretly. gives a
-            // worst case upper bound analysis
-            // we can get away with bad solutions here because there aren't many
-            // real world cases where we have
-            // overlapping strides of differnet lengths that do not divide each othe
-            int64_t overlap1 = num_overlap_locations(one,Block(other.first(),other.end()));
-            int64_t overlap2 = num_overlap_locations(other,Block(one.first(),one.end()));
-            int64_t cap_overlap = min(overlap1,overlap2);
-            return false;//overlap_locs(false,-1);
+            return slow_has_overlap(one,other);
+        }
+    }
+    else if(one.block_size() == other.block_size() && 
+            delta % one.block_size() == 0){
+        if(gcd(one.stride(),other.stride())){
+            return false;
+        }
+        else{
+            return true;
         }
     }
     else{
-        assert(false);
-        // this case is really bad, so just return that you don't exactly know what to do.
-        int64_t overlap1 = num_overlap_locations(one,Block(other.first(),other.end()));
-        int64_t overlap2 = num_overlap_locations(other,Block(one.first(),one.end()));
-        int64_t cap_overlap = min(overlap1,overlap2);
-        return false;//overlap_locs(false,cap_overlap);
+        return slow_has_overlap(one,other);
     }
 }
 SparseStride ordered_merge(SparseStride lower_eq, SparseStride upper){

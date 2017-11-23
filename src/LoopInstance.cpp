@@ -10,7 +10,6 @@ typedef CompressedData<Stride> StrideTable;
 LoopInstance::LoopInstance(int64_t in_loop_id){
     loop_id = in_loop_id;
     loop_count = 0;
-    has_dep_count = 0;
 }
 
 void LoopInstance::addMemAccess(Block block,PC_ID identifier,StrideDetector & pc_detector){
@@ -65,13 +64,19 @@ void conflicts(CompressedData<IntTy1> & first,CompressedData<IntTy2> & second,ve
     check_overlap_sorted(first_inters,second_inters,overlap);
     only_conflicts(overlap,out_conflicts);
 }
-void LoopInstance::handle_conflicts(){
-    CompressedSet conflict_bits = pending_bits[READ];
-    conflict_bits.intersect(history_bits[WRITE]);
+void LoopInstance::handle_all_conflicts(){
+    handle_conflicts(READ,WRITE);
+    handle_conflicts(WRITE,READ);
+    handle_conflicts(WRITE,WRITE);
+}
+void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode history_mode){
+    CompressedSet conflict_bits = pending_bits[pending_mode];
+    conflict_bits.intersect(history_bits[history_mode]);
+    LoopInstanceDep & cur_dependencies = my_dependencies[history_mode][pending_mode];
     if(conflict_bits.any()){
         int64_t conflict_count = conflict_bits.count();
-        if(has_dep_count > HAS_DEP_LIMIT){
-            my_dependencies.addIterationDepsNoInstrs(conflict_count);
+        if(cur_dependencies.conflict_iterations() > HAS_DEP_LIMIT){
+            cur_dependencies.addIterationDepsNoInstrs(conflict_count);
         }
         else{
             vector<InstrDependence> out_dependencies;
@@ -81,12 +86,11 @@ void LoopInstance::handle_conflicts(){
             conflicts(history_strides,pending_points,out_dependencies);
             conflicts(history_strides,pending_strides,out_dependencies);
             
-            my_dependencies.addIterationDependencies(out_dependencies,conflict_count);
+            cur_dependencies.addIterationDependencies(out_dependencies,conflict_count);
         }
-        has_dep_count++;
     }
     else{
-        my_dependencies.addIterationDepsNoInstrs(0);
+        cur_dependencies.addIterationDepsNoInstrs(0);
     }
 }
 
@@ -109,7 +113,7 @@ void LoopInstance::merge_pending_history(){
 }
 void LoopInstance::iteration_end(){
     loop_count++;
-    handle_conflicts();
+    handle_all_conflicts();
     merge_pending_history();
 }
 void LoopInstance::merge_history_pending(LoopInstance & otherloop){
@@ -152,6 +156,6 @@ void LoopInstance::merge_history_pending(LoopInstance & otherloop){
     new_kill_bits.subtract(pending_bits[READ]); 
     killed_bits.unite(new_kill_bits);
 }
-const LoopInstanceDep & LoopInstance::loop_end(){
+AllLoopInstanceDep &LoopInstance::loop_end(){
     return my_dependencies;
 }

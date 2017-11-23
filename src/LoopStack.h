@@ -6,11 +6,12 @@
 
 using namespace std;
 
+typedef access_mode_pair<access_mode_pair<LoopTotalSummary> > AllLoopTotalSummary;
 class LoopStack{
 protected:
     list<LoopInstance> stack;
-    unordered_map<int64_t, LoopTotalSummary> loop_dependencies;
-    typedef typename unordered_map<int64_t, LoopTotalSummary>::iterator dependence_iterator;
+    unordered_map<int64_t, AllLoopTotalSummary> loop_dependencies;
+    typedef typename unordered_map<int64_t, AllLoopTotalSummary>::iterator dependence_iterator;
     unordered_map<int64_t, StrideDetector> stride_detector;
 public:
     LoopStack();
@@ -20,4 +21,5 @@ public:
     void iter_end(int64_t loop_id);
     LoopInstance & second_from_top();
     void print_loop_dependencies();
+protected:
 };

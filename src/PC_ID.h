@@ -44,7 +44,8 @@ inline const char * MemAccessModeString(MemAccessMode type){
     case READ:return "READ";
     case WRITE:return "WRITE";
     }
-    assert(false);
+    assert(false && "bad MemAccessMode type");
+    return "ERROR";
 }
 const PC_ID null_id(-1,INVALID);
 inline std::ostream &operator<<(std::ostream &os, const PC_ID &obj) {
@@ -67,6 +68,7 @@ public:
         }
         else{
             assert(false && "bad mode");
+            return read;
         }
     }
     ItemType & operator[](MemAccessMode mode){

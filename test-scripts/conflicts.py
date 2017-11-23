@@ -150,18 +150,15 @@ def conflicts_nested_loop():
 def false_read_write_dep():
     '''
     A fairly simple test that has a read-write conflict,
-    but in theory is parrelellizable.
+    but is massively parrelelizable.
     '''
     prog  = Program()
-    size = 10
-    A = prog.new_list(size)
-    B = prog.new_list(size)
-    C = prog.new_list(size)
+    n = 10
+    A = prog.new_list(3*n)
 
     prog.loop_start(1)
-    for i in range(1,size):
-        A[i].assign(3,prog.un_op(2,B[i-1]))
-        B[i].assign(5,prog.un_op(4,C[i]))
+    for i in range(n,3*n):
+        A[i].assign(3,prog.un_op(2,A[i-n]))
         prog.iter_end(1)
     prog.loop_end(1)
 

@@ -63,8 +63,8 @@ class SparseStride {
     int64_t block_size() const { return _block_size; }
     int64_t stride() const { return _stride; }
     int64_t end() const { return _first + _size * _stride; }
-    bool is_dense()const{ return _stride == _block_size; }
-    Block dense_block()const{ return Block(first(),end()); }
+    bool is_dense() const { return _stride == _block_size; }
+    Block dense_block() const { return Block(first(),end()); }
 
     bool is_in(int64_t access);
     Block block(int64_t access);

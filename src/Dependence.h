@@ -65,6 +65,7 @@ public:
     LoopInstanceDep();
     void addIterationDependencies(const vector<InstrDependence> & inst_deps_loop_instance,int64_t num_mem_conflicts_in_iter);
     void addIterationDepsNoInstrs(int64_t num_mem_conflicts_in_iter);
+    int64_t conflict_iterations()const{ return actual_conflict_iterations; }
     
     friend std::ostream &operator<<(std::ostream &os, const LoopInstanceDep &obj);
     friend class LoopTotalSummary;

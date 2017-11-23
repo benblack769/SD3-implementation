@@ -23,7 +23,7 @@ bool test_overlap();
 
 void TestObj::run_all() {
     bool has_failed = false;
-    for (int i = 0; i < tests.size(); i++) {
+    for (size_t i = 0; i < tests.size(); i++) {
         run_func(tests[i]);
         has_failed = has_failed || !test_valid;
     }

@@ -12,7 +12,8 @@ DependenceType get_dep_type(MemAccessMode earlier,MemAccessMode later){
             return WAW;
         }
     }
-    assert(false);
+    assert(false && "got dependence of RAR which is not a dependence");
+    return RAW;
 }
 
 InstrDependence::InstrDependence(){
@@ -76,7 +77,8 @@ const char * DependenceTypeString(DependenceType type){
     case WAR:return "WAR";
     case WAW:return "WAW";
     }
-    assert(false);
+    assert(false && "bad dependence string");
+    return "ERROR";
 }
 
 std::ostream &operator<<(std::ostream &os, const InstrDependence &obj) {
@@ -102,7 +104,6 @@ void LoopInstanceDep::addIterationDepsNoInstrs(int64_t num_mem_conflicts_in_iter
     actual_conflict_iterations += num_mem_conflicts_in_iter == 0 ? 0 : 1;
     total_memory_conflicts += num_mem_conflicts_in_iter;
 }
-    
 
 std::ostream &operator<<(std::ostream &os, const LoopInstanceDep &obj) {
     os << ", Loop iterations:" << obj.loop_iterations << 

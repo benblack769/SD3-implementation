@@ -14,7 +14,10 @@ typedef CompressedData<Stride> StrideTable;
 
 extern int64_t add_mem_time;
 
+typedef access_mode_pair<access_mode_pair<LoopInstanceDep> > AllLoopInstanceDep;
+
 class LoopInstance {
+protected:
     map<PC_ID,StrideDetector> detectors;
     PointTable pending_points;
     StrideTable pending_strides;
@@ -26,10 +29,9 @@ class LoopInstance {
     access_mode_pair<CompressedSet> pending_bits;
     access_mode_pair<CompressedSet> history_bits;
 
-    LoopInstanceDep my_dependencies;
+    AllLoopInstanceDep my_dependencies;//history_acc_mode<pending_acc_mode<deps>>
 
     int64_t loop_count;
-    int64_t has_dep_count;
     int64_t loop_id;
 public:
     LoopInstance(int64_t in_loop_id);
@@ -38,10 +40,11 @@ public:
     void iteration_end();
     void merge_history_pending(LoopInstance & otherloop);
 
-    const LoopInstanceDep &loop_end();
+    AllLoopInstanceDep &loop_end();
     int64_t get_loop_id(){return loop_id;}
 protected:
-    void handle_conflicts();
+    void handle_all_conflicts();
+    void handle_conflicts(MemAccessMode pending_mode,MemAccessMode history_mode);
 
     void merge_pending_history();
 };
