@@ -1,3 +1,4 @@
+#pragma once
 #include "PC_ID.h"
 #include "CompressedBits.h"
 #include <vector>
