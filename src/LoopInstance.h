@@ -3,12 +3,7 @@
 
 #include "ConflictData.h"
 #include "CompressedBits.h"
-#include "StrideDetector.h"
-#include "dynamic_gcd.h"
 #include "Dependence.h"
-
-typedef CompressedData<Point> PointTable;
-typedef CompressedData<Stride> StrideTable;
 
 #define HAS_DEP_LIMIT 4
 
@@ -19,12 +14,6 @@ typedef access_mode_pair<access_mode_pair<LoopInstanceDep> > AllLoopInstanceDep;
 class LoopInstance {
 protected:
     map<PC_ID,StrideDetector> detectors;
-    PointTable pending_points;
-    StrideTable pending_strides;
-
-    PointTable history_points;
-    StrideTable history_strides;
-
     CompressedSet killed_bits;
     access_mode_pair<CompressedSet> pending_bits;
     access_mode_pair<CompressedSet> history_bits;

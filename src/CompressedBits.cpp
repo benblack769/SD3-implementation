@@ -85,6 +85,19 @@ void CompressedSet::and_with_optional_neg(CompressedSet & outer,bool neg){
 void CompressedSet::intersect(CompressedSet & outer){
     and_with_optional_neg(outer,false);
 }
+bool CompressedSet::has_any_in_intersect(CompressedSet & outer){
+    if(outer.data.size() < this->data.size()){
+        outer.has_any_in_intersect(*this);
+    }
+    for(set_iterator iter = data.begin(); iter != data.end(); ++iter){
+        int64_t key = iter->first;
+        BlockSet value = iter->second;
+        if(outer.data.count(key) & (value.bits & outer.data[key].bits).any()){
+            return true;
+        }
+    }
+    return false;
+}
 
 void CompressedSet::subtract(CompressedSet & outer){
     and_with_optional_neg(outer,true);
