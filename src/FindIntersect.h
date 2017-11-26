@@ -5,6 +5,59 @@
 #include <map>
 #include <cassert>
 
+/*
+The idea is this:
+
+For compressed memory access, we want 3 things
+
+2 sets of instructions, each with a set of memory locations they accessed
+
+You want to be able to 
+
+1. Merge these together
+2. Find instructions that have overlapping memory addresses
+
+
+There are other operations involving a single set such as
+
+1. Remove all bits that are in a set of adresses
+2. Find the union of all memory adresses
+
+In order to accomplish all these things efficiently, we be constantly relying on the 
+distributive property of set intersection over union. 
+
+The idea is to store the instructions in a tree. The leaves are the instructions, 
+the nodes are unions of the sets in the children. 
+
+The root, of course, is the union of all the sets in the tree. 
+
+For example, 
+              {1,2,3,4}
+        {1,3,4}          {1,2}
+  {1,4}I:4  {3}I:2  {1,2}I:1  {2}I:5
+
+There is also a bidirectional map between instructions and locations in the tree.   
+
+The operations on this set is as follows:
+
+1. Adding new instruction to the set is just like adding elements to a heap. This results in perfect ballancing. 
+2. Merging in new memory accesses for an existing instruction finds the instruction, and unions the set with all of the parents of that node
+3. Finding conflicts between two trees happens in two steps
+    1. Pick the root of one of the trees. Recursively go down the other tree into the nodes which have overlap with the root. Save the instructions with those nodes
+    2. For each of those instructions, recursively go down the original tree to 
+    
+Running time of operations looks like this:
+
+Assume linear time for set intersection and union, possible with hash tables. 
+
+N is the total number of instructions
+M is the total number of memory adresses accesse
+
+1. This is constant amortized time
+2. This is O(m * log(N)), where m is the number of memory adfresses that you are unioning in
+3.
+    1. This O(M * log(N) * C) Where C is the number of pairs of instruction conflicts
+*/
 
 typedef PC_ID KeyType;
 struct IntersectInfo{
@@ -38,12 +91,12 @@ class IntersectFinder{
     }
 
     void merge(const IntersectFinder & other){
-        if(equal_keys(other)){
-            fast_merge(other);
-        }
-        else{
+        //if(equal_keys(other)){
+        //    fast_merge(other);
+        //}
+        //else{
             slow_merge(other);
-        }
+        //}
     }
     
     CompressedSet & my_set(KeyType key){
@@ -82,6 +135,9 @@ protected:
                 out_keys.push_back(keys[cur_node]);
             }
             else{
+                //TODO: Possible significant optimization:
+                //CompressedSet inter = with;
+                //inter.intersect(data[cur_node])
                 add_overlap_keys(out_keys,with,left(cur_node));
                 add_overlap_keys(out_keys,with,right(cur_node));
             }
@@ -113,6 +169,7 @@ protected:
         return data.size() - num_sets();
     }
     void fast_merge(const IntersectFinder & other){
+        assert(equal_keys(other));
         //assumes equal_key returns true, fails otherwise.
         assert(data.size() == other.data.size());
         for(size_t i = 0; i < data.size(); i++){
