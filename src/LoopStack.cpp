@@ -59,9 +59,9 @@ void LoopStack::print_loop_dependencies(){
         int64_t lid = it->first;
         cout << "LOOP " << lid << "\n";    
         cout << "RAW dependencies: " << "\n";
-        cout << it->second[READ][WRITE] << endl;
-        cout << "WAR dependencies: " << "\n";
         cout << it->second[WRITE][READ] << endl;
+        cout << "WAR dependencies: " << "\n";
+        cout << it->second[READ][WRITE] << endl;
         cout << "WAW dependencies: " << "\n";
         cout << it->second[WRITE][WRITE] << endl;
     }

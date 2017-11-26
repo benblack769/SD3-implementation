@@ -53,12 +53,12 @@ void only_conflicts(vector<pair<IntTy1,IntTy2> > & in_overlap,vector<InstrDepend
     }
 }
 template<class IntTy1,class IntTy2>
-void conflicts(CompressedData<IntTy1> & first,CompressedData<IntTy2> & second,vector<InstrDependence> & out_conflicts){
+void conflicts(CompressedData<IntTy1> & first,CompressedData<IntTy2> & second,vector<InstrDependence> & out_conflicts,MemAccessMode first_mode,MemAccessMode second_mode){
     vector<pair<IntTy1,IntTy2> > overlap;
     vector<IntTy1> first_inters;
     vector<IntTy2> second_inters;
-    first.intervals(first_inters,true,WRITE);
-    second.intervals(second_inters,true,READ);
+    first.intervals(first_inters,true,first_mode);
+    second.intervals(second_inters,true,second_mode);
     sort_by_first(first_inters);
     sort_by_first(second_inters);
     check_overlap_sorted(first_inters,second_inters,overlap);
@@ -73,6 +73,9 @@ void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode hi
     CompressedSet conflict_bits = pending_bits[pending_mode];
     conflict_bits.intersect(history_bits[history_mode]);
     LoopInstanceDep & cur_dependencies = my_dependencies[history_mode][pending_mode];
+    if(loop_id == 1 && history_mode == READ && pending_mode == WRITE){
+        cout << "asdas";
+    }
     if(conflict_bits.any()){
         int64_t conflict_count = conflict_bits.count();
         if(cur_dependencies.conflict_iterations() > HAS_DEP_LIMIT){
@@ -81,10 +84,10 @@ void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode hi
         else{
             vector<InstrDependence> out_dependencies;
             //find 4-way overlap between points and strides
-            conflicts(history_points,pending_points,out_dependencies);
-            conflicts(history_points,pending_strides,out_dependencies);
-            conflicts(history_strides,pending_points,out_dependencies);
-            conflicts(history_strides,pending_strides,out_dependencies);
+            conflicts(history_points,pending_points,out_dependencies,history_mode,pending_mode);
+            conflicts(history_points,pending_strides,out_dependencies,history_mode,pending_mode);
+            conflicts(history_strides,pending_points,out_dependencies,history_mode,pending_mode);
+            conflicts(history_strides,pending_strides,out_dependencies,history_mode,pending_mode);
             
             cur_dependencies.addIterationDependencies(out_dependencies,conflict_count);
         }
