@@ -1,6 +1,7 @@
 #include "LoopStack.h"
 #include <fstream>
 #include <cassert>
+#include <iostream>
 using namespace std;
 
 void single_loop_parser_run(char * filename){

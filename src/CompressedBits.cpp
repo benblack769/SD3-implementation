@@ -1,6 +1,8 @@
 #include <cassert>
 #include "CompressedBits.h"
 
+CompressedSet empty_set;
+
 void BlockSet::add(int64_t element){
     assert(element < BLOCK_SIZE && element >= 0);
     bits[element] = true;
@@ -23,6 +25,9 @@ bool BlockSet::any(){
 }
 int64_t BlockSet::count(){
     return bits.count();
+}
+bool BlockSet::contains(const BlockSet &  outer){
+    return (bits | outer.bits) == bits;
 }
 
 
@@ -54,18 +59,13 @@ bool CompressedSet::has_any_in_block(int64_t element,int64_t size){
         }
     }
     return false;
-}    
-void CompressedSet::and_with_optional_neg(CompressedSet & outer,bool neg){
+}
+void CompressedSet::intersect(CompressedSet & outer){
     for(set_iterator iter = data.begin(); iter != data.end(); ){
         int64_t key = iter->first;
         BlockSet & value = iter->second;
         if(outer.data.count(key)){
-            if(!neg){
-                value &= outer.data[key];
-            }
-            else{
-                value.subtract(outer.data[key]);
-            }
+            value &= outer.data[key];
             if(!value.any()){
                 //be careful, erases current element. 
                 data.erase(iter++);
@@ -77,13 +77,7 @@ void CompressedSet::and_with_optional_neg(CompressedSet & outer,bool neg){
             //be careful, erases current element.
             data.erase(iter++);
         }
-        //if(data.size() == 0){
-        //    break;
-        //}
     }
-}
-void CompressedSet::intersect(CompressedSet & outer){
-    and_with_optional_neg(outer,false);
 }
 bool CompressedSet::has_any_in_intersect(CompressedSet & outer){
     if(outer.data.size() < this->data.size()){
@@ -98,9 +92,33 @@ bool CompressedSet::has_any_in_intersect(CompressedSet & outer){
     }
     return false;
 }
+bool CompressedSet::contains(CompressedSet & outer){
+    for(set_iterator iter = outer.data.begin(); iter != outer.data.end(); ++iter){
+        int64_t key = iter->first;
+        if(data.count(key) && !data[key].contains(iter->second)){
+            return false;
+        }
+    }
+    return true;
+}
 
 void CompressedSet::subtract(CompressedSet & outer){
-    and_with_optional_neg(outer,true);
+    for(set_iterator iter = data.begin(); iter != data.end(); ){
+        int64_t key = iter->first;
+        BlockSet & value = iter->second;
+        if(outer.data.count(key)){
+            value.subtract(outer.data[key]);
+            if(!value.any()){
+                //be careful, erases current element. 
+                data.erase(iter++);
+            }
+            else{
+                ++iter;
+            }
+        }else{
+            ++iter;
+        }
+    }
 }
 void CompressedSet::unite(CompressedSet & outer){
     for(set_iterator iter = outer.data.begin(); iter != outer.data.end(); ++iter){

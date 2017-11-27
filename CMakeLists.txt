@@ -17,10 +17,10 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 add_executable(unit_test ${CPP_TEST_DIR}/test_object.h ${CPP_TEST_DIR}/test_object.cpp  ${CPP_SOURCE_DIR}/FindIntersect.h ${CPP_TEST_DIR}/FindIntersectTest.cpp ${CPP_SOURCE_DIR}/CompressedBits.cpp  ${CPP_SOURCE_DIR}/CompressedBits.h ${CPP_TEST_DIR}/CompressedBitsTest.cpp)
-#add_executable(conflict_test ${CPP_TEST_DIR}/conflict_test.cpp ${CPP_SOURCE_DIR}/ConflictData.h ${CPP_SOURCE_DIR}/CompressedBits.cpp  ${CPP_SOURCE_DIR}/CompressedBits.h ${CPP_SOURCE_DIR}/LoopInstance.h ${CPP_SOURCE_DIR}/LoopInstance.cpp ${CPP_SOURCE_DIR}/LoopStack.h ${CPP_SOURCE_DIR}/LoopStack.cpp ${CPP_SOURCE_DIR}/PC_ID.h ${CPP_SOURCE_DIR}/Dependence.cpp)
+add_executable(conflict_test ${CPP_TEST_DIR}/conflict_test.cpp ${CPP_SOURCE_DIR}/CompressedBits.cpp  ${CPP_SOURCE_DIR}/CompressedBits.h ${CPP_SOURCE_DIR}/LoopInstance.h ${CPP_SOURCE_DIR}/LoopInstance.cpp ${CPP_SOURCE_DIR}/LoopStack.h ${CPP_SOURCE_DIR}/LoopStack.cpp ${CPP_SOURCE_DIR}/PC_ID.h ${CPP_SOURCE_DIR}/Dependence.cpp)
 
-set_property(TARGET unit_test PROPERTY CXX_STANDARD 98)
-set_property(TARGET unit_test PROPERTY CXX_STANDARD_REQUIRED ON)
+#set_property(TARGET unit_test PROPERTY CXX_STANDARD 98)
+#set_property(TARGET unit_test PROPERTY CXX_STANDARD_REQUIRED ON)
 
-#set_property(TARGET conflict_test PROPERTY CXX_STANDARD 98)
-#set_property(TARGET conflict_test PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET conflict_test PROPERTY CXX_STANDARD 11)
+set_property(TARGET conflict_test PROPERTY CXX_STANDARD_REQUIRED ON)

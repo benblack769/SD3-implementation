@@ -1,8 +1,8 @@
 #pragma once
 #include "Types.h"
 
-#include "ConflictData.h"
 #include "CompressedBits.h"
+#include "FindIntersect.h"
 #include "Dependence.h"
 
 #define HAS_DEP_LIMIT 4
@@ -13,10 +13,9 @@ typedef access_mode_pair<access_mode_pair<LoopInstanceDep> > AllLoopInstanceDep;
 
 class LoopInstance {
 protected:
-    map<PC_ID,StrideDetector> detectors;
     CompressedSet killed_bits;
-    access_mode_pair<CompressedSet> pending_bits;
-    access_mode_pair<CompressedSet> history_bits;
+    access_mode_pair<IntersectFinder> pending_bits;
+    access_mode_pair<IntersectFinder> history_bits;
 
     AllLoopInstanceDep my_dependencies;//history_acc_mode<pending_acc_mode<deps>>
 
@@ -24,8 +23,8 @@ protected:
     int64_t loop_id;
 public:
     LoopInstance(int64_t in_loop_id);
-    void addMemAccess(Block block,PC_ID identifier,StrideDetector & pc_detector);
-    bool isKilled(Block block);
+    void addMemAccess(int64_t mem_addr,int64_t access_size,PC_ID identifier);
+    bool isKilled(int64_t mem_addr,int64_t access_size);
     void iteration_end();
     void merge_history_pending(LoopInstance & otherloop);
 

@@ -32,6 +32,7 @@ public:
     void subtract(const BlockSet &  outer);
     bool any();
     int64_t count();
+    bool contains(const BlockSet &  outer);
     friend class CompressedSet;
 };
 
@@ -67,6 +68,7 @@ public:
     bool has_any_in_block(int64_t element,int64_t size);
     void intersect(CompressedSet & outer);
     bool has_any_in_intersect(CompressedSet & outer);
+    bool contains(CompressedSet & outer);
     void unite(CompressedSet & outer);
     void subtract(CompressedSet & outer);//boolean operator (x & !y)
     bool any();
@@ -76,3 +78,4 @@ public:
 protected:
     void and_with_optional_neg(CompressedSet & outer,bool neg);
 };
+extern CompressedSet empty_set;

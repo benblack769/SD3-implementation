@@ -67,30 +67,37 @@ struct IntersectInfo{
 };
 
 class IntersectFinder{
+protected:
     vector<CompressedSet> data;
     vector<KeyType> keys;
     map<KeyType,size_t> key_locations;
+public:
     void add_new_set(KeyType key){
         if(key_locations.count(key)){
             return;
         }
-        swap_node_key();
+        if(!is_empty()){
+            swap_node_key();
+        }
         
         //adds another key entry
         data.push_back(CompressedSet());
         keys.push_back(key);
     }
-    void add_values_to_key(KeyType key,const CompressedSet & add_values){
+    void add_values_to_key(KeyType key,CompressedSet & add_values){
         add_values_to_loc(key_locations[key],add_values);
     }
-    bool equal_keys(const IntersectFinder & other){
-        if(keys.size() != other.keys.size()){
-            return false;
-        }
-        return equal(keys.begin(),keys.end(), other.keys.begin());
+    bool is_empty(){
+        return data.size() == 0;
     }
 
-    void merge(const IntersectFinder & other){
+    void clear(){
+        data.clear();
+        keys.clear();
+        key_locations.clear();
+    }
+
+    void merge(IntersectFinder & other){
         //if(equal_keys(other)){
         //    fast_merge(other);
         //}
@@ -98,22 +105,33 @@ class IntersectFinder{
             slow_merge(other);
         //}
     }
+    void subtract_from_all(CompressedSet & add_values){
+        if(!is_empty()){
+            subtract_from(add_values,0);
+        }
+    }
     
     CompressedSet & my_set(KeyType key){
         return data[key_locations[key]];
     }
+    CompressedSet & union_all(){
+        if(is_empty()){
+            return empty_set;
+        }
+        else{
+            return data[0];
+        }
+    }
 
-    size_t num_sets(){
+    size_t num_keys(){
         return (data.size() + 1) / 2;
     }
-    vector<KeyType> find_overlap_keys(const CompressedSet & with){
-        vector<KeyType> res;
-        add_overlap_keys(res,with,0);
-        return res;
-    }
-    vector<IntersectInfo>  conflicting_keys(const IntersectFinder & other){
+    vector<IntersectInfo>  conflicting_keys(IntersectFinder & other){
         vector<IntersectInfo> res;
-        vector<KeyType> my_conflict_keys = find_overlap_keys(other.data[0]);
+        if(is_empty()){
+            return res;
+        }
+        vector<KeyType> my_conflict_keys = find_overlap_keys(other.union_all());
         for(size_t i = 0; i < my_conflict_keys.size(); i++){
             KeyType this_key = my_conflict_keys[i];
             vector<KeyType> other_conflict_keys = other.find_overlap_keys(this->data[key_locations[this_key]]);
@@ -129,7 +147,18 @@ class IntersectFinder{
         return res;
     }
 protected:
-    void add_overlap_keys(vector<KeyType> & out_keys,const CompressedSet & with,size_t cur_node){
+    vector<KeyType> find_overlap_keys(CompressedSet & with){
+        vector<KeyType> res;
+        add_overlap_keys(res,with,0);
+        return res;
+    }
+    bool equal_keys(IntersectFinder & other){
+        if(keys.size() != other.keys.size()){
+            return false;
+        }
+        return equal(keys.begin(),keys.end(), other.keys.begin());
+    }
+    void add_overlap_keys(vector<KeyType> & out_keys,CompressedSet & with,size_t cur_node){
         if(with.has_any_in_intersect(data[cur_node])){
             if(is_data_node(cur_node)){
                 out_keys.push_back(keys[cur_node]);
@@ -143,7 +172,18 @@ protected:
             }
         }
     }
-    void add_values_to_loc(size_t loc,const CompressedSet & add_values){
+    void subtract_from(CompressedSet & with,size_t cur_node){
+        CompressedSet new_with = with;
+        with.intersect(data[cur_node]);
+        if(new_with.any()){
+            data[cur_node].subtract(new_with);
+            if(!is_data_node(cur_node)){
+                subtract_from(new_with,left(cur_node));
+                subtract_from(new_with,right(cur_node));
+            }
+        }
+    }
+    void add_values_to_loc(size_t loc,CompressedSet & add_values){
         data[loc].unite(add_values);
         if(!is_root(loc)){
             add_values_to_loc(parent(loc),add_values);
@@ -166,9 +206,9 @@ protected:
         return node*2 + 2;
     }
     size_t num_tmps(){
-        return data.size() - num_sets();
+        return data.size() - num_keys();
     }
-    void fast_merge(const IntersectFinder & other){
+    void fast_merge(IntersectFinder & other){
         assert(equal_keys(other));
         //assumes equal_key returns true, fails otherwise.
         assert(data.size() == other.data.size());
@@ -176,7 +216,7 @@ protected:
             data[i].unite(other.data[i]);
         }
     }
-    void slow_merge(const IntersectFinder & other){
+    void slow_merge(IntersectFinder & other){
         for(size_t i = other.num_tmps(); i < other.data.size(); i++){
             KeyType add_key = other.keys[i];
             this->add_new_set(add_key);
@@ -188,7 +228,7 @@ protected:
         //swaps final key entry with a node entry
         size_t last_set_loc = num_tmps();
         size_t swap_set_loc = data.size();
-        KeyType null_key();
+        KeyType null_key;
         data.push_back(data[last_set_loc]);
         keys.push_back(null_key);
         
