@@ -36,7 +36,7 @@ void CompressedSet::add_block(int64_t element,int64_t size){
     }
 }
 bool CompressedSet::has(int64_t element){
-    return data[uint64_t(element) / BLOCK_SIZE].has(uint64_t(element) % BLOCK_SIZE); 
+    return data[uint64_t(element) / BLOCK_SIZE].has(uint64_t(element) % BLOCK_SIZE);
 }
 
 bool CompressedSet::has_all_block(int64_t element,int64_t size){
@@ -54,20 +54,34 @@ bool CompressedSet::has_any_in_block(int64_t element,int64_t size){
         }
     }
     return false;
-}    
-void CompressedSet::and_with_optional_neg(CompressedSet & outer,bool neg){
+}
+void CompressedSet::subtract(CompressedSet & outer){
     for(set_iterator iter = data.begin(); iter != data.end(); ){
         int64_t key = iter->first;
         BlockSet & value = iter->second;
         if(outer.data.count(key)){
-            if(!neg){
-                value &= outer.data[key];
+            value.subtract(outer.data[key]);
+            if(!value.any()){
+                //be careful, erases current element.
+                data.erase(iter++);
             }
             else{
-                value.subtract(outer.data[key]);
+                ++iter;
             }
+        }else{
+            ++iter;
+        }
+    }
+}
+
+void CompressedSet::intersect(CompressedSet & outer){
+    for(set_iterator iter = data.begin(); iter != data.end(); ){
+        int64_t key = iter->first;
+        BlockSet & value = iter->second;
+        if(outer.data.count(key)){
+            value &= outer.data[key];
             if(!value.any()){
-                //be careful, erases current element. 
+                //be careful, erases current element.
                 data.erase(iter++);
             }
             else{
@@ -77,17 +91,7 @@ void CompressedSet::and_with_optional_neg(CompressedSet & outer,bool neg){
             //be careful, erases current element.
             data.erase(iter++);
         }
-        //if(data.size() == 0){
-        //    break;
-        //}
     }
-}
-void CompressedSet::intersect(CompressedSet & outer){
-    and_with_optional_neg(outer,false);
-}
-
-void CompressedSet::subtract(CompressedSet & outer){
-    and_with_optional_neg(outer,true);
 }
 void CompressedSet::unite(CompressedSet & outer){
     for(set_iterator iter = outer.data.begin(); iter != outer.data.end(); ++iter){

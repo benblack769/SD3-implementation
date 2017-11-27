@@ -69,6 +69,4 @@ public:
     bool any();
     void clear();
     int64_t count();
-protected:
-    void and_with_optional_neg(CompressedSet & outer,bool neg);
 };
