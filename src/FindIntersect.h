@@ -83,6 +83,7 @@ public:
         //adds another key entry
         data.push_back(CompressedSet());
         keys.push_back(key);
+        key_locations[key] = keys.size()-1;
     }
     void add_values_to_key(KeyType key,CompressedSet & add_values){
         add_values_to_loc(key_locations[key],add_values);
@@ -174,7 +175,7 @@ protected:
     }
     void subtract_from(CompressedSet & with,size_t cur_node){
         CompressedSet new_with = with;
-        with.intersect(data[cur_node]);
+        new_with.intersect(data[cur_node]);
         if(new_with.any()){
             data[cur_node].subtract(new_with);
             if(!is_data_node(cur_node)){
@@ -208,14 +209,6 @@ protected:
     size_t num_tmps(){
         return data.size() - num_keys();
     }
-    void fast_merge(IntersectFinder & other){
-        assert(equal_keys(other));
-        //assumes equal_key returns true, fails otherwise.
-        assert(data.size() == other.data.size());
-        for(size_t i = 0; i < data.size(); i++){
-            data[i].unite(other.data[i]);
-        }
-    }
     void slow_merge(IntersectFinder & other){
         for(size_t i = other.num_tmps(); i < other.data.size(); i++){
             KeyType add_key = other.keys[i];
@@ -228,6 +221,7 @@ protected:
         //swaps final key entry with a node entry
         size_t last_set_loc = num_tmps();
         size_t swap_set_loc = data.size();
+        assert(parent(swap_set_loc) == last_set_loc && "this is needed to ensure correctness");
         KeyType null_key;
         data.push_back(data[last_set_loc]);
         keys.push_back(null_key);

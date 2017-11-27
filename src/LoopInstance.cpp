@@ -39,6 +39,10 @@ void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode hi
     intersect.intersect(pending_bits[pending_mode].union_all());
     int64_t conflict_count = intersect.count();
     LoopInstanceDep & cur_dependencies = my_dependencies[history_mode][pending_mode];
+    if(loop_id == 1){
+        int i = 0;
+        i++;
+    }
     if(conflict_count){
         vector<IntersectInfo> all_info = history_bits[history_mode].conflicting_keys(pending_bits[pending_mode]);
         vector<InstrDependence> out_dependencies(all_info.size());
