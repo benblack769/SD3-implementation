@@ -12,7 +12,7 @@ For compressed memory access, we want 3 things
 
 2 sets of instructions, each with a set of memory locations they accessed
 
-You want to be able to 
+You want to be able to
 
 1. Merge these together
 2. Find instructions that have overlapping memory addresses
@@ -23,32 +23,37 @@ There are other operations involving a single set such as
 1. Remove all bits that are in a set of adresses
 2. Find the union of all memory adresses
 
-In order to accomplish all these things efficiently, we be constantly relying on the 
-distributive property of set intersection over union. 
+In order to accomplish all these things efficiently, we be constantly relying on the
+distributive property of set intersection over union.
 
-The idea is to store the instructions in a tree. The leaves are the instructions, 
-the nodes are unions of the sets in the children. 
+When thinking about sets this way, you can reaslize that you can do binary
+search over sets. The only thing you need to do this is the union of each pair of sets.
 
-The root, of course, is the union of all the sets in the tree. 
+The idea is to store the instructions in a tree. The leaves are the instructions,
+the nodes are unions of the sets in the children.
 
-For example, 
+The root, of course, is the union of all the sets in the tree.
+
+For example,
               {1,2,3,4}
         {1,3,4}          {1,2}
   {1,4}I:4  {3}I:2  {1,2}I:1  {2}I:5
 
-There is also a bidirectional map between instructions and locations in the tree.   
+There is also a bidirectional map between instructions and locations in the tree,
+so that data access is efficient.
+
 
 The operations on this set is as follows:
 
-1. Adding new instruction to the set is just like adding elements to a heap. This results in perfect ballancing. 
+1. Adding new instruction to the set is just like adding elements to a heap. This results in perfect ballancing.
 2. Merging in new memory accesses for an existing instruction finds the instruction, and unions the set with all of the parents of that node
 3. Finding conflicts between two trees happens in two steps
     1. Pick the root of one of the trees. Recursively go down the other tree into the nodes which have overlap with the root. Save the instructions with those nodes
-    2. For each of those instructions, recursively go down the original tree to 
-    
+    2. For each of those instructions, recursively go down the original tree to
+
 Running time of operations looks like this:
 
-Assume linear time for set intersection and union, possible with hash tables. 
+Assume linear time for set intersection and union, possible with hash tables.
 
 N is the total number of instructions
 M is the total number of memory adresses accesse
@@ -79,7 +84,7 @@ public:
         if(!is_empty()){
             swap_node_key();
         }
-        
+
         //adds another key entry
         data.push_back(CompressedSet());
         keys.push_back(key);
@@ -111,7 +116,7 @@ public:
             subtract_from(add_values,0);
         }
     }
-    
+
     CompressedSet & my_set(KeyType key){
         return data[key_locations[key]];
     }
@@ -225,7 +230,7 @@ protected:
         KeyType null_key;
         data.push_back(data[last_set_loc]);
         keys.push_back(null_key);
-        
+
         key_locations[keys[last_set_loc]] = swap_set_loc;
         keys[swap_set_loc] = keys[last_set_loc];
         keys[last_set_loc] = null_key;
