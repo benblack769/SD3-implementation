@@ -11,4 +11,4 @@ test-data/conflict
 __pycache__
 Makefile
 *.pyc
-test-data/conflict-out/many_point.txt
+test-data/conflict-out/many_points.txt
