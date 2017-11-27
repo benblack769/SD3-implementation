@@ -114,6 +114,61 @@ def kill_bit_nested_loop():
 
     prog.generate_file(output_relative_path+"kill_bit_nested_loop.txt")
 
+def no_conflicts_werid_strides():
+    '''
+    Strides of not normal lengths conflict
+    '''
+    prog  = Program()
+    size = 10
+    A = prog.new_list(1000)
+
+    prog.loop_start(1)
+    for i in range(size):
+        prog.loop_start(2)
+        for j in range(7,49,7):
+            prog.un_op(1,A[j])
+            prog.iter_end(2)
+        prog.loop_end(2)
+
+        prog.loop_start(3)
+        for j in range(4,26,3):
+            A[j].assign(2,prog.constant())
+            prog.iter_end(3)
+        prog.loop_end(3)
+
+        prog.iter_end(1)
+    prog.loop_end(1)
+
+    prog.generate_file(output_relative_path+"no_conflicts_werid_strides.txt")
+
+
+def conflicts_werid_strides():
+    '''
+    Strides of not normal lengths conflict
+    '''
+    prog  = Program()
+    size = 10
+    A = prog.new_list(1000)
+
+    prog.loop_start(1)
+    for i in range(size):
+        prog.loop_start(2)
+        for j in range(7,49,7):
+            prog.un_op(1,A[j])
+            prog.iter_end(2)
+        prog.loop_end(2)
+
+        prog.loop_start(3)
+        for j in range(4,33,3):
+            A[j].assign(2,prog.constant())
+            prog.iter_end(3)
+        prog.loop_end(3)
+
+        prog.iter_end(1)
+    prog.loop_end(1)
+
+    prog.generate_file(output_relative_path+"conflicts_werid_strides.txt")
+
 
 def conflicts_nested_loop():
     '''
@@ -203,6 +258,8 @@ mat_mul()
 kill_bit_dep()
 kill_bit_nested_loop()
 conflicts_nested_loop()
+no_conflicts_werid_strides()
+conflicts_werid_strides()
 false_read_write_dep()
 many_points()
 #
