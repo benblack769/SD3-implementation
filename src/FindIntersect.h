@@ -165,9 +165,9 @@ protected:
                 out_keys.push_back(keys[cur_node]);
             }
             else{
-                //TODO: Possible significant optimization:
                 //CompressedSet inter = with;
                 //inter.intersect(data[cur_node])
+                //TODO: Possible significant optimization:
                 add_overlap_keys(out_keys,with,left(cur_node));
                 add_overlap_keys(out_keys,with,right(cur_node));
             }

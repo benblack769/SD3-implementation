@@ -30,8 +30,8 @@ void LoopInstance::addMemAccess(int64_t mem_addr, int64_t access_size, PC_ID ide
     my_table.add_values_to_key(identifier,new_set);
 }
 void LoopInstance::handle_all_conflicts(){
-    handle_conflicts(READ,WRITE);
     handle_conflicts(WRITE,READ);
+    handle_conflicts(READ,WRITE);
     handle_conflicts(WRITE,WRITE);
 }
 void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode history_mode){
@@ -39,18 +39,19 @@ void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode hi
     intersect.intersect(pending_bits[pending_mode].union_all());
     int64_t conflict_count = intersect.count();
     LoopInstanceDep & cur_dependencies = my_dependencies[history_mode][pending_mode];
-    if(loop_id == 1){
-        int i = 0;
-        i++;
-    }
     if(conflict_count){
-        vector<IntersectInfo> all_info = history_bits[history_mode].conflicting_keys(pending_bits[pending_mode]);
-        vector<InstrDependence> out_dependencies(all_info.size());
-        for(size_t i = 0; i < all_info.size(); i++){
-            IntersectInfo info = all_info[i];
-            out_dependencies[i] = InstrDependence(info.key_one,info.key_two,-1,info.size_of_intersect);
+        if(cur_dependencies.conflict_iterations() <= HAS_DEP_LIMIT){
+            vector<IntersectInfo> all_info = history_bits[history_mode].conflicting_keys(pending_bits[pending_mode]);
+            vector<InstrDependence> out_dependencies(all_info.size());
+            for(size_t i = 0; i < all_info.size(); i++){
+                IntersectInfo info = all_info[i];
+                out_dependencies[i] = InstrDependence(info.key_one,info.key_two,-1,info.size_of_intersect);
+            }
+            cur_dependencies.addIterationDependencies(out_dependencies,conflict_count);
         }
-        cur_dependencies.addIterationDependencies(out_dependencies,conflict_count);
+        else{
+            cur_dependencies.addIterationDepsNoInstrs(conflict_count);
+        }
     }
     else{
         cur_dependencies.addIterationDepsNoInstrs(conflict_count);
