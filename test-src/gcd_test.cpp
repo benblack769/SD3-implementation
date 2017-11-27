@@ -32,11 +32,29 @@ void debug_print_test_overlap(SparseStride stride1, SparseStride stride2) {
 
     cout << "num overlap calculated = " << has_overlap(stride1, stride2) << endl;
 }
-void test_num_overlap_stride_stride() {
+void werid_stride_overlap_case(){
+    //tests really bad stride case
     SparseStride stride1(12, 4, 7, 4);
-    SparseStride stride2(4, 4, 16, 4);
+    SparseStride stride2(4, 4, 16, 3);
+    //debug_print_test_overlap(stride1, stride2);
+    t_assert(has_overlap(stride1, stride2));
+}
+//SparseStride(int64_t in_first, int64_t in_size, int64_t in_stride, int64_t in_block_size)
+
+void ext_euclid_test(){
+    //tests really bad stride case
+    SparseStride stride1(20,7,4,1);
+    SparseStride stride2(23,7,3,1);
     debug_print_test_overlap(stride1, stride2);
-    //t_assert(has_overlap(stride1, stride2) == 4);
+    t_assert(has_overlap(stride1, stride2));
+    SparseStride not_stride1(21,6,3,1);
+    SparseStride not_stride2(23,6,8,1);
+    t_assert(!has_overlap(not_stride1, not_stride2));
+}
+
+void test_num_overlap_stride_stride() {
+    werid_stride_overlap_case();
+    ext_euclid_test();
 }
 void test_num_overlap_stride_block() {
     Block b1(5, 12 + 1);

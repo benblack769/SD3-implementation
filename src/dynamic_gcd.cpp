@@ -87,7 +87,7 @@ StrideIterator begin(SparseStride stride){
 }
 
 bool slow_has_overlap (StrideIterator one, StrideIterator other){
-  while (one.at_end() && other.at_end())
+  while (!one.at_end() && !other.at_end())
   {
       if(has_overlap(*one,*other)){
           return true;
@@ -124,19 +124,14 @@ ExtEuclidResult xgcd(int64_t a, int64_t b){
         q = b / a; b = b % a;
         aa[1] = aa[1] - q*aa[0];  bb[1] = bb[1] - q*bb[0];
         if (b == 0) {
-            ExtEuclidResult result = {b,aa[0],bb[0]};
+            ExtEuclidResult result = {a,aa[0],bb[0]};
             return result;
         };
     };
 }
-
-//bool ex_euclid_has_overlap(SparseStride one, SparseStride other){
-//    assert(one.block_size() == other.block_size() && 
-//           delta % one.block_size() == 0);
-    //ExtEuclidResult res = xgcd()
-    
-//}
-
+bool i_divides(int64_t denom,int64_t num){
+    return num % denom == 0;
+}
 bool has_overlap(SparseStride one, SparseStride other) {
     // ensures one.first < other.first always
     if (one.first() > other.first()) {
@@ -145,34 +140,36 @@ bool has_overlap(SparseStride one, SparseStride other) {
         other = tmp;
     }
     int64_t delta = other.first() - one.first();
-    int64_t overlap_size = one.end() - other.first();
 
-    if (overlap_size <= 0) {
+    if (one.end() - other.first() <= 0) {
         return false;
+    }
+    else if(delta == 0){
+        return true;
     }
     else if(one.is_dense() || other.is_dense()){
         return true;
     }
-    else if(one.stride() == other.stride()){
-        int64_t stride_offset = one.stride() % delta;
-        if(stride_offset == 0){
-            return true;
+    else if(one.block_size() == other.block_size() && 
+            i_divides(one.block_size(),delta)){
+        if(one.stride() == other.stride()){
+            return i_divides(one.stride(),delta);
         }
-        else if(one.block_size() == other.block_size() &&
-                delta % one.block_size() == 0){
-            return false;
-        }
-        else{
+        ExtEuclidResult res = xgcd(one.stride(),other.stride());        
+        int64_t gcd = res.gcd_result;
+        if(i_divides(gcd,delta)){
+            /*int64_t lcm = (one.stride() * other.stride()) / gcd;
+            int64_t adj_b_val = (res.b_value * delta) / gcd;
+            int64_t first_conflict = adj_b_val * other.stride() + other.first();
+            while(first_conflict < other.first()){
+                first_conflict += lcm;
+            }
+            return first_conflict <= one.last() && 
+                   first_conflict <= other.last();*/
             return slow_has_overlap(one,other);
         }
-    }
-    else if(one.block_size() == other.block_size() && 
-            delta % one.block_size() == 0){
-        if(gcd(one.stride(),other.stride())){
-            return false;
-        }
         else{
-            return true;
+            return false;
         }
     }
     else{

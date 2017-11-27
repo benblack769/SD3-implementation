@@ -1,16 +1,13 @@
 #include "test_object.h"
 #include "CompressedBits.h"
-#include "Point.h"
-#include "IntervalOverlap.h"
 
 bool compressed_bits_test(){
-    cout << sizeof(CachedInterval<Stride>) << endl;
     CompressedSet bits1;
     for(int i = 0;i < 1000; i+= 133){
         bits1.add(i);
     }
     CompressedSet bits2;
-    t_assert(!bits1.any());
+    t_assert(!bits2.any());
     for(int j = 0; j < 12123; j += 3){
         bits2.add(j);
     }

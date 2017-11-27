@@ -8,15 +8,6 @@
 
 using namespace std;
 
-class KilledSpot{
-public:
-    KilledSpot():
-        killed(false){}
-    void set_killed(bool value){killed = value;}
-    bool is_killed(){return killed;}
-protected:
-    bool killed;
-};
 class PC_info{
 public:
     PC_info(PC_ID in_pc):
@@ -30,7 +21,6 @@ protected:
 
 class Point:
     public Block,
-    public KilledSpot,
     public PC_info{
   public:
     // Create a new point including its memory address and the PC that made the
@@ -45,8 +35,7 @@ class Point:
 };
 class Stride:
     public SparseStride,
-    public PC_info,
-    public KilledSpot{
+    public PC_info{
   public:
     // Create a new point including its memory address and the PC that made the
     // memory access
