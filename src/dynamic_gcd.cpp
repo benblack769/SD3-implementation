@@ -112,7 +112,7 @@ struct ExtEuclidResult{
 
 // C function for extended Euclidean Algorithm
 //Taken from https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Extended_Euclidean_algorithm
-ExtEuclidResult xgcd(int64_t a, int64_t b){
+/*ExtEuclidResult xgcd(int64_t a, int64_t b){
     int64_t aa[2]={1,0}, bb[2]={0,1}, q;
     while(true) {
         q = a / b; a = a % b;
@@ -128,7 +128,7 @@ ExtEuclidResult xgcd(int64_t a, int64_t b){
             return result;
         };
     };
-}
+}*/
 bool i_divides(int64_t denom,int64_t num){
     return num % denom == 0;
 }
@@ -140,8 +140,11 @@ bool has_overlap(SparseStride one, SparseStride other) {
         other = tmp;
     }
     int64_t delta = other.first() - one.first();
+    int64_t low = one.first();
+    int64_t high = min(one.last(),other.last());
+    int64_t overlap_size = high - low;
 
-    if (one.end() - other.first() <= 0) {
+    if (overlap_size <= 0) {
         return false;
     }
     else if(delta == 0){
@@ -155,8 +158,8 @@ bool has_overlap(SparseStride one, SparseStride other) {
         if(one.stride() == other.stride()){
             return i_divides(one.stride(),delta);
         }
-        ExtEuclidResult res = xgcd(one.stride(),other.stride());        
-        int64_t gcd = res.gcd_result;
+        //ExtEuclidResult res = xgcd(one.stride(),other.stride());        
+        int64_t gcd = ::gcd(one.stride(),other.stride());//res.gcd_result;
         if(i_divides(gcd,delta)){
             /*int64_t lcm = (one.stride() * other.stride()) / gcd;
             int64_t adj_b_val = (res.b_value * delta) / gcd;
@@ -166,7 +169,13 @@ bool has_overlap(SparseStride one, SparseStride other) {
             }
             return first_conflict <= one.last() && 
                    first_conflict <= other.last();*/
-            return slow_has_overlap(one,other);
+            int64_t lcm = (one.stride() * other.stride()) / gcd;
+            if(lcm <= overlap_size){
+                return true;
+            }
+            else{
+                return slow_has_overlap(one,other);
+            }
         }
         else{
             return false;
