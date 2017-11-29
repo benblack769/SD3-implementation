@@ -22,8 +22,8 @@ void LoopInstance::addMemAccess(Block block,PC_ID identifier,StrideDetector & pc
         killed_bits.add_block(block.begin(),block.length());
     }
     //add point to pending bit tables
-    pending_bits[identifier.get_acc_mode()].add_block(block.begin(),block.length());    
-    
+    pending_bits[identifier.get_acc_mode()].add_block(block.begin(),block.length());
+
     //get pc detector result and add point/stride to tables
     int64_t mem_addr = block.begin();
     int64_t access_size = block.length();
@@ -73,9 +73,6 @@ void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode hi
     CompressedSet conflict_bits = pending_bits[pending_mode];
     conflict_bits.intersect(history_bits[history_mode]);
     LoopInstanceDep & cur_dependencies = my_dependencies[history_mode][pending_mode];
-    if(loop_id == 1 && history_mode == READ && pending_mode == WRITE){
-        cout << "asdas";
-    }
     if(conflict_bits.any()){
         int64_t conflict_count = conflict_bits.count();
         if(cur_dependencies.conflict_iterations() > HAS_DEP_LIMIT){
@@ -88,7 +85,7 @@ void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode hi
             conflicts(history_points,pending_strides,out_dependencies,history_mode,pending_mode);
             conflicts(history_strides,pending_points,out_dependencies,history_mode,pending_mode);
             conflicts(history_strides,pending_strides,out_dependencies,history_mode,pending_mode);
-            
+
             cur_dependencies.addIterationDependencies(out_dependencies,conflict_count);
         }
     }
@@ -102,15 +99,15 @@ void LoopInstance::merge_pending_history(){
     int64_t start = my_clock();
     history_bits[READ].unite(pending_bits[READ]);
     history_bits[WRITE].unite(pending_bits[WRITE]);
-    
+
     history_points.merge_into(pending_points);
     history_strides.merge_into(pending_strides);
     add_mem_time += my_clock() - start;
-    
+
     pending_bits[READ].clear();
     pending_bits[WRITE].clear();
     killed_bits.clear();
-    
+
     pending_points.clear();
     pending_strides.clear();
 }
@@ -124,8 +121,8 @@ void LoopInstance::merge_history_pending(LoopInstance & otherloop){
     vector<Point> in_points;
     otherloop.history_strides.intervals(in_strides);
     otherloop.history_points.intervals(in_points);
-    
-    
+
+
     //merge in points
     for(size_t i = 0; i < in_points.size(); i++){
         Point this_point = in_points[i];
@@ -153,10 +150,10 @@ void LoopInstance::merge_history_pending(LoopInstance & otherloop){
     otherloop.history_bits[WRITE].subtract(killed_bits);
     pending_bits[READ].unite(otherloop.history_bits[READ]);
     pending_bits[WRITE].unite(otherloop.history_bits[WRITE]);
-    
+
     //add in new killed bits
     CompressedSet new_kill_bits = otherloop.history_bits[WRITE];
-    new_kill_bits.subtract(pending_bits[READ]); 
+    new_kill_bits.subtract(pending_bits[READ]);
     killed_bits.unite(new_kill_bits);
 }
 AllLoopInstanceDep &LoopInstance::loop_end(){
