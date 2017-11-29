@@ -104,12 +104,7 @@ public:
     }
 
     void merge(IntersectFinder & other){
-        //if(equal_keys(other)){
-        //    fast_merge(other);
-        //}
-        //else{
-            slow_merge(other);
-        //}
+        slow_merge(other);
     }
     void subtract_from_all(CompressedSet & add_values){
         if(!is_empty()){
@@ -170,22 +165,17 @@ protected:
                 out_keys.push_back(keys[cur_node]);
             }
             else{
-                //CompressedSet inter = with;
-                //inter.intersect(data[cur_node])
-                //TODO: Possible significant optimization:
                 add_overlap_keys(out_keys,with,left(cur_node));
                 add_overlap_keys(out_keys,with,right(cur_node));
             }
         }
     }
     void subtract_from(CompressedSet & with,size_t cur_node){
-        CompressedSet new_with = with;
-        new_with.intersect(data[cur_node]);
-        if(new_with.any()){
-            data[cur_node].subtract(new_with);
+        if(with.has_any_in_intersect(data[cur_node])){
+            data[cur_node].subtract(with);
             if(!is_data_node(cur_node)){
-                subtract_from(new_with,left(cur_node));
-                subtract_from(new_with,right(cur_node));
+                subtract_from(with,left(cur_node));
+                subtract_from(with,right(cur_node));
             }
         }
     }
