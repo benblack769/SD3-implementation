@@ -1,4 +1,5 @@
 #include <cassert>
+#include <iostream>
 #include "CompressedBits.h"
 
 CompressedSet empty_set;
@@ -26,9 +27,6 @@ bool BlockSet::any(){
 int64_t BlockSet::count(){
     return bits.count();
 }
-bool BlockSet::contains(const BlockSet &  outer){
-    return (bits | outer.bits) == bits;
-}
 
 
 void CompressedSet::add(int64_t element){
@@ -43,92 +41,99 @@ void CompressedSet::add_block(int64_t element,int64_t size){
 bool CompressedSet::has(int64_t element){
     return data[uint64_t(element) / BLOCK_SIZE].has(uint64_t(element) % BLOCK_SIZE); 
 }
-
-bool CompressedSet::has_all_block(int64_t element,int64_t size){
-    for(int64_t i = 0; i < size; i++){
-        if(!has(i+element)){
-            return false;
-        }
-    }
-    return true;
-}
-bool CompressedSet::has_any_in_block(int64_t element,int64_t size){
-    for(int64_t i = 0; i < size; i++){
-        if(has(i+element)){
-            return true;
-        }
-    }
-    return false;
-}
 void CompressedSet::intersect(CompressedSet & outer){
-    for(set_iterator iter = data.begin(); iter != data.end(); ){
-        int64_t key = iter->first;
-        BlockSet & value = iter->second;
-        if(outer.data.count(key)){
-            value &= outer.data[key];
-            if(!value.any()){
-                //be careful, erases current element. 
+    for(set_iterator iter = this->data.begin(), outer_iter = outer.data.begin();
+            iter != this->data.end() && outer_iter != outer.data.end(); ){
+        int64_t this_key = iter->first;
+        int64_t outer_key = outer_iter->first;
+        if(this_key == outer_key){
+            iter->second &= outer_iter->second;
+            if(!iter->second.any()){
                 data.erase(iter++);
             }
             else{
                 ++iter;
             }
-        }else{
-            //be careful, erases current element.
-            data.erase(iter++);
+            ++outer_iter;
+        }
+        else if(this_key < outer_key){
+            set_iterator new_iter = this->data.lower_bound(outer_key);
+            data.erase(iter,new_iter);
+            iter = new_iter;
+        }
+        else{
+            outer_iter = outer.data.lower_bound(this_key);
         }
     }
 }
 bool CompressedSet::has_any_in_intersect(CompressedSet & outer){
-    if(outer.data.size() < this->data.size()){
-        outer.has_any_in_intersect(*this);
-    }
-    for(set_iterator iter = data.begin(); iter != data.end(); ++iter){
-        int64_t key = iter->first;
-        BlockSet value = iter->second;
-        if(outer.data.count(key) & (value.bits & outer.data[key].bits).any()){
-            return true;
+    for(set_iterator iter = this->data.begin(), outer_iter = outer.data.begin();
+            iter != this->data.end() && outer_iter != outer.data.end(); ){
+        int64_t this_key = iter->first;
+        int64_t outer_key = outer_iter->first;
+        if(this_key == outer_key){
+            BlockSet block = iter->second;
+            block &= outer_iter->second;
+            if(block.any()){
+                return true;
+            }
+            ++iter;
+            ++outer_iter;
+        }
+        else if(this_key < outer_key){
+            iter = this->data.lower_bound(outer_key);
+        }
+        else{
+            outer_iter = outer.data.lower_bound(this_key);
         }
     }
     return false;
 }
-bool CompressedSet::contains(CompressedSet & outer){
-    for(set_iterator iter = outer.data.begin(); iter != outer.data.end(); ++iter){
-        int64_t key = iter->first;
-        if(data.count(key) && !data[key].contains(iter->second)){
-            return false;
-        }
-    }
-    return true;
-}
 
 void CompressedSet::subtract(CompressedSet & outer){
-    for(set_iterator iter = data.begin(); iter != data.end(); ){
-        int64_t key = iter->first;
-        BlockSet & value = iter->second;
-        if(outer.data.count(key)){
-            value.subtract(outer.data[key]);
-            if(!value.any()){
-                //be careful, erases current element. 
+    for(set_iterator iter = this->data.begin(), outer_iter = outer.data.begin();
+            iter != this->data.end() && outer_iter != outer.data.end(); ){
+        int64_t this_key = iter->first;
+        int64_t outer_key = outer_iter->first;
+        if(this_key == outer_key){
+            iter->second.subtract(outer_iter->second);
+            if(!iter->second.any()){
                 data.erase(iter++);
             }
             else{
                 ++iter;
             }
-        }else{
-            ++iter;
+            ++outer_iter;
+        }
+        else if(this_key < outer_key){
+            iter = this->data.lower_bound(outer_key);
+        }
+        else{
+            outer_iter = outer.data.lower_bound(this_key);
         }
     }
 }
 void CompressedSet::unite(CompressedSet & outer){
-    for(set_iterator iter = outer.data.begin(); iter != outer.data.end(); ++iter){
-        int64_t key = iter->first;
-        if(this->data.count(key)){
-            this->data[key] |= iter->second;
+    set_iterator iter = this->data.begin(), outer_iter = outer.data.begin();
+    for(;iter != this->data.end() && outer_iter != outer.data.end(); ){
+        int64_t this_key = iter->first;
+        int64_t outer_key = outer_iter->first;
+        if(this_key == outer_key){
+            iter->second |= outer_iter->second;
+            ++iter;
+            ++outer_iter;
+        }
+        else if(this_key < outer_key){
+            iter = this->data.lower_bound(outer_key);
         }
         else{
-            this->data[key] = iter->second;
+            set_iterator new_outer_iter = outer.data.lower_bound(this_key);
+            this->data.insert(outer_iter,new_outer_iter);
+            outer_iter = new_outer_iter;
         }
+    }
+    if(outer_iter != outer.data.end()){
+        this->data.insert(outer_iter,outer.data.end());
     }
 }
 
