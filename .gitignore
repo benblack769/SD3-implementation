@@ -10,5 +10,6 @@ CMakeLists.txt.user
 test-data/conflict
 __pycache__
 Makefile
+*.cbp
 *.pyc
 test-data/conflict-out/many_points.txt

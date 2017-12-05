@@ -1,20 +1,20 @@
-asdasasdasasdasasdasasdasasdasasdasasdasasdasasdasasdasasdasasdasasdasasdasasdasasdasasdasasdasasdasTimings:
-Total time: 1317000
-Add: 30000
-LoopInstaceMarker: 15000
+Timings:
+Total time: 83701
+Add: 12072
+LoopInstaceMarker: 5232
 Merge: 0
-It end: 81000
+It end: 24159
 LOOP 1
 RAW dependencies: 
-LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:20, ConflictedIterations:10, TotalConflictingBytes:40
-Dependence: RAW, AproxMemAddr: 52, NumConflicts: 3, Earlier: PC_ID(100002, WRITE), Later: PC_ID(100001, READ), NumConflictIters: 3     
+LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:20, ConflictedIterations:11, TotalConflictingBytes:44
+Dependence: RAW, AproxMemAddr: 52, NumConflicts: 1, Earlier: PC_ID(100002, WRITE), Later: PC_ID(100001, READ), NumConflictIters: 1     
 
 
 WAR dependencies: 
-LoopInstances:1, ConflictingLoopInstances:0, TotalLoopIterations:20, ConflictedIterations:0, TotalConflictingBytes:0
+LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:20, ConflictedIterations:1, TotalConflictingBytes:4
 
 
 WAW dependencies: 
-LoopInstances:1, ConflictingLoopInstances:0, TotalLoopIterations:20, ConflictedIterations:0, TotalConflictingBytes:0
+LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:20, ConflictedIterations:1, TotalConflictingBytes:4
 
 
