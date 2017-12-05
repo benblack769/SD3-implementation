@@ -39,7 +39,8 @@ void CompressedSet::add_block(int64_t element,int64_t size){
     }
 }
 bool CompressedSet::has(int64_t element){
-    return data[uint64_t(element) / BLOCK_SIZE].has(uint64_t(element) % BLOCK_SIZE); 
+    return data.count(uint64_t(element) / BLOCK_SIZE) && 
+           data[uint64_t(element) / BLOCK_SIZE].has(uint64_t(element) % BLOCK_SIZE); 
 }
 bool CompressedSet::has_all_block(int64_t element,int64_t size){
     for(int64_t i = 0; i < size; i++){

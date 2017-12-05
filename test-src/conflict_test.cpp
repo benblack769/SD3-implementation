@@ -10,24 +10,24 @@ void single_loop_parser_run(char * filename){
     ifstream file(filename);
     assert(file && "incorrect filename");
     while(file >> first_item){
-        int loop_id;
+        int64_t loop_id;
         if(first_item == "STA"){
-            file >> loop_id;
+            file >> hex >> loop_id;
             loopstack.loop_start(loop_id);
         }
         else if(first_item == "END"){
-            file >> loop_id;
+            file >> hex >> loop_id;
             loopstack.loop_end(loop_id);
         }
         else if(first_item == "ITR"){
-            file >> loop_id;
+            file >> hex >> loop_id;
             loopstack.iter_end(loop_id);
         }
         else{
             int64_t mem_access = atoi(first_item.c_str());
             int64_t instr;
             string read_string;
-            file >> instr >> read_string;
+            file >> hex >> instr >> read_string;
             MemAccessMode mode = read_string == "READ" ? READ : WRITE;
             loopstack.addMemAccess(mem_access,4,instr,mode);
         }

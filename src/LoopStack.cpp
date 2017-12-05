@@ -11,9 +11,11 @@ LoopStack::LoopStack(){
 }
 
 void LoopStack::addMemAccess(int64_t mem_addr,int64_t access_size,int64_t instr_address,MemAccessMode acc_mode){
-    int64_t start = my_clock();
-    stack.back().addMemAccess(Block(mem_addr,mem_addr+access_size),PC_ID(instr_address,acc_mode),stride_detector[instr_address]);
-    add_timer += my_clock() - start;
+    if(stack.size() > 0){
+        int64_t start = my_clock();
+        stack.back().addMemAccess(Block(mem_addr,mem_addr+access_size),PC_ID(instr_address,acc_mode),stride_detector[instr_address]);
+        add_timer += my_clock() - start;
+    }
 }
 
 void add_all_summaries(AllLoopTotalSummary & summary, AllLoopInstanceDep & deps){
