@@ -26,13 +26,13 @@ void add_all_summaries(AllLoopTotalSummary & summary, AllLoopInstanceDep & deps)
 void LoopStack::loop_end(int64_t loop_id){
     assert(stack.size() != 0);
     assert(stack.back().get_loop_id() == loop_id);
+    int64_t start = my_clock();
     if(stack.size() > 1){
-        int64_t start = my_clock();
         second_from_top().merge_history_pending(stack.back());
-        merge_timer += my_clock() - start;
     }
     add_all_summaries(loop_dependencies[loop_id],stack.back().loop_end());
     stack.pop_back();
+    merge_timer += my_clock() - start;
 }
 void LoopStack::loop_start(int64_t loop_id){
     stack.push_back(LoopInstance(loop_id));
@@ -53,13 +53,13 @@ void LoopStack::print_loop_dependencies(){
     cout << "Timings:" << endl;
     cout << "Total time: " << full_timer << endl;
     cout << "Add: " << add_timer << endl;
-    cout << "LoopInstaceMarker: " << add_mem_time << endl;
+    //cout << "LoopInstaceMarker: " << add_mem_time << endl;
     cout << "Merge: " << merge_timer << endl;
     cout << "It end: " << it_end_timer << endl;
 
     for(dependence_iterator it = loop_dependencies.begin(); it != loop_dependencies.end(); it++){
         int64_t lid = it->first;
-        cout << "LOOP " << hex << lid << dec << "\n";    
+        cout << "LOOP " << hex << lid << dec << "\n";
         cout << "RAW dependencies: " << "\n";
         cout << it->second[WRITE][READ] << endl;
         cout << "WAR dependencies: " << "\n";
