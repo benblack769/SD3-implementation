@@ -56,10 +56,10 @@ void LoopStack::print_loop_dependencies(){
     cout << "LoopInstaceMarker: " << add_mem_time << endl;
     cout << "Merge: " << merge_timer << endl;
     cout << "It end: " << it_end_timer << endl;
-    
+
     for(dependence_iterator it = loop_dependencies.begin(); it != loop_dependencies.end(); it++){
         int64_t lid = it->first;
-        cout << "LOOP " << lid << "\n";    
+        cout << "LOOP " << hex << lid << dec << "\n";    
         cout << "RAW dependencies: " << "\n";
         cout << it->second[WRITE][READ] << endl;
         cout << "WAR dependencies: " << "\n";
@@ -68,4 +68,3 @@ void LoopStack::print_loop_dependencies(){
         cout << it->second[WRITE][WRITE] << endl;
     }
 }
-

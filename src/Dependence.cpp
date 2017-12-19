@@ -83,11 +83,11 @@ const char * DependenceTypeString(DependenceType type){
 
 std::ostream &operator<<(std::ostream &os, const InstrDependence &obj) {
     os << "Dependence: " << DependenceTypeString(obj.getDependenceType()) << 
-          ", AproxMemAddr: " << obj.getApproxamateMemoryAddress() << 
-          ", NumConflicts: " << obj.getNumConflicts() << 
-          ", Earlier: " << obj.getEarlier() <<  
-          ", Later: " << obj.getLater() << 
-          ", NumConflictIters: " << obj.num_conflict_iters << "     ";
+          ", AproxMemAddr: " << hex <<obj.getApproxamateMemoryAddress() << 
+          ", NumConflicts: " << dec << obj.getNumConflicts() << 
+          ", Earlier: " << hex << obj.getEarlier() <<  
+          ", Later: " << hex << obj.getLater() << 
+          ", NumConflictIters: " << dec << obj.num_conflict_iters << "     ";
     return os;
 }
 LoopInstanceDep::LoopInstanceDep(){

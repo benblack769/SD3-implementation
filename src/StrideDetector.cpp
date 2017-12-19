@@ -16,7 +16,7 @@ StrideDetector::StrideDetector() {
 MemAccessType StrideDetector::addAccess(int64_t address) {
     // changes state and returned value indicates forward or backward motion in
     // FSM
-    int change = determineStateChange(address);
+    /*int change = */determineStateChange(address);
 
     //std::cout << "\t ADDR " << address << " change " << change << " distance " << myStrideDist << std::endl;
 
@@ -66,7 +66,7 @@ int StrideDetector::determineStateChange(int64_t address) {
                 myPrevMemAddr = address;
 
                 myState = WeakStride;
-            } 
+            }
         } else { // Old stride is now gone
             myFirstMemAddr = address;
             myPrevMemAddr = 0;
