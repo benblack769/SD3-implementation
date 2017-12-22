@@ -45,3 +45,13 @@ Other tests, not really appropriate for unit testing are the `stride_detector_te
 and the `merge_test`.
 
 These take input files that are a list of memory accesses, and spit out how they processed them. The files in `single_pc_test_data` are for this. Also, the files `test-data/OldTestInputs` are somewhat appropriate for input.
+
+## Changes from SD3
+
+Since I had much less time than the original SD3 developers, I changed a number of the basic data structures to make implementation easier, while keeping asymptotic efficiency.
+
+The major changes are:
+
+* Instead of using a interval tree, I sort lists of the items that would have been put in the tree, and use an linear time algorithm to compare the lists. Then I ensured that this routine would not run too many times (measured in terms of the number of times this routine would look at a particular memory access).
+* Another change is the data structure for merging strides. They use an interval tree and caching, which works most of the time, while I use a hash table and a binary search tree that merges all mergable lists efficiently. See `src/ConflictData.h` for more details.
+* I also did not implement a number of other optimizations mentioned in the paper, like Dynamic Site ID. 
