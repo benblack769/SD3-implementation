@@ -7,7 +7,6 @@
 
 #define HAS_DEP_LIMIT 4
 
-extern int64_t add_mem_time;
 
 typedef access_mode_pair<access_mode_pair<LoopInstanceDep> > AllLoopInstanceDep;
 
