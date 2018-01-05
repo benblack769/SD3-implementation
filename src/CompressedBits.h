@@ -26,6 +26,7 @@ protected:
 public:
     BlockSet(){}
     void add(int64_t element);
+    void add_block(int64_t start,int64_t size);
     bool has(int64_t element);
     void operator |= (const BlockSet & outer);
     void operator &= (const BlockSet & outer);

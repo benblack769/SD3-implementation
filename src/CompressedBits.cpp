@@ -8,6 +8,12 @@ void BlockSet::add(int64_t element){
     assert(element < BLOCK_SIZE && element >= 0);
     bits[element] = true;
 }
+void BlockSet::add_block(int64_t start,int64_t size){
+    for(int64_t i = 0; i < size; i++){
+        this->add(start+i);
+    }
+}
+
 bool BlockSet::has(int64_t element){
     assert(element < BLOCK_SIZE && element >= 0);
     return bits[element];
@@ -34,8 +40,14 @@ void CompressedSet::add(int64_t element){
 }
 
 void CompressedSet::add_block(int64_t element,int64_t size){
-    for(int64_t i = 0; i < size; i++){
-        this->add(element+i);
+    int64_t block1 = element/BLOCK_SIZE;
+    data[block1].add_block(element%BLOCK_SIZE, size);
+    
+    int64_t block1_start = block1 * BLOCK_SIZE;
+    if(element + size > block1_start){
+        int64_t block2_start = block1_start + BLOCK_SIZE;
+        int64_t block2_size = element + size - block2_start;
+        data[block1+1].add_block(0,block2_size);
     }
 }
 bool CompressedSet::has(int64_t element){
