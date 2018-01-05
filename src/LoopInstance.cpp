@@ -26,8 +26,7 @@ void LoopInstance::addMemAccess(int64_t mem_addr, int64_t access_size, PC_ID ide
     }
     //add point to pending bit tables
     IntersectFinder & my_table = pending_bits[identifier.get_acc_mode()];
-    my_table.add_new_set(identifier);
-    my_table.add_values_to_key(identifier,new_set);
+    my_table.add_new_element(identifier,mem_addr,access_size);
 }
 void LoopInstance::handle_all_conflicts(){
     handle_conflicts(WRITE,READ);

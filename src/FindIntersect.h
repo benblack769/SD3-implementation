@@ -27,6 +27,7 @@ protected:
     bool needs_update;
     vector<char> update_keys;
 public:
+    friend class FastIntersectFinder;
     void add_new_set(KeyType key);
     void add_values_to_key(KeyType key,CompressedSet & add_values);
     bool is_empty(){
@@ -82,7 +83,7 @@ struct AccInfo{
     int64_t size;
     KeyType key;
 };
-void extend_vec(list<AccInfo> & extended,  list<AccInfo> & add){
+inline void extend_vec(list<AccInfo> & extended,  list<AccInfo> & add){
     extended.insert(extended.end(),add.begin(),add.end());
 }
 
@@ -128,10 +129,34 @@ public:
                 outer_iter = other.accesses.lower_bound(this_key);
             }
         }
+        return res;
     }
     
+    struct mem_acc{
+        int64_t size;
+        int64_t location;
+    };
     CompressedIntersectFinder compress(){
-        
+        CompressedIntersectFinder res;
+        map<KeyType,vector<mem_acc> > key_data;
+        for(acc_iterator acc_it = accesses.begin(); acc_it != accesses.end(); ++acc_it){ 
+            list<AccInfo> & this_list = acc_it->second;
+            for(list_iterator t_it = this_list.begin(); t_it != this_list.end(); ++t_it){
+                mem_acc new_entry = {t_it->size,acc_it->first};
+                key_data[t_it->key].push_back(new_entry);
+            }
+        }
+        for (map<KeyType,vector<mem_acc> >::iterator key_it = key_data.begin(); key_it != key_data.end(); ++key_it){
+            vector<mem_acc> & mems = key_it->second;
+            KeyType key = key_it->first;
+            res.add_new_set(key);
+            CompressedSet new_set;
+            for(size_t i = 0; i < mems.size(); i++){
+                new_set.add_block(mems[i].location,mems[i].size);
+            }
+            res.add_values_to_key(key,new_set);
+        }
+        return res;
     }
 };
 
@@ -143,7 +168,16 @@ public:
     bool is_fast;
     
     void add_new_element(KeyType key,int64_t location,int64_t size){
-        
+        _union_all.add_block(location,size);
+        if(is_fast){
+            fast_finder.add_new_element(key,location,size);
+        }
+        else{
+            CompressedSet set;
+            set.add_block(location,size);
+            inter_finder.add_new_set(key);
+            inter_finder.add_values_to_key(key,set);
+        }
     }
     
     void clear(){

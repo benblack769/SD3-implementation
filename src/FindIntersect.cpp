@@ -78,7 +78,6 @@ void CompressedIntersectFinder::add_values_to_key(KeyType key,CompressedSet & ad
     size_t key_loc = key_locations[key];
     update_keys[key_loc] = true;
     data[key_loc].unite(add_values);
-    data[0].unite(add_values);
 }
 void CompressedIntersectFinder::update_intermeds(){
     if(needs_update){
@@ -100,7 +99,7 @@ void CompressedIntersectFinder::clear(){
     needs_update = false;
 }
 
-void CompressedIntersectFinder::merge(IntersectFinder & other){
+void CompressedIntersectFinder::merge(CompressedIntersectFinder & other){
     slow_merge(other);
 }
 void CompressedIntersectFinder::subtract_from_all(CompressedSet & add_values){
@@ -118,12 +117,12 @@ CompressedSet & CompressedIntersectFinder::union_all(){
         return empty_set;
     }
     else{
-        //update_intermeds(); //not needed since union_all is always kept up to date. 
+        update_intermeds(); 
         return data[0];
     }
 }
 
-vector<IntersectInfo>  CompressedIntersectFinder::conflicting_keys(IntersectFinder & other){
+vector<IntersectInfo>  CompressedIntersectFinder::conflicting_keys(CompressedIntersectFinder & other){
     vector<IntersectInfo> res;
     if(is_empty()){
         return res;
@@ -151,7 +150,7 @@ vector<KeyType> CompressedIntersectFinder::find_overlap_keys(CompressedSet & wit
     add_overlap_keys(res,with,0);
     return res;
 }
-bool CompressedIntersectFinder::equal_keys(IntersectFinder & other){
+bool CompressedIntersectFinder::equal_keys(CompressedIntersectFinder & other){
     if(keys.size() != other.keys.size()){
         return false;
     }
@@ -177,7 +176,7 @@ void CompressedIntersectFinder::subtract_from(CompressedSet & with,size_t cur_no
         }
     }
 }
-void CompressedIntersectFinder::slow_merge(IntersectFinder & other){
+void CompressedIntersectFinder::slow_merge(CompressedIntersectFinder & other){
     for(size_t i = other.num_tmps(); i < other.data.size(); i++){
         KeyType add_key = other.keys[i];
         if(!key_locations.count(add_key)){
