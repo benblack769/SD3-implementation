@@ -59,7 +59,7 @@ M is the total number of memory adresses accesse
     1. This O(M * log(N) * C) Where C is the number of pairs of instruction conflicts
 */
 
-void IntersectFinder::add_new_set(KeyType key){
+void CompressedIntersectFinder::add_new_set(KeyType key){
     if(key_locations.count(key)){
         return;
     }
@@ -73,15 +73,14 @@ void IntersectFinder::add_new_set(KeyType key){
     update_keys.push_back(false);
     key_locations[key] = keys.size()-1;
 }
-void IntersectFinder::add_values_to_key(KeyType key,CompressedSet & add_values){
+void CompressedIntersectFinder::add_values_to_key(KeyType key,CompressedSet & add_values){
     needs_update = true;
     size_t key_loc = key_locations[key];
     update_keys[key_loc] = true;
     data[key_loc].unite(add_values);
     data[0].unite(add_values);
-    //add_values_to_loc(key_locations[key],add_values);
 }
-void IntersectFinder::update_intermeds(){
+void CompressedIntersectFinder::update_intermeds(){
     if(needs_update){
         needs_update = false;
         for(int64_t i = int64_t(update_keys.size())-1; i >= 0; i--){
@@ -93,7 +92,7 @@ void IntersectFinder::update_intermeds(){
     }
 }
 
-void IntersectFinder::clear(){
+void CompressedIntersectFinder::clear(){
     data.clear();
     keys.clear();
     key_locations.clear();
@@ -101,34 +100,35 @@ void IntersectFinder::clear(){
     needs_update = false;
 }
 
-void IntersectFinder::merge(IntersectFinder & other){
+void CompressedIntersectFinder::merge(IntersectFinder & other){
     slow_merge(other);
 }
-void IntersectFinder::subtract_from_all(CompressedSet & add_values){
+void CompressedIntersectFinder::subtract_from_all(CompressedSet & add_values){
     if(!is_empty()){
         update_intermeds();
         subtract_from(add_values,0);
     }
 }
 
-CompressedSet & IntersectFinder::my_set(KeyType key){
+CompressedSet & CompressedIntersectFinder::my_set(KeyType key){
     return data[key_locations[key]];
 }
-CompressedSet & IntersectFinder::union_all(){
+CompressedSet & CompressedIntersectFinder::union_all(){
     if(is_empty()){
         return empty_set;
     }
     else{
-        //update_intermeds();
+        //update_intermeds(); //not needed since union_all is always kept up to date. 
         return data[0];
     }
 }
 
-vector<IntersectInfo>  IntersectFinder::conflicting_keys(IntersectFinder & other){
+vector<IntersectInfo>  CompressedIntersectFinder::conflicting_keys(IntersectFinder & other){
     vector<IntersectInfo> res;
     if(is_empty()){
         return res;
     }
+    update_intermeds();
     vector<KeyType> my_conflict_keys = find_overlap_keys(other.union_all());
     for(size_t i = 0; i < my_conflict_keys.size(); i++){
         KeyType this_key = my_conflict_keys[i];
@@ -146,18 +146,18 @@ vector<IntersectInfo>  IntersectFinder::conflicting_keys(IntersectFinder & other
     }
     return res;
 }
-vector<KeyType> IntersectFinder::find_overlap_keys(CompressedSet & with){
+vector<KeyType> CompressedIntersectFinder::find_overlap_keys(CompressedSet & with){
     vector<KeyType> res;
     add_overlap_keys(res,with,0);
     return res;
 }
-bool IntersectFinder::equal_keys(IntersectFinder & other){
+bool CompressedIntersectFinder::equal_keys(IntersectFinder & other){
     if(keys.size() != other.keys.size()){
         return false;
     }
     return equal(keys.begin(),keys.end(), other.keys.begin());
 }
-void IntersectFinder::add_overlap_keys(vector<KeyType> & out_keys,CompressedSet & with,size_t cur_node){
+void CompressedIntersectFinder::add_overlap_keys(vector<KeyType> & out_keys,CompressedSet & with,size_t cur_node){
     if(with.has_any_in_intersect(data[cur_node])){
         if(is_data_node(cur_node)){
             out_keys.push_back(keys[cur_node]);
@@ -168,7 +168,7 @@ void IntersectFinder::add_overlap_keys(vector<KeyType> & out_keys,CompressedSet 
         }
     }
 }
-void IntersectFinder::subtract_from(CompressedSet & with,size_t cur_node){
+void CompressedIntersectFinder::subtract_from(CompressedSet & with,size_t cur_node){
     if(with.has_any_in_intersect(data[cur_node])){
         data[cur_node].subtract(with);
         if(!is_data_node(cur_node)){
@@ -177,21 +177,17 @@ void IntersectFinder::subtract_from(CompressedSet & with,size_t cur_node){
         }
     }
 }
-void IntersectFinder::add_values_to_loc(size_t loc,CompressedSet & add_values){
-    data[loc].unite(add_values);
-    if(!is_root(loc)){
-        add_values_to_loc(parent(loc),add_values);
-    }
-}
-void IntersectFinder::slow_merge(IntersectFinder & other){
+void CompressedIntersectFinder::slow_merge(IntersectFinder & other){
     for(size_t i = other.num_tmps(); i < other.data.size(); i++){
         KeyType add_key = other.keys[i];
-        this->add_new_set(add_key);
+        if(!key_locations.count(add_key)){
+            this->add_new_set(add_key);
+        }
         this->add_values_to_key(add_key,other.data[i]);
     }
 }
 
-void IntersectFinder::swap_node_key(){
+void CompressedIntersectFinder::swap_node_key(){
     //swaps final key entry with a node entry
     size_t last_set_loc = num_tmps();
     size_t swap_set_loc = data.size();
