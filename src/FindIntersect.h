@@ -166,6 +166,9 @@ public:
     CompressedIntersectFinder inter_finder;
     CompressedSet _union_all;
     bool is_fast;
+    IntersectFinder(){
+        is_fast = true;
+    }
     
     void add_new_element(KeyType key,int64_t location,int64_t size){
         _union_all.add_block(location,size);
