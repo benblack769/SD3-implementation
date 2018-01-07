@@ -35,23 +35,18 @@ void LoopInstance::handle_all_conflicts(){
     handle_conflicts(WRITE,WRITE);
 }
 void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode history_mode){
-    CompressedSet intersect = history_bits[history_mode].union_all();
-    intersect.intersect(pending_bits[pending_mode].union_all());
+    CompressedSet intersect = pending_bits[pending_mode].union_all();
+    intersect.intersect(history_bits[history_mode].union_all());
     int64_t conflict_count = intersect.count();
     LoopInstanceDep & cur_dependencies = my_dependencies[history_mode][pending_mode];
-    if(conflict_count){
-        if(cur_dependencies.conflict_iterations() <= HAS_DEP_LIMIT){
-            vector<IntersectInfo> all_info = history_bits[history_mode].conflicting_keys(pending_bits[pending_mode]);
-            vector<InstrDependence> out_dependencies(all_info.size());
-            for(size_t i = 0; i < all_info.size(); i++){
-                IntersectInfo info = all_info[i];
-                out_dependencies[i] = InstrDependence(info.key_one,info.key_two,-1,info.size_of_intersect);
-            }
-            cur_dependencies.addIterationDependencies(out_dependencies,conflict_count);
+    if(conflict_count && cur_dependencies.conflict_iterations() <= HAS_DEP_LIMIT){
+        vector<IntersectInfo> all_info = history_bits[history_mode].conflicting_keys(pending_bits[pending_mode]);
+        vector<InstrDependence> out_dependencies(all_info.size());
+        for(size_t i = 0; i < all_info.size(); i++){
+            IntersectInfo info = all_info[i];
+            out_dependencies[i] = InstrDependence(info.key_one,info.key_two,-1,info.size_of_intersect);
         }
-        else{
-            cur_dependencies.addIterationDepsNoInstrs(conflict_count);
-        }
+        cur_dependencies.addIterationDependencies(out_dependencies,conflict_count);
     }
     else{
         cur_dependencies.addIterationDepsNoInstrs(conflict_count);
@@ -70,6 +65,9 @@ void LoopInstance::merge_pending_history(){
 }
 void LoopInstance::iteration_end(){
     loop_count++;
+    
+    int64_t start = my_clock();
+    add_mem_time += my_clock() - start;
     handle_all_conflicts();
     merge_pending_history();
 }
