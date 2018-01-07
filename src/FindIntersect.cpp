@@ -66,7 +66,7 @@ void IntersectFinder::add_new_set(KeyType key){
     if(!is_empty()){
         swap_node_key();
     }
-
+    
     //adds another key entry
     data.push_back(CompressedSet());
     keys.push_back(key);

@@ -57,9 +57,9 @@ class CompressedSet{
         uses actual bit operations to find the outcome.
     */
 protected:
-    typedef typename unordered_map<int64_t,BlockSet>::iterator set_iterator;
-    typedef typename unordered_map<int64_t,BlockSet>::const_iterator const_set_iterator;
-    unordered_map<int64_t,BlockSet> data;
+    typedef typename map<int64_t,BlockSet>::iterator set_iterator;
+    typedef typename map<int64_t,BlockSet>::const_iterator const_set_iterator;
+    map<int64_t,BlockSet> data;
 public:
     void add(int64_t element);
     void add_block(int64_t start,int64_t size);
@@ -72,6 +72,7 @@ public:
     void clear();
     void swap(CompressedSet & other){ this->data.swap(other.data); }
     int64_t count();
+    int64_t count_intersect(CompressedSet & outer);
 protected:
     void and_with_optional_neg(CompressedSet & outer,bool neg);
 };

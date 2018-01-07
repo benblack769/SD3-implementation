@@ -90,6 +90,30 @@ bool CompressedSet::has_any_in_intersect(CompressedSet & outer){
     return false;
 }
 
+int64_t CompressedSet::count_intersect(CompressedSet & outer){
+    int64_t count = 0;
+    for(set_iterator iter = this->data.begin(), outer_iter = outer.data.begin();
+            iter != this->data.end() && outer_iter != outer.data.end(); ){
+        int64_t this_key = iter->first;
+        int64_t outer_key = outer_iter->first;
+        if(this_key == outer_key){
+            BlockSet intersect = iter->second;
+            intersect &= outer_iter->second;
+            count += intersect.count();
+            
+            ++iter;
+            ++outer_iter;
+        }
+        else if(this_key < outer_key){
+            iter = this->data.lower_bound(outer_key);
+        }
+        else{
+            outer_iter = outer.data.lower_bound(this_key);
+        }
+    }
+    return count;
+}
+
 void CompressedSet::subtract(CompressedSet & outer){
     for(set_iterator iter = this->data.begin(), outer_iter = outer.data.begin();
             iter != this->data.end() && outer_iter != outer.data.end(); ){
