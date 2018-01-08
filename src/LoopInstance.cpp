@@ -11,7 +11,8 @@ LoopInstance::LoopInstance(int64_t in_loop_id){
 }
 
 void LoopInstance::addMemAccess(int64_t mem_addr, int64_t access_size, PC_ID identifier){
-    CompressedSet new_set;
+    CompressedSet new_set;    
+
     new_set.add_block(mem_addr,access_size);
     //find overlap with killed bits of pending_tables using isKilled
     new_set.subtract(killed_bits);
@@ -35,23 +36,18 @@ void LoopInstance::handle_all_conflicts(){
     handle_conflicts(WRITE,WRITE);
 }
 void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode history_mode){
-    CompressedSet intersect = history_bits[history_mode].union_all();
-    intersect.intersect(pending_bits[pending_mode].union_all());
-    int64_t conflict_count = intersect.count();
+    int64_t conflict_count = pending_bits[pending_mode].union_all().count_intersect(history_bits[history_mode].union_all());
+
     LoopInstanceDep & cur_dependencies = my_dependencies[history_mode][pending_mode];
-    if(conflict_count){
-        if(cur_dependencies.conflict_iterations() <= HAS_DEP_LIMIT){
-            vector<IntersectInfo> all_info = history_bits[history_mode].conflicting_keys(pending_bits[pending_mode]);
-            vector<InstrDependence> out_dependencies(all_info.size());
-            for(size_t i = 0; i < all_info.size(); i++){
-                IntersectInfo info = all_info[i];
-                out_dependencies[i] = InstrDependence(info.key_one,info.key_two,-1,info.size_of_intersect);
-            }
-            cur_dependencies.addIterationDependencies(out_dependencies,conflict_count);
+    
+    if(conflict_count && cur_dependencies.conflict_iterations() <= HAS_DEP_LIMIT){
+        vector<IntersectInfo> all_info = history_bits[history_mode].conflicting_keys(pending_bits[pending_mode]);
+        vector<InstrDependence> out_dependencies(all_info.size());
+        for(size_t i = 0; i < all_info.size(); i++){
+            IntersectInfo info = all_info[i];
+            out_dependencies[i] = InstrDependence(info.key_one,info.key_two,-1,info.size_of_intersect);
         }
-        else{
-            cur_dependencies.addIterationDepsNoInstrs(conflict_count);
-        }
+        cur_dependencies.addIterationDependencies(out_dependencies,conflict_count);
     }
     else{
         cur_dependencies.addIterationDepsNoInstrs(conflict_count);
@@ -60,7 +56,6 @@ void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode hi
 
 void LoopInstance::merge_pending_history(){
     //merge pending into history
-    int64_t start = my_clock();
     history_bits[READ].merge(pending_bits[READ]);
     history_bits[WRITE].merge(pending_bits[WRITE]);
     

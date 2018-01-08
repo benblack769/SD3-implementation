@@ -66,7 +66,7 @@ void IntersectFinder::add_new_set(KeyType key){
     if(!is_empty()){
         swap_node_key();
     }
-
+    
     //adds another key entry
     data.push_back(CompressedSet());
     keys.push_back(key);
@@ -119,7 +119,7 @@ CompressedSet & IntersectFinder::union_all(){
         return empty_set;
     }
     else{
-        //update_intermeds();
+        //update_intermeds(); // not needed since data[0] is always kept up to date
         return data[0];
     }
 }
@@ -129,6 +129,7 @@ vector<IntersectInfo>  IntersectFinder::conflicting_keys(IntersectFinder & other
     if(is_empty()){
         return res;
     }
+    update_intermeds();
     vector<KeyType> my_conflict_keys = find_overlap_keys(other.union_all());
     for(size_t i = 0; i < my_conflict_keys.size(); i++){
         KeyType this_key = my_conflict_keys[i];

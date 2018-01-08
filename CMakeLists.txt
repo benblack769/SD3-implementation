@@ -22,5 +22,5 @@ add_executable(conflict_test ${CPP_TEST_DIR}/conflict_test.cpp ${CPP_SOURCE_DIR}
 #set_property(TARGET unit_test PROPERTY CXX_STANDARD 98)
 #set_property(TARGET unit_test PROPERTY CXX_STANDARD_REQUIRED ON)
 
-set_property(TARGET conflict_test PROPERTY CXX_STANDARD 98)
+set_property(TARGET conflict_test PROPERTY CXX_STANDARD 11)
 set_property(TARGET conflict_test PROPERTY CXX_STANDARD_REQUIRED ON)
