@@ -4,7 +4,9 @@
 typedef long long int64_t;
 typedef unsigned long long uint64_t;
 #else
+#ifdef __PIN__
 typedef unsigned long long uint64_t;
+#endif
 #include <cstdlib>
 #endif
 

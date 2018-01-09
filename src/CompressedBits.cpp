@@ -39,11 +39,11 @@ void CompressedSet::add_block(int64_t element,int64_t size){
     }
 }
 bool CompressedSet::has(int64_t element){
-    return data[uint64_t(element) / BLOCK_SIZE].has(uint64_t(element) % BLOCK_SIZE); 
+    return data[uint64_t(element) / BLOCK_SIZE].has(uint64_t(element) % BLOCK_SIZE);
 }
 void CompressedSet::intersect(CompressedSet & outer){
-    for(set_iterator iter = this->data.begin(), outer_iter = outer.data.begin();
-            iter != this->data.end() && outer_iter != outer.data.end(); ){
+    set_iterator iter = this->data.begin(), outer_iter = outer.data.begin();
+    for(; iter != this->data.end() && outer_iter != outer.data.end(); ){
         int64_t this_key = iter->first;
         int64_t outer_key = outer_iter->first;
         if(this_key == outer_key){
@@ -58,12 +58,15 @@ void CompressedSet::intersect(CompressedSet & outer){
         }
         else if(this_key < outer_key){
             set_iterator new_iter = this->data.lower_bound(outer_key);
-            data.erase(iter,new_iter);
+            this->data.erase(iter,new_iter);
             iter = new_iter;
         }
         else{
             outer_iter = outer.data.lower_bound(this_key);
         }
+    }
+    if(iter != this->data.end()){
+        this->data.erase(iter,this->data.end());
     }
 }
 bool CompressedSet::has_any_in_intersect(CompressedSet & outer){
@@ -100,7 +103,7 @@ int64_t CompressedSet::count_intersect(CompressedSet & outer){
             BlockSet intersect = iter->second;
             intersect &= outer_iter->second;
             count += intersect.count();
-            
+
             ++iter;
             ++outer_iter;
         }
