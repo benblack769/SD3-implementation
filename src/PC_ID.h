@@ -23,13 +23,13 @@ public:
     bool is_invalid(){
         return this->pc == INVALID;
     }
-    MemAccessMode get_acc_mode()const{return accessmode;} 
+    MemAccessMode get_acc_mode()const{return accessmode;}
     int64_t get_pc()const{return pc;}
 protected:
     int64_t pc;
     MemAccessMode accessmode;
 };
-namespace std {
+/*namespace std {
   template <> struct hash<PC_ID>
   {
     size_t operator()(const PC_ID & x) const
@@ -37,7 +37,7 @@ namespace std {
       return x.get_pc() ^ (int64_t(x.get_acc_mode()) << 16);
     }
   };
-}
+}*/
 inline const char * MemAccessModeString(MemAccessMode type){
     switch(type){
     case INVALID:return "INVALID";

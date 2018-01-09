@@ -4,9 +4,9 @@
 typedef long long int64_t;
 typedef unsigned long long uint64_t;
 #else
-#ifdef __PIN__
+//#ifdef __PIN__
 typedef unsigned long long uint64_t;
-#endif
+//#endif
 #include <cstdlib>
 #endif
 
@@ -19,5 +19,5 @@ inline int64_t my_clock(){
     return spc.tv_nsec + 1000000000LL*spc.tv_sec;
 }
 
-#include <unordered_map>
-//#define unordered_map map
+//#include <unordered_map>
+#define unordered_map map
