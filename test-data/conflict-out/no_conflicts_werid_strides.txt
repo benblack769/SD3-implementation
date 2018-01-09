@@ -1,28 +1,28 @@
 Timings:
-Total time: 255040
-Add: 33118
-LoopInstaceMarker: 19166
-Merge: 14145
-It end: 104138
+Total time: 253687
+Add: 32314
+LoopInstaceMarker: 20302
+Merge: 16144
+It end: 93553
 LOOP 1
 RAW dependencies: 
-LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:10, ConflictedIterations:10, TotalConflictingBytes:60
-Dependence: RAW, AproxMemAddr: 32, NumConflicts: 4, Earlier: PC_ID(100002, WRITE), Later: PC_ID(100001, READ), NumConflictIters: 4     
+LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:10, ConflictedIterations:9, TotalConflictingBytes:36
+Dependence: RAW, AproxMemAddr: 32, NumConflicts: 5, Earlier: PC_ID(1048578, WRITE), Later: PC_ID(1048577, READ), NumConflictIters: 5     
 
 
 WAR dependencies: 
-LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:10, ConflictedIterations:10, TotalConflictingBytes:68
-Dependence: WAR, AproxMemAddr: 32, NumConflicts: 4, Earlier: PC_ID(100001, READ), Later: PC_ID(100002, WRITE), NumConflictIters: 4     
+LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:10, ConflictedIterations:9, TotalConflictingBytes:36
+Dependence: WAR, AproxMemAddr: 32, NumConflicts: 5, Earlier: PC_ID(1048577, READ), Later: PC_ID(1048578, WRITE), NumConflictIters: 5     
 
 
 WAW dependencies: 
-LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:10, ConflictedIterations:10, TotalConflictingBytes:320
-Dependence: WAW, AproxMemAddr: 32, NumConflicts: 22, Earlier: PC_ID(100002, WRITE), Later: PC_ID(100002, WRITE), NumConflictIters: 22     
+LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:10, ConflictedIterations:9, TotalConflictingBytes:288
+Dependence: WAW, AproxMemAddr: 32, NumConflicts: 28, Earlier: PC_ID(1048578, WRITE), Later: PC_ID(1048578, WRITE), NumConflictIters: 28     
 
 
 LOOP 2
 RAW dependencies: 
-LoopInstances:10, ConflictingLoopInstances:10, TotalLoopIterations:60, ConflictedIterations:60, TotalConflictingBytes:240
+LoopInstances:10, ConflictingLoopInstances:0, TotalLoopIterations:60, ConflictedIterations:0, TotalConflictingBytes:0
 
 
 WAR dependencies: 
@@ -39,10 +39,10 @@ LoopInstances:10, ConflictingLoopInstances:0, TotalLoopIterations:80, Conflicted
 
 
 WAR dependencies: 
-LoopInstances:10, ConflictingLoopInstances:10, TotalLoopIterations:80, ConflictedIterations:10, TotalConflictingBytes:40
+LoopInstances:10, ConflictingLoopInstances:0, TotalLoopIterations:80, ConflictedIterations:0, TotalConflictingBytes:0
 
 
 WAW dependencies: 
-LoopInstances:10, ConflictingLoopInstances:10, TotalLoopIterations:80, ConflictedIterations:10, TotalConflictingBytes:40
+LoopInstances:10, ConflictingLoopInstances:0, TotalLoopIterations:80, ConflictedIterations:0, TotalConflictingBytes:0
 
 
