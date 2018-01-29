@@ -50,21 +50,25 @@ LoopInstance & LoopStack::second_from_top(){
 }
 void LoopStack::print_loop_dependencies(){
     full_timer = my_clock() - full_timer;
-    cout << "Timings:" << endl;
-    cout << "Total time: " << full_timer << endl;
-    cout << "Add: " << add_timer << endl;
+    cout << "{\n";
+    cout << "\"Timings\":" << endl;
+    cout << "{\n\"TotalTime\": " << full_timer << ", \n";
+    cout << "\"Add\": " << add_timer << ", \n";
     //cout << "LoopInstaceMarker: " << add_mem_time << endl;
-    cout << "Merge: " << merge_timer << endl;
-    cout << "It end: " << it_end_timer << endl;
+    cout << "\"Merge\": " << merge_timer << ", \n";
+    cout << "\"ItEnd\": " << it_end_timer << ", \n";
+    cout << "},\n" << endl;
 
     for(dependence_iterator it = loop_dependencies.begin(); it != loop_dependencies.end(); it++){
         int64_t lid = it->first;
-        cout << "LOOP " << hex << lid << dec << "\n";
-        cout << "RAW dependencies: " << "\n";
-        cout << it->second[WRITE][READ] << endl;
-        cout << "WAR dependencies: " << "\n";
-        cout << it->second[READ][WRITE] << endl;
-        cout << "WAW dependencies: " << "\n";
-        cout << it->second[WRITE][WRITE] << endl;
+        cout  << "\"" << hex << lid << dec << "\":{\n";
+        cout << "\"RAW\": " << "";
+        cout << it->second[WRITE][READ] << ",\n" << endl;
+        cout << "\"WAR\": " << "";
+        cout << it->second[READ][WRITE] << ",\n" << endl;
+        cout << "\"WAW\": " << "";
+        cout << it->second[WRITE][WRITE] << ",\n" << endl;
+        cout << "}," << endl;
     }
+    cout << "}\n";
 }
