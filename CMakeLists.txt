@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.8)
 project (StrideDetector C CXX)
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
+#set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(CPP_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 set(CPP_TEST_DIR ${PROJECT_SOURCE_DIR}/test-src)
