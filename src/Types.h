@@ -9,10 +9,6 @@ typedef unsigned long long uint64_t;
 #else
 #include <cstdlib>
 
-#ifndef __PIN__
-typedef unsigned long long uint64_t;
-#endif
-
 #endif
 
 inline int64_t iabs(int64_t num){
