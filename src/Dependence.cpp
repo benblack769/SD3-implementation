@@ -23,17 +23,17 @@ InstrDependence::InstrDependence(){
 InstrDependence::InstrDependence(PC_ID earlier, PC_ID later, int64_t mem_addr, int64_t num_conflicts, int64_t num_conflict_iterations){
     earlier_instr = earlier;
     later_instr = later;
-    
+
     myMemoryAddr = mem_addr;
     numConflicts = num_conflicts;
-    
+
     num_conflict_iters = num_conflict_iterations;
-    
+
     myDependenceType = get_dep_type(earlier_instr.get_acc_mode(),later_instr.get_acc_mode());
 }
 bool InstrDependence::can_summarize(const InstrDependence & other){
-    return earlier_instr == other.earlier_instr && 
-            later_instr == other.later_instr && 
+    return earlier_instr == other.earlier_instr &&
+            later_instr == other.later_instr &&
             myDependenceType == other.myDependenceType;
 }
 void InstrDependence::sum_num_conflicts(const InstrDependence & other){
@@ -63,9 +63,14 @@ bool InstructionSetSummary::try_summarize(const InstrDependence & other){
 }
 
 std::ostream &operator<<(std::ostream &os, const InstructionSetSummary &obj) {
+    os << "[ \n";
     for(size_t i = 0; i < obj.summaries.size(); i++){
-        os << obj.summaries[i] << "\n";
+        os << obj.summaries[i];
+        if(i != obj.summaries.size()-1){
+            os << ",\n";
+        }
     }
+    os << " ]";
     return os;
 }
 
@@ -82,12 +87,14 @@ const char * DependenceTypeString(DependenceType type){
 }
 
 std::ostream &operator<<(std::ostream &os, const InstrDependence &obj) {
-    os << "Dependence: " << DependenceTypeString(obj.getDependenceType()) << 
-          ", AproxMemAddr: " << hex <<obj.getApproxamateMemoryAddress() << 
-          ", NumConflicts: " << dec << obj.getNumConflicts() << 
-          ", Earlier: " << hex << obj.getEarlier() <<  
-          ", Later: " << hex << obj.getLater() << 
-          ", NumConflictIters: " << dec << obj.num_conflict_iters << "     ";
+    os << //"\"" << DependenceTypeString(obj.getDependenceType()) << "\" : " <<
+        "{ " <<
+          "\"AproxMemAddr\": " << hex <<"\""<<obj.getApproxamateMemoryAddress() << "\""<<", " <<
+          "\"NumConflicts\": " << dec << obj.getNumConflicts() << ", " <<
+          "\"EarlierPC\": " << hex << "\""<<obj.getEarlier().get_pc() <<"\""<< ", " <<
+          "\"LaterPC\": " << hex << "\""<<obj.getLater().get_pc() <<"\""<< ", " <<
+          "\"NumConflictIters\": " << dec << obj.num_conflict_iters <<
+         " } ";
     return os;
 }
 LoopInstanceDep::LoopInstanceDep(){
@@ -106,11 +113,11 @@ void LoopInstanceDep::addIterationDepsNoInstrs(int64_t num_mem_conflicts_in_iter
 }
 
 std::ostream &operator<<(std::ostream &os, const LoopInstanceDep &obj) {
-    os << ", Loop iterations:" << obj.loop_iterations << 
-          ", ConflictedIterations:" << obj.actual_conflict_iterations << 
-          ", TotalConflictingBytes:" << obj.total_memory_conflicts 
-       << "\n";
-    os << obj.instr_summary;
+    os << "{ \"LoopIterations\": " << obj.loop_iterations <<  ", " <<
+          "\"ConflictedIterations\": " << obj.actual_conflict_iterations <<  ", " <<
+          "\"TotalConflictingBytes\": " << obj.total_memory_conflicts <<  ", " <<
+          "\"InstructionSummary\": " << obj.instr_summary <<
+          " }";
     os << endl;
     return os;
 }
@@ -132,13 +139,13 @@ void LoopTotalSummary::addLoopInstanceSummary(const LoopInstanceDep & add){
     instr_summary.set_summarize(add.instr_summary);
 }
 std::ostream &operator<<(std::ostream &os, const LoopTotalSummary &obj) {
-    os << "LoopInstances:" << obj.num_instances << 
-          ", ConflictingLoopInstances:" << obj.num_conflict_instances << 
-          ", TotalLoopIterations:" << obj.total_iterations << 
-          ", ConflictedIterations:" << obj.total_conflict_iterations << 
-          ", TotalConflictingBytes:" << obj.total_mem_conflicts 
-       << "\n";
-    os << obj.instr_summary;
+    os << "{ \"LoopInstances\": " << obj.num_instances <<  ", " <<
+          "\"ConflictingLoopInstances\": " << obj.num_conflict_instances <<  ", " <<
+          "\"TotalLoopIterations\": " << obj.total_iterations <<  ", " <<
+          "\"ConflictedIterations\": " << obj.total_conflict_iterations <<  ", " <<
+          "\"TotalConflictingBytes\": " << obj.total_mem_conflicts <<  ", " <<
+          "\"InstructionSummary\": " << obj.instr_summary <<
+          " }\n";
     os << endl;
     return os;
 }
