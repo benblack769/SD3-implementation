@@ -20,6 +20,9 @@ protected:
     vector<CompressedSet> data;
     vector<KeyType> keys;
     map<KeyType,size_t> key_locations;
+    
+    bool needs_update;
+    vector<char> update_keys;
 public:
     void add_new_set(KeyType key);
     void add_values_to_key(KeyType key,CompressedSet & add_values);
@@ -42,15 +45,14 @@ public:
     vector<IntersectInfo> conflicting_keys(IntersectFinder & other);
 protected:
     vector<KeyType> find_overlap_keys(CompressedSet & with);
+    bool equal_keys(IntersectFinder & other);
     void add_overlap_keys(vector<KeyType> & out_keys,CompressedSet & with,size_t cur_node);
-    //void add_values_to_loc(size_t loc,CompressedSet & add_values);
+    void subtract_from(CompressedSet & with,size_t cur_node);
+    void add_values_to_loc(size_t loc,CompressedSet & add_values);
     bool is_data_node(size_t node){
         return node >= num_tmps();
     }
-    void create_intermeds();
-    void delete_intermeds();
-
-    void swap_node_key();
+    void update_intermeds();
 
     bool is_root(size_t loc){
         return loc == 0;
@@ -67,6 +69,8 @@ protected:
     size_t num_tmps(){
         return data.size() - num_keys();
     }
+    void slow_merge(IntersectFinder & other);
 
+    void swap_node_key();
 };
 

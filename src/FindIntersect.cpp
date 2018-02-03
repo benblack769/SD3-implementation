@@ -70,22 +70,26 @@ void IntersectFinder::add_new_set(KeyType key){
     //adds another key entry
     data.push_back(CompressedSet());
     keys.push_back(key);
+    update_keys.push_back(false);
     key_locations[key] = keys.size()-1;
 }
 void IntersectFinder::add_values_to_key(KeyType key,CompressedSet & add_values){
+    needs_update = true;
     size_t key_loc = key_locations[key];
+    update_keys[key_loc] = true;
     data[key_loc].unite(add_values);
     data[0].unite(add_values);
+    //add_values_to_loc(key_locations[key],add_values);
 }
-void IntersectFinder::create_intermeds(){
-    const int64_t final_non_all_parent_num = 3;
-    for(int64_t i = int64_t(data.size())-1; i >= final_non_all_parent_num; i--){
-        data[parent(i)].unite(data[i]);
-    }
-}
-void IntersectFinder::delete_intermeds(){
-    for(size_t i = 1; i < num_tmps(); i++){
-        data[i].clear();
+void IntersectFinder::update_intermeds(){
+    if(needs_update){
+        needs_update = false;
+        for(int64_t i = int64_t(update_keys.size())-1; i >= 0; i--){
+            if(update_keys[i] && i != 0){
+                update_keys[parent(i)] = true;
+                data[parent(i)].unite(data[i]);
+            }
+        }
     }
 }
 
@@ -93,22 +97,17 @@ void IntersectFinder::clear(){
     data.clear();
     keys.clear();
     key_locations.clear();
+    update_keys.clear();
+    needs_update = false;
 }
 
 void IntersectFinder::merge(IntersectFinder & other){
-    for(size_t i = other.num_tmps(); i < other.data.size(); i++){
-        KeyType add_key = other.keys[i];
-        this->add_new_set(add_key);
-        this->add_values_to_key(add_key,other.data[i]);
-    }
+    slow_merge(other);
 }
 void IntersectFinder::subtract_from_all(CompressedSet & add_values){
     if(!is_empty()){
-        data[0].subtract(add_values);
-
-        for(size_t i = num_tmps(); i < data.size(); i++){
-            data[i].subtract(add_values);
-        }
+        update_intermeds();
+        subtract_from(add_values,0);
     }
 }
 
@@ -120,6 +119,7 @@ CompressedSet & IntersectFinder::union_all(){
         return empty_set;
     }
     else{
+        //update_intermeds(); // not needed since data[0] is always kept up to date
         return data[0];
     }
 }
@@ -129,7 +129,7 @@ vector<IntersectInfo>  IntersectFinder::conflicting_keys(IntersectFinder & other
     if(is_empty()){
         return res;
     }
-    create_intermeds();
+    update_intermeds();
     vector<KeyType> my_conflict_keys = find_overlap_keys(other.union_all());
     for(size_t i = 0; i < my_conflict_keys.size(); i++){
         KeyType this_key = my_conflict_keys[i];
@@ -145,13 +145,18 @@ vector<IntersectInfo>  IntersectFinder::conflicting_keys(IntersectFinder & other
             res.push_back(intersect);
         }
     }
-    delete_intermeds();
     return res;
 }
 vector<KeyType> IntersectFinder::find_overlap_keys(CompressedSet & with){
     vector<KeyType> res;
     add_overlap_keys(res,with,0);
     return res;
+}
+bool IntersectFinder::equal_keys(IntersectFinder & other){
+    if(keys.size() != other.keys.size()){
+        return false;
+    }
+    return equal(keys.begin(),keys.end(), other.keys.begin());
 }
 void IntersectFinder::add_overlap_keys(vector<KeyType> & out_keys,CompressedSet & with,size_t cur_node){
     if(with.has_any_in_intersect(data[cur_node])){
@@ -164,6 +169,28 @@ void IntersectFinder::add_overlap_keys(vector<KeyType> & out_keys,CompressedSet 
         }
     }
 }
+void IntersectFinder::subtract_from(CompressedSet & with,size_t cur_node){
+    if(with.has_any_in_intersect(data[cur_node])){
+        data[cur_node].subtract(with);
+        if(!is_data_node(cur_node)){
+            subtract_from(with,left(cur_node));
+            subtract_from(with,right(cur_node));
+        }
+    }
+}
+void IntersectFinder::add_values_to_loc(size_t loc,CompressedSet & add_values){
+    data[loc].unite(add_values);
+    if(!is_root(loc)){
+        add_values_to_loc(parent(loc),add_values);
+    }
+}
+void IntersectFinder::slow_merge(IntersectFinder & other){
+    for(size_t i = other.num_tmps(); i < other.data.size(); i++){
+        KeyType add_key = other.keys[i];
+        this->add_new_set(add_key);
+        this->add_values_to_key(add_key,other.data[i]);
+    }
+}
 
 void IntersectFinder::swap_node_key(){
     //swaps final key entry with a node entry
@@ -171,14 +198,9 @@ void IntersectFinder::swap_node_key(){
     size_t swap_set_loc = data.size();
     assert(parent(swap_set_loc) == last_set_loc && "this is needed to ensure correctness");
     KeyType null_key;
-    if(last_set_loc == 0){
-        data.push_back(data[last_set_loc]);
-    }
-    else{
-        data.push_back(CompressedSet());
-        data[last_set_loc].swap(data.back());
-    }
+    data.push_back(data[last_set_loc]);
     keys.push_back(null_key);
+    update_keys.push_back(false);
 
     key_locations[keys[last_set_loc]] = swap_set_loc;
     keys[swap_set_loc] = keys[last_set_loc];
