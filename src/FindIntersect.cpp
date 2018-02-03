@@ -133,14 +133,12 @@ vector<IntersectInfo>  IntersectFinder::conflicting_keys(IntersectFinder & other
     vector<KeyType> my_conflict_keys = find_overlap_keys(other.union_all());
     for(size_t i = 0; i < my_conflict_keys.size(); i++){
         KeyType this_key = my_conflict_keys[i];
-        CompressedSet this_set = this->my_set(this_key);
+        CompressedSet & this_set = this->my_set(this_key);
         
         vector<KeyType> other_conflict_keys = other.find_overlap_keys(this->data[key_locations[this_key]]);
         for(size_t j = 0; j < other_conflict_keys.size(); j++){
             KeyType other_key = other_conflict_keys[j];
-            CompressedSet intersect_set = this_set;
-            intersect_set.intersect(other.my_set(other_key));
-            int64_t intersect_size = intersect_set.count();
+            int64_t intersect_size = this_set.count_intersect(other.my_set(other_key));
             IntersectInfo intersect = {this_key,other_key,intersect_size};
             res.push_back(intersect);
         }
