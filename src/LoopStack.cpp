@@ -1,6 +1,6 @@
 #include "LoopStack.h"
 #include <ctime>
-#include <iostream>
+#include <ostream>
 
 int64_t add_timer = 0;
 int64_t merge_timer = 0;
@@ -49,33 +49,33 @@ LoopInstance & LoopStack::second_from_top(){
     assert(stack.size() > 1);
     return *(++stack.rbegin());
 }
-void LoopStack::print_loop_dependencies(){
+void LoopStack::print_loop_dependencies(ostream & os){
     full_timer = my_clock() - full_timer;
-    cout << "{\n";
-    cout << "\"Timings\":" << endl;
-    cout << "{\n\"TotalTime\": " << full_timer << ", \n";
-    cout << "\"Add\": " << add_timer << ", \n";
-    //cout << "LoopInstaceMarker: " << add_mem_time << endl;
-    cout << "\"Merge\": " << merge_timer << ", \n";
-    cout << "\"ItEnd\": " << it_end_timer << " \n";
-    cout << "},\n";
+    os << "{\n";
+    os << "\"Timings\":" << endl;
+    os << "{\n\"TotalTime\": " << full_timer << ", \n";
+    os << "\"Add\": " << add_timer << ", \n";
+    //os << "LoopInstaceMarker: " << add_mem_time << endl;
+    os << "\"Merge\": " << merge_timer << ", \n";
+    os << "\"ItEnd\": " << it_end_timer << " \n";
+    os << "},\n";
 
-    cout << "\"Loops\": {\n";
+    os << "\"Loops\": {\n";
     for(dependence_iterator it = loop_dependencies.begin(); it != loop_dependencies.end(); ){
         int64_t lid = it->first;
-        cout  << "\"" << hex << lid << dec << "\":{\n";
-        cout << "\"RAW\": " << "";
-        cout << it->second[WRITE][READ] << ",\n";
-        cout << "\"WAR\": " << "";
-        cout << it->second[READ][WRITE] << ",\n";
-        cout << "\"WAW\": " << "";
-        cout << it->second[WRITE][WRITE] << "\n";
-        cout << "}";
+        os  << "\"" << hex << lid << dec << "\":{\n";
+        os << "\"RAW\": " << "";
+        os << it->second[WRITE][READ] << ",\n";
+        os << "\"WAR\": " << "";
+        os << it->second[READ][WRITE] << ",\n";
+        os << "\"WAW\": " << "";
+        os << it->second[WRITE][WRITE] << "\n";
+        os << "}";
         ++it;
         if (it != loop_dependencies.end()){
-            cout << "," << "\n";
+            os << "," << "\n";
         }
     }
-    cout << "}\n";
-    cout << "}\n";
+    os << "}\n";
+    os << "}\n";
 }

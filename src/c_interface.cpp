@@ -1,5 +1,6 @@
 #include "LoopStack.h"
 #include "c_interface.h"
+#include <fstream>
 
 int64_t ptr_int(void * ptr){
     assert(sizeof(ptr) == sizeof(int64_t));
@@ -37,6 +38,7 @@ void d_iteration_end(ParrDetector * detector,void * loop_id){
 void d_loop_begin(ParrDetector * detector,void * loop_id){
     detector->stack.loop_start(ptr_int(loop_id));
 }
-void d_print_output(ParrDetector * detector){
-    detector->stack.print_loop_dependencies();
+void d_print_output(ParrDetector * detector,char * filename){
+    std::ofstream output_file(filename);
+    detector->stack.print_loop_dependencies(output_file);
 }

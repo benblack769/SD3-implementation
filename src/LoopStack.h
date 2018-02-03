@@ -19,6 +19,6 @@ public:
     void loop_start(int64_t loop_id);
     void iter_end(int64_t loop_id);
     LoopInstance & second_from_top();
-    void print_loop_dependencies();
+    void print_loop_dependencies(ostream &os);
 protected:
 };

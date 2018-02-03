@@ -38,7 +38,7 @@ void single_loop_parser_run(){
             }
         }
     }while(line_type != 'E');
-    loopstack.print_loop_dependencies();
+    loopstack.print_loop_dependencies(cout);
 }
 
 int main(int argc,char ** argv){

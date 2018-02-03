@@ -10,5 +10,5 @@ void d_mem_access(ParrDetector * detector,void * mem_address,unsigned long long 
 void d_loop_end(ParrDetector * detector,void * loop_id);
 void d_iteration_end(ParrDetector * detector,void * loop_id);
 void d_loop_begin(ParrDetector * detector,void * loop_id);
-void d_print_output(ParrDetector * detector);
+void d_print_output(ParrDetector * detector,char * filename);
 }
