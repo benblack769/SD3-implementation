@@ -24,6 +24,7 @@ protected:
     bool needs_update;
     vector<char> update_keys;
 public:
+    IntersectFinder();
     void add_new_set(KeyType key);
     void add_values_to_key(KeyType key,CompressedSet & add_values);
     bool is_empty(){

@@ -59,6 +59,9 @@ M is the total number of memory adresses accesse
     1. This O(M * log(N) * C) Where C is the number of pairs of instruction conflicts
 */
 
+IntersectFinder::IntersectFinder(){
+    needs_update = true;
+}
 void IntersectFinder::add_new_set(KeyType key){
     if(key_locations.count(key)){
         return;
@@ -130,6 +133,7 @@ vector<IntersectInfo>  IntersectFinder::conflicting_keys(IntersectFinder & other
         return res;
     }
     update_intermeds();
+    other.update_intermeds();
     vector<KeyType> my_conflict_keys = find_overlap_keys(other.union_all());
     for(size_t i = 0; i < my_conflict_keys.size(); i++){
         KeyType this_key = my_conflict_keys[i];
