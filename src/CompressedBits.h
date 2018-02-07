@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <bitset>
+#include <ostream>
 #include "Types.h"
 
 using namespace std;
@@ -34,6 +35,7 @@ public:
     int64_t count();
     //bool contains(const BlockSet &  outer);
     friend class CompressedSet;
+    friend ostream & operator << (ostream & os,const BlockSet & bitset);
 };
 
 class CompressedSet{
@@ -73,6 +75,7 @@ public:
     void swap(CompressedSet & other){ this->data.swap(other.data); }
     int64_t count();
     int64_t count_intersect(CompressedSet & outer);
+    friend ostream & operator << (ostream & os, CompressedSet &bitset);
 protected:
     void and_with_optional_neg(CompressedSet & outer,bool neg);
 };

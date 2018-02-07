@@ -1,5 +1,4 @@
 #include <cassert>
-#include <iostream>
 #include "CompressedBits.h"
 
 CompressedSet empty_set;
@@ -27,6 +26,13 @@ bool BlockSet::any(){
 int64_t BlockSet::count(){
     return bits.count();
 }
+ostream & operator << (ostream & os, const BlockSet &block_set){
+    for(size_t i = 0; i < BLOCK_SIZE; i++){
+        os << block_set.bits[i];
+    }
+    return os;
+}
+
 
 
 void CompressedSet::add(int64_t element){
@@ -181,4 +187,12 @@ int64_t CompressedSet::count(){
 }
 void CompressedSet::clear(){
     data.clear();
+}
+ostream & operator << (ostream & os, CompressedSet &compset){
+    for(CompressedSet::set_iterator iter = compset.data.begin(); iter != compset.data.end(); ++iter){
+        int64_t upper_loc = iter->first;
+        BlockSet lower_loc = iter->second;
+        os << hex << upper_loc << dec << ": " << lower_loc << "\n";
+    }
+    return os;
 }
