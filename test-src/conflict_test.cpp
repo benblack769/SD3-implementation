@@ -32,7 +32,7 @@ void single_loop_parser_run(char * filename){
             loopstack.addMemAccess(mem_access,4,instr,mode);
         }
     }
-    loopstack.print_loop_dependencies();
+    loopstack.print_loop_dependencies(cout);
 }
 
 int main(int argc,char ** argv){
