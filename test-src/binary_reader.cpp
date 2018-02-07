@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cassert>
 #include <cstring>
+#include <iostream>
 using namespace std;
 
 #define in_file cin
@@ -16,12 +17,14 @@ void single_loop_parser_run(){
             char read_write;
             int64_t ip;
             int64_t addr;
+            int32_t mem_acc_size;
             in_file.read((char *)(&read_write),sizeof(read_write));
             in_file.read((char *)(&ip),sizeof(ip));
             in_file.read((char *)(&addr),sizeof(addr));
+            in_file.read((char *)(&mem_acc_size),sizeof(mem_acc_size));
             MemAccessMode mode = read_write == 'R' ? READ : WRITE;
             //int64_t start = my_clock();
-            loopstack.addMemAccess(addr,8,ip,mode);
+            loopstack.addMemAccess(addr,mem_acc_size,ip,mode);
             //tot_time +=
         }
         else if(line_type == 'L'){
@@ -37,7 +40,7 @@ void single_loop_parser_run(){
             }
         }
     }while(line_type != 'E');
-    loopstack.print_loop_dependencies();
+    loopstack.print_loop_dependencies(cout);
 }
 
 int main(int argc,char ** argv){
