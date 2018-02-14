@@ -39,7 +39,8 @@ void LoopStack::loop_start(int64_t loop_id){
     stack.push_back(LoopInstance(loop_id));
 }
 void LoopStack::iter_end(int64_t loop_id){
-    assert(stack.back().get_loop_id() == loop_id);
+    assert(stack.back().get_loop_id() == loop_id && "note that this might be a problem with "
+        "multiple loop ends, and not a real bug. Perhaps this assertion should be removed, and replaced by a conditional loop end");
     int64_t start = my_clock();
     stack.back().iteration_end();
     it_end_timer += my_clock() - start;
