@@ -17,18 +17,19 @@ extern int64_t add_mem_time;
 
 class IntersectFinder{
 protected:
-    vector<CompressedSet> data;
+    vector<CompressedSet> union_data;
+    vector<CompressedSet> key_data;
     vector<KeyType> keys;
     map<KeyType,size_t> key_locations;
-    
+
     bool needs_update;
-    vector<char> update_keys;
+    //vector<char> update_keys;
 public:
     IntersectFinder();
     void add_new_set(KeyType key);
     void add_values_to_key(KeyType key,CompressedSet & add_values);
     bool is_empty(){
-        return data.size() == 0;
+        return key_data.size() == 0;
     }
 
     void clear();
@@ -46,19 +47,30 @@ public:
     vector<IntersectInfo> conflicting_keys(IntersectFinder & other);
 protected:
     vector<KeyType> find_overlap_keys(CompressedSet & with);
-    bool equal_keys(IntersectFinder & other);
     void add_overlap_keys(vector<KeyType> & out_keys,CompressedSet & with,size_t cur_node);
     void subtract_from(CompressedSet & with,size_t cur_node);
-    void add_values_to_loc(size_t loc,CompressedSet & add_values);
-    bool is_data_node(size_t node){
-        return node >= num_tmps();
-    }
+    void resize_unions();
+    void reorder_heap();
+    void reorder_data_nodes(size_t high_data, size_t low_data);
+    bool should_reorder_data_nodes(uint64_t high_count, uint64_t low_count);
+    //bool is_data_node(size_t node){
+    //    return node >= num_tmps();
+    //}
     void update_intermeds();
 
-    bool is_root(size_t loc){
-        return loc == 0;
+    //bool is_root(size_t loc){
+    //    return loc == 0;
+    //}
+    CompressedSet & node_at(size_t node){
+        return has_union(node) ? union_data[node] : key_data[node];
     }
-    size_t parent(size_t node){
+    size_t data_parent(size_t node){
+        return node < union_data.size() ? node : node_parent(node);
+    }
+    size_t has_union(size_t data_node){
+        return data_node < union_data.size();
+    }
+    size_t node_parent(size_t node){
         return (node-1) / 2;
     }
     size_t left(size_t node){
@@ -67,11 +79,18 @@ protected:
     size_t right(size_t node){
         return node*2 + 2;
     }
-    size_t num_tmps(){
-        return data.size() - num_keys();
+    bool has_data(size_t node){
+        return node < key_data.size();
     }
+    bool has_left(size_t node){
+        return left(node) < key_data.size();
+    }
+    bool has_right(size_t node){
+        return right(node) < key_data.size();
+    }
+    //size_t num_tmps(){
+    //    return data.size() - num_keys();
+    //}
     void slow_merge(IntersectFinder & other);
-
-    void swap_node_key();
 };
 

@@ -185,6 +185,9 @@ int64_t CompressedSet::count(){
     }
     return sum;
 }
+int64_t CompressedSet::set_overhead(){
+    return data.size();
+}
 void CompressedSet::clear(){
     data.clear();
 }

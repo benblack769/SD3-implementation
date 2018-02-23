@@ -74,6 +74,7 @@ public:
     void clear();
     void swap(CompressedSet & other){ this->data.swap(other.data); }
     int64_t count();
+    int64_t set_overhead();//a relative estimate of how expensive operations are on the set, for optimizaiton purposes only
     int64_t count_intersect(CompressedSet & outer);
     friend ostream & operator << (ostream & os, CompressedSet &bitset);
 protected:

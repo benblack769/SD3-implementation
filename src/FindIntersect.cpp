@@ -66,41 +66,67 @@ void IntersectFinder::add_new_set(KeyType key){
     if(key_locations.count(key)){
         return;
     }
-    if(!is_empty()){
-        swap_node_key();
+    if(!union_data.size()){
+        union_data.push_back(CompressedSet());
     }
-    
-    //adds another key entry
-    data.push_back(CompressedSet());
+    key_data.push_back(CompressedSet());
     keys.push_back(key);
-    update_keys.push_back(false);
+    needs_update = true;
+    //update_keys.push_back(false);
     key_locations[key] = keys.size()-1;
+    resize_unions();
 }
 void IntersectFinder::add_values_to_key(KeyType key,CompressedSet & add_values){
     needs_update = true;
     size_t key_loc = key_locations[key];
-    update_keys[key_loc] = true;
-    data[key_loc].unite(add_values);
-    data[0].unite(add_values);
-    //add_values_to_loc(key_locations[key],add_values);
+    key_data[key_loc].unite(add_values);
+    union_data[0].unite(add_values);
+}
+void IntersectFinder::resize_unions(){
+    size_t new_union_size = (keys.size() - 1) / 2;
+    if(new_union_size > 1 && new_union_size != union_data.size()){
+        union_data.resize(new_union_size);
+    }
+}
+bool IntersectFinder::should_reorder_data_nodes(uint64_t high_count, uint64_t low_count){
+    return high_count * 1.25 < low_count;
+}
+void IntersectFinder::reorder_data_nodes(size_t high_data, size_t low_data){
+    assert(high_data != 0 && high_data == node_parent(low_data));
+    key_data[low_data].swap(key_data[high_data]);
+    if(has_union(low_data)){
+        //recompute union data for the low set
+        union_data[low_data] = key_data[low_data];
+        if(has_data(left(low_data))){
+            union_data[low_data].unite(node_at(left(low_data)));
+        }
+        if(has_data(right(low_data))){
+            union_data[low_data].unite(node_at(right(low_data)));
+        }
+    }
 }
 void IntersectFinder::update_intermeds(){
     if(needs_update){
         needs_update = false;
-        for(int64_t i = int64_t(update_keys.size())-1; i >= 0; i--){
-            if(update_keys[i] && i != 0){
-                update_keys[parent(i)] = true;
-                data[parent(i)].unite(data[i]);
+        for(int64_t i = int64_t(key_data.size())-1; i >= 3; i--){
+            if(should_reorder_data_nodes(key_data[node_parent(i)].set_overhead(),key_data[i].set_overhead())){
+                reorder_data_nodes(node_parent(i),i);
             }
+        }
+        for(int64_t i = int64_t(key_data.size())-1; i >= 1; i--){//union_data[0] always up to date
+            union_data[data_parent(i)].unite(key_data[i]);
+        }
+        for(int64_t i = int64_t(union_data.size())-1; i > right(0); i--){//union_data[0] always up to date
+            union_data[node_parent(i)].unite(union_data[i]);
         }
     }
 }
 
 void IntersectFinder::clear(){
-    data.clear();
-    keys.clear();
+    union_data.clear();
+    key_data.clear();
     key_locations.clear();
-    update_keys.clear();
+    keys.clear();
     needs_update = false;
 }
 
@@ -109,13 +135,17 @@ void IntersectFinder::merge(IntersectFinder & other){
 }
 void IntersectFinder::subtract_from_all(CompressedSet & add_values){
     if(!is_empty()){
-        update_intermeds();
-        subtract_from(add_values,0);
+        for(size_t i = 0; i < union_data.size(); i++){
+            union_data[i].subtract(add_values);
+        }
+        for(size_t i = 0; i < key_data.size(); i++){
+            key_data[i].subtract(add_values);
+        }
     }
 }
 
 CompressedSet & IntersectFinder::my_set(KeyType key){
-    return data[key_locations[key]];
+    return key_data[key_locations[key]];
 }
 CompressedSet & IntersectFinder::union_all(){
     if(is_empty()){
@@ -123,7 +153,7 @@ CompressedSet & IntersectFinder::union_all(){
     }
     else{
         //update_intermeds(); // not needed since data[0] is always kept up to date
-        return data[0];
+        return union_data[0];
     }
 }
 
@@ -139,7 +169,7 @@ vector<IntersectInfo>  IntersectFinder::conflicting_keys(IntersectFinder & other
         KeyType this_key = my_conflict_keys[i];
         CompressedSet & this_set = this->my_set(this_key);
         
-        vector<KeyType> other_conflict_keys = other.find_overlap_keys(this->data[key_locations[this_key]]);
+        vector<KeyType> other_conflict_keys = other.find_overlap_keys(this_set);
         for(size_t j = 0; j < other_conflict_keys.size(); j++){
             KeyType other_key = other_conflict_keys[j];
             int64_t intersect_size = this_set.count_intersect(other.my_set(other_key));
@@ -154,57 +184,19 @@ vector<KeyType> IntersectFinder::find_overlap_keys(CompressedSet & with){
     add_overlap_keys(res,with,0);
     return res;
 }
-bool IntersectFinder::equal_keys(IntersectFinder & other){
-    if(keys.size() != other.keys.size()){
-        return false;
-    }
-    return equal(keys.begin(),keys.end(), other.keys.begin());
-}
 void IntersectFinder::add_overlap_keys(vector<KeyType> & out_keys,CompressedSet & with,size_t cur_node){
-    if(with.has_any_in_intersect(data[cur_node])){
-        if(is_data_node(cur_node)){
-            out_keys.push_back(keys[cur_node]);
-        }
-        else{
-            add_overlap_keys(out_keys,with,left(cur_node));
-            add_overlap_keys(out_keys,with,right(cur_node));
-        }
+    if(has_data(cur_node) && with.has_any_in_intersect(key_data[cur_node])){
+        out_keys.push_back(keys[cur_node]);
     }
-}
-void IntersectFinder::subtract_from(CompressedSet & with,size_t cur_node){
-    if(with.has_any_in_intersect(data[cur_node])){
-        data[cur_node].subtract(with);
-        if(!is_data_node(cur_node)){
-            subtract_from(with,left(cur_node));
-            subtract_from(with,right(cur_node));
-        }
-    }
-}
-void IntersectFinder::add_values_to_loc(size_t loc,CompressedSet & add_values){
-    data[loc].unite(add_values);
-    if(!is_root(loc)){
-        add_values_to_loc(parent(loc),add_values);
+    if(has_union(cur_node) && with.has_any_in_intersect(union_data[cur_node])){
+        add_overlap_keys(out_keys,with,left(cur_node));
+        add_overlap_keys(out_keys,with,right(cur_node));
     }
 }
 void IntersectFinder::slow_merge(IntersectFinder & other){
-    for(size_t i = other.num_tmps(); i < other.data.size(); i++){
+    for(size_t i = 0; i < other.key_data.size(); i++){
         KeyType add_key = other.keys[i];
         this->add_new_set(add_key);
-        this->add_values_to_key(add_key,other.data[i]);
+        this->add_values_to_key(add_key,other.key_data[i]);
     }
-}
-
-void IntersectFinder::swap_node_key(){
-    //swaps final key entry with a node entry
-    size_t last_set_loc = num_tmps();
-    size_t swap_set_loc = data.size();
-    assert(parent(swap_set_loc) == last_set_loc && "this is needed to ensure correctness");
-    KeyType null_key;
-    data.push_back(data[last_set_loc]);
-    keys.push_back(null_key);
-    update_keys.push_back(false);
-
-    key_locations[keys[last_set_loc]] = swap_set_loc;
-    keys[swap_set_loc] = keys[last_set_loc];
-    keys[last_set_loc] = null_key;
 }
