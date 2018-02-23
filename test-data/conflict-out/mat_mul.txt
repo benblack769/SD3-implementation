@@ -1,48 +1,52 @@
-Timings:
-Total time: 343870728
-Add: 99347632
-LoopInstaceMarker: 0
-Merge: 13746163
-It end: 86099929
-LOOP 1
-RAW dependencies: 
-LoopInstances:1, ConflictingLoopInstances:0, TotalLoopIterations:50, ConflictedIterations:0, TotalConflictingBytes:0
+{
+"Timings":
+{
+"TotalTime": 340181064, 
+"Add": 93689937, 
+"Merge": 16220862, 
+"ItEnd": 82943586 
+},
+"Loops": {
+"1":{
+"RAW": { "LoopInstances": 1, "ConflictingLoopInstances": 0, "TotalLoopIterations": 50, "ConflictedIterations": 0, "TotalConflictingBytes": 0, "InstructionSummary": [ 
+ ] }
+
+,
+"WAR": { "LoopInstances": 1, "ConflictingLoopInstances": 0, "TotalLoopIterations": 50, "ConflictedIterations": 0, "TotalConflictingBytes": 0, "InstructionSummary": [ 
+ ] }
+
+,
+"WAW": { "LoopInstances": 1, "ConflictingLoopInstances": 0, "TotalLoopIterations": 50, "ConflictedIterations": 0, "TotalConflictingBytes": 0, "InstructionSummary": [ 
+ ] }
 
 
-WAR dependencies: 
-LoopInstances:1, ConflictingLoopInstances:0, TotalLoopIterations:50, ConflictedIterations:0, TotalConflictingBytes:0
+},
+"2":{
+"RAW": { "LoopInstances": 50, "ConflictingLoopInstances": 0, "TotalLoopIterations": 2500, "ConflictedIterations": 0, "TotalConflictingBytes": 0, "InstructionSummary": [ 
+ ] }
+
+,
+"WAR": { "LoopInstances": 50, "ConflictingLoopInstances": 0, "TotalLoopIterations": 2500, "ConflictedIterations": 0, "TotalConflictingBytes": 0, "InstructionSummary": [ 
+ ] }
+
+,
+"WAW": { "LoopInstances": 50, "ConflictingLoopInstances": 0, "TotalLoopIterations": 2500, "ConflictedIterations": 0, "TotalConflictingBytes": 0, "InstructionSummary": [ 
+ ] }
 
 
-WAW dependencies: 
-LoopInstances:1, ConflictingLoopInstances:0, TotalLoopIterations:50, ConflictedIterations:0, TotalConflictingBytes:0
+},
+"3":{
+"RAW": { "LoopInstances": 2500, "ConflictingLoopInstances": 2500, "TotalLoopIterations": 125000, "ConflictedIterations": 122500, "TotalConflictingBytes": 490000, "InstructionSummary": [ 
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 50000, "EarlierPC": "186a6", "LaterPC": "186a3", "NumConflictIters": 12500 }  ] }
+
+,
+"WAR": { "LoopInstances": 2500, "ConflictingLoopInstances": 2500, "TotalLoopIterations": 125000, "ConflictedIterations": 122500, "TotalConflictingBytes": 490000, "InstructionSummary": [ 
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 50000, "EarlierPC": "186a3", "LaterPC": "186a6", "NumConflictIters": 12500 }  ] }
+
+,
+"WAW": { "LoopInstances": 2500, "ConflictingLoopInstances": 2500, "TotalLoopIterations": 125000, "ConflictedIterations": 122500, "TotalConflictingBytes": 490000, "InstructionSummary": [ 
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 50000, "EarlierPC": "186a6", "LaterPC": "186a6", "NumConflictIters": 12500 }  ] }
 
 
-LOOP 2
-RAW dependencies: 
-LoopInstances:50, ConflictingLoopInstances:0, TotalLoopIterations:2500, ConflictedIterations:0, TotalConflictingBytes:0
-
-
-WAR dependencies: 
-LoopInstances:50, ConflictingLoopInstances:0, TotalLoopIterations:2500, ConflictedIterations:0, TotalConflictingBytes:0
-
-
-WAW dependencies: 
-LoopInstances:50, ConflictingLoopInstances:0, TotalLoopIterations:2500, ConflictedIterations:0, TotalConflictingBytes:0
-
-
-LOOP 3
-RAW dependencies: 
-LoopInstances:2500, ConflictingLoopInstances:2500, TotalLoopIterations:125000, ConflictedIterations:122500, TotalConflictingBytes:490000
-Dependence: WAR, AproxMemAddr: -1, NumConflicts: 50000, Earlier: PC_ID(100003, READ), Later: PC_ID(100006, WRITE), NumConflictIters: 12500     
-
-
-WAR dependencies: 
-LoopInstances:2500, ConflictingLoopInstances:2500, TotalLoopIterations:125000, ConflictedIterations:122500, TotalConflictingBytes:490000
-Dependence: RAW, AproxMemAddr: -1, NumConflicts: 50000, Earlier: PC_ID(100006, WRITE), Later: PC_ID(100003, READ), NumConflictIters: 12500     
-
-
-WAW dependencies: 
-LoopInstances:2500, ConflictingLoopInstances:2500, TotalLoopIterations:125000, ConflictedIterations:122500, TotalConflictingBytes:490000
-Dependence: WAW, AproxMemAddr: -1, NumConflicts: 50000, Earlier: PC_ID(100006, WRITE), Later: PC_ID(100006, WRITE), NumConflictIters: 12500     
-
-
+}}
+}

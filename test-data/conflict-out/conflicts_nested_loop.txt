@@ -1,67 +1,71 @@
-Timings:
-Total time: 643470
-Add: 157434
-LoopInstaceMarker: 0
-Merge: 12188
-It end: 219248
-LOOP 1
-RAW dependencies: 
-LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:10, ConflictedIterations:9, TotalConflictingBytes:396
-Dependence: WAR, AproxMemAddr: -1, NumConflicts: 20, Earlier: PC_ID(100002, READ), Later: PC_ID(100003, WRITE), NumConflictIters: 5     
-Dependence: WAR, AproxMemAddr: -1, NumConflicts: 20, Earlier: PC_ID(100002, READ), Later: PC_ID(100006, WRITE), NumConflictIters: 5     
-Dependence: WAR, AproxMemAddr: -1, NumConflicts: 20, Earlier: PC_ID(100004, READ), Later: PC_ID(100003, WRITE), NumConflictIters: 5     
-Dependence: WAR, AproxMemAddr: -1, NumConflicts: 20, Earlier: PC_ID(100004, READ), Later: PC_ID(100006, WRITE), NumConflictIters: 5     
-Dependence: WAR, AproxMemAddr: -1, NumConflicts: 200, Earlier: PC_ID(100001, READ), Later: PC_ID(100005, WRITE), NumConflictIters: 5     
-Dependence: WAR, AproxMemAddr: -1, NumConflicts: 200, Earlier: PC_ID(100001, READ), Later: PC_ID(100007, WRITE), NumConflictIters: 5     
+{
+"Timings":
+{
+"TotalTime": 524681, 
+"Add": 123420, 
+"Merge": 18025, 
+"ItEnd": 157035 
+},
+"Loops": {
+"1":{
+"RAW": { "LoopInstances": 1, "ConflictingLoopInstances": 1, "TotalLoopIterations": 10, "ConflictedIterations": 9, "TotalConflictingBytes": 396, "InstructionSummary": [ 
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a3", "LaterPC": "186a4", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a3", "LaterPC": "186a2", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a5", "LaterPC": "186a1", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a6", "LaterPC": "186a4", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a6", "LaterPC": "186a2", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a7", "LaterPC": "186a1", "NumConflictIters": 5 }  ] }
+
+,
+"WAR": { "LoopInstances": 1, "ConflictingLoopInstances": 1, "TotalLoopIterations": 10, "ConflictedIterations": 9, "TotalConflictingBytes": 396, "InstructionSummary": [ 
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a2", "LaterPC": "186a3", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a2", "LaterPC": "186a6", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a4", "LaterPC": "186a3", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a4", "LaterPC": "186a6", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a1", "LaterPC": "186a5", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a1", "LaterPC": "186a7", "NumConflictIters": 5 }  ] }
+
+,
+"WAW": { "LoopInstances": 1, "ConflictingLoopInstances": 1, "TotalLoopIterations": 10, "ConflictedIterations": 9, "TotalConflictingBytes": 396, "InstructionSummary": [ 
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a3", "LaterPC": "186a3", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a3", "LaterPC": "186a6", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a5", "LaterPC": "186a5", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a5", "LaterPC": "186a7", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a6", "LaterPC": "186a3", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a6", "LaterPC": "186a6", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a7", "LaterPC": "186a5", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a7", "LaterPC": "186a7", "NumConflictIters": 5 }  ] }
 
 
-WAR dependencies: 
-LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:10, ConflictedIterations:9, TotalConflictingBytes:396
-Dependence: RAW, AproxMemAddr: -1, NumConflicts: 20, Earlier: PC_ID(100003, WRITE), Later: PC_ID(100002, READ), NumConflictIters: 5     
-Dependence: RAW, AproxMemAddr: -1, NumConflicts: 200, Earlier: PC_ID(100005, WRITE), Later: PC_ID(100001, READ), NumConflictIters: 5     
-Dependence: RAW, AproxMemAddr: -1, NumConflicts: 20, Earlier: PC_ID(100006, WRITE), Later: PC_ID(100002, READ), NumConflictIters: 5     
-Dependence: RAW, AproxMemAddr: -1, NumConflicts: 200, Earlier: PC_ID(100007, WRITE), Later: PC_ID(100001, READ), NumConflictIters: 5     
+},
+"2":{
+"RAW": { "LoopInstances": 10, "ConflictingLoopInstances": 10, "TotalLoopIterations": 100, "ConflictedIterations": 90, "TotalConflictingBytes": 360, "InstructionSummary": [ 
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a3", "LaterPC": "186a4", "NumConflictIters": 50 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a3", "LaterPC": "186a2", "NumConflictIters": 50 }  ] }
+
+,
+"WAR": { "LoopInstances": 10, "ConflictingLoopInstances": 10, "TotalLoopIterations": 100, "ConflictedIterations": 90, "TotalConflictingBytes": 360, "InstructionSummary": [ 
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a2", "LaterPC": "186a3", "NumConflictIters": 50 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a4", "LaterPC": "186a3", "NumConflictIters": 50 }  ] }
+
+,
+"WAW": { "LoopInstances": 10, "ConflictingLoopInstances": 10, "TotalLoopIterations": 100, "ConflictedIterations": 90, "TotalConflictingBytes": 360, "InstructionSummary": [ 
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a3", "LaterPC": "186a3", "NumConflictIters": 50 }  ] }
 
 
-WAW dependencies: 
-LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:10, ConflictedIterations:9, TotalConflictingBytes:396
-Dependence: WAW, AproxMemAddr: -1, NumConflicts: 20, Earlier: PC_ID(100003, WRITE), Later: PC_ID(100003, WRITE), NumConflictIters: 5     
-Dependence: WAW, AproxMemAddr: -1, NumConflicts: 20, Earlier: PC_ID(100003, WRITE), Later: PC_ID(100006, WRITE), NumConflictIters: 5     
-Dependence: WAW, AproxMemAddr: -1, NumConflicts: 200, Earlier: PC_ID(100005, WRITE), Later: PC_ID(100005, WRITE), NumConflictIters: 5     
-Dependence: WAW, AproxMemAddr: -1, NumConflicts: 200, Earlier: PC_ID(100005, WRITE), Later: PC_ID(100007, WRITE), NumConflictIters: 5     
-Dependence: WAW, AproxMemAddr: -1, NumConflicts: 20, Earlier: PC_ID(100006, WRITE), Later: PC_ID(100003, WRITE), NumConflictIters: 5     
-Dependence: WAW, AproxMemAddr: -1, NumConflicts: 20, Earlier: PC_ID(100006, WRITE), Later: PC_ID(100006, WRITE), NumConflictIters: 5     
-Dependence: WAW, AproxMemAddr: -1, NumConflicts: 200, Earlier: PC_ID(100007, WRITE), Later: PC_ID(100005, WRITE), NumConflictIters: 5     
-Dependence: WAW, AproxMemAddr: -1, NumConflicts: 200, Earlier: PC_ID(100007, WRITE), Later: PC_ID(100007, WRITE), NumConflictIters: 5     
+},
+"3":{
+"RAW": { "LoopInstances": 10, "ConflictingLoopInstances": 0, "TotalLoopIterations": 100, "ConflictedIterations": 0, "TotalConflictingBytes": 0, "InstructionSummary": [ 
+ ] }
+
+,
+"WAR": { "LoopInstances": 10, "ConflictingLoopInstances": 0, "TotalLoopIterations": 100, "ConflictedIterations": 0, "TotalConflictingBytes": 0, "InstructionSummary": [ 
+ ] }
+
+,
+"WAW": { "LoopInstances": 10, "ConflictingLoopInstances": 0, "TotalLoopIterations": 100, "ConflictedIterations": 0, "TotalConflictingBytes": 0, "InstructionSummary": [ 
+ ] }
 
 
-LOOP 3
-RAW dependencies: 
-LoopInstances:10, ConflictingLoopInstances:0, TotalLoopIterations:100, ConflictedIterations:0, TotalConflictingBytes:0
-
-
-WAR dependencies: 
-LoopInstances:10, ConflictingLoopInstances:0, TotalLoopIterations:100, ConflictedIterations:0, TotalConflictingBytes:0
-
-
-WAW dependencies: 
-LoopInstances:10, ConflictingLoopInstances:0, TotalLoopIterations:100, ConflictedIterations:0, TotalConflictingBytes:0
-
-
-LOOP 2
-RAW dependencies: 
-LoopInstances:10, ConflictingLoopInstances:10, TotalLoopIterations:100, ConflictedIterations:90, TotalConflictingBytes:360
-Dependence: WAR, AproxMemAddr: -1, NumConflicts: 200, Earlier: PC_ID(100002, READ), Later: PC_ID(100003, WRITE), NumConflictIters: 50     
-Dependence: WAR, AproxMemAddr: -1, NumConflicts: 200, Earlier: PC_ID(100004, READ), Later: PC_ID(100003, WRITE), NumConflictIters: 50     
-
-
-WAR dependencies: 
-LoopInstances:10, ConflictingLoopInstances:10, TotalLoopIterations:100, ConflictedIterations:90, TotalConflictingBytes:360
-Dependence: RAW, AproxMemAddr: -1, NumConflicts: 200, Earlier: PC_ID(100003, WRITE), Later: PC_ID(100002, READ), NumConflictIters: 50     
-
-
-WAW dependencies: 
-LoopInstances:10, ConflictingLoopInstances:10, TotalLoopIterations:100, ConflictedIterations:90, TotalConflictingBytes:360
-Dependence: WAW, AproxMemAddr: -1, NumConflicts: 200, Earlier: PC_ID(100003, WRITE), Later: PC_ID(100003, WRITE), NumConflictIters: 50     
-
-
+}}
+}
