@@ -1,20 +1,24 @@
-Timings:
-Total time: 168774
-Add: 27791
-LoopInstaceMarker: 7185
-Merge: 0
-It end: 33880
-LOOP 1
-RAW dependencies: 
-LoopInstances:1, ConflictingLoopInstances:0, TotalLoopIterations:50, ConflictedIterations:0, TotalConflictingBytes:0
+{
+"Timings":
+{
+"TotalTime": 151137, 
+"Add": 26550, 
+"Merge": 1153, 
+"ItEnd": 25040 
+},
+"Loops": {
+"1":{
+"RAW": { "LoopInstances": 1, "ConflictingLoopInstances": 0, "TotalLoopIterations": 50, "ConflictedIterations": 0, "TotalConflictingBytes": 0, "InstructionSummary": [ 
+ ] }
+
+,
+"WAR": { "LoopInstances": 1, "ConflictingLoopInstances": 0, "TotalLoopIterations": 50, "ConflictedIterations": 0, "TotalConflictingBytes": 0, "InstructionSummary": [ 
+ ] }
+
+,
+"WAW": { "LoopInstances": 1, "ConflictingLoopInstances": 1, "TotalLoopIterations": 50, "ConflictedIterations": 49, "TotalConflictingBytes": 196, "InstructionSummary": [ 
+{ "AproxMemAddr": "cc", "NumConflicts": 5, "EarlierPC": "100001", "LaterPC": "100001", "NumConflictIters": 5 }  ] }
 
 
-WAR dependencies: 
-LoopInstances:1, ConflictingLoopInstances:0, TotalLoopIterations:50, ConflictedIterations:0, TotalConflictingBytes:0
-
-
-WAW dependencies: 
-LoopInstances:1, ConflictingLoopInstances:1, TotalLoopIterations:50, ConflictedIterations:49, TotalConflictingBytes:196
-Dependence: WAW, AproxMemAddr: 204, NumConflicts: 5, Earlier: PC_ID(1048577, WRITE), Later: PC_ID(1048577, WRITE), NumConflictIters: 5     
-
-
+}}
+}
