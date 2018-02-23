@@ -1,29 +1,29 @@
 {
 "Timings":
 {
-"TotalTime": 524681, 
-"Add": 123420, 
-"Merge": 18025, 
-"ItEnd": 157035 
+"TotalTime": 490691, 
+"Add": 113103, 
+"Merge": 16951, 
+"ItEnd": 141606 
 },
 "Loops": {
 "1":{
 "RAW": { "LoopInstances": 1, "ConflictingLoopInstances": 1, "TotalLoopIterations": 10, "ConflictedIterations": 9, "TotalConflictingBytes": 396, "InstructionSummary": [ 
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a3", "LaterPC": "186a4", "NumConflictIters": 5 } ,
 { "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a3", "LaterPC": "186a2", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a3", "LaterPC": "186a4", "NumConflictIters": 5 } ,
 { "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a5", "LaterPC": "186a1", "NumConflictIters": 5 } ,
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a6", "LaterPC": "186a4", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a7", "LaterPC": "186a1", "NumConflictIters": 5 } ,
 { "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a6", "LaterPC": "186a2", "NumConflictIters": 5 } ,
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a7", "LaterPC": "186a1", "NumConflictIters": 5 }  ] }
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a6", "LaterPC": "186a4", "NumConflictIters": 5 }  ] }
 
 ,
 "WAR": { "LoopInstances": 1, "ConflictingLoopInstances": 1, "TotalLoopIterations": 10, "ConflictedIterations": 9, "TotalConflictingBytes": 396, "InstructionSummary": [ 
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a1", "LaterPC": "186a5", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a1", "LaterPC": "186a7", "NumConflictIters": 5 } ,
 { "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a2", "LaterPC": "186a3", "NumConflictIters": 5 } ,
 { "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a2", "LaterPC": "186a6", "NumConflictIters": 5 } ,
 { "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a4", "LaterPC": "186a3", "NumConflictIters": 5 } ,
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a4", "LaterPC": "186a6", "NumConflictIters": 5 } ,
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a1", "LaterPC": "186a5", "NumConflictIters": 5 } ,
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a1", "LaterPC": "186a7", "NumConflictIters": 5 }  ] }
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a4", "LaterPC": "186a6", "NumConflictIters": 5 }  ] }
 
 ,
 "WAW": { "LoopInstances": 1, "ConflictingLoopInstances": 1, "TotalLoopIterations": 10, "ConflictedIterations": 9, "TotalConflictingBytes": 396, "InstructionSummary": [ 
@@ -31,17 +31,17 @@
 { "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a3", "LaterPC": "186a6", "NumConflictIters": 5 } ,
 { "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a5", "LaterPC": "186a5", "NumConflictIters": 5 } ,
 { "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a5", "LaterPC": "186a7", "NumConflictIters": 5 } ,
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a6", "LaterPC": "186a3", "NumConflictIters": 5 } ,
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a6", "LaterPC": "186a6", "NumConflictIters": 5 } ,
 { "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a7", "LaterPC": "186a5", "NumConflictIters": 5 } ,
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a7", "LaterPC": "186a7", "NumConflictIters": 5 }  ] }
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a7", "LaterPC": "186a7", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a6", "LaterPC": "186a3", "NumConflictIters": 5 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a6", "LaterPC": "186a6", "NumConflictIters": 5 }  ] }
 
 
 },
 "2":{
 "RAW": { "LoopInstances": 10, "ConflictingLoopInstances": 10, "TotalLoopIterations": 100, "ConflictedIterations": 90, "TotalConflictingBytes": 360, "InstructionSummary": [ 
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a3", "LaterPC": "186a4", "NumConflictIters": 50 } ,
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a3", "LaterPC": "186a2", "NumConflictIters": 50 }  ] }
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a3", "LaterPC": "186a2", "NumConflictIters": 50 } ,
+{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 200, "EarlierPC": "186a3", "LaterPC": "186a4", "NumConflictIters": 50 }  ] }
 
 ,
 "WAR": { "LoopInstances": 10, "ConflictingLoopInstances": 10, "TotalLoopIterations": 100, "ConflictedIterations": 90, "TotalConflictingBytes": 360, "InstructionSummary": [ 
