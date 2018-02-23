@@ -90,7 +90,7 @@ bool IntersectFinder::should_reorder_data_nodes(uint64_t high_count, uint64_t lo
     return high_count * 1.25 < low_count;
 }
 void IntersectFinder::reorder_data_nodes(size_t high_data, size_t low_data){
-    assert(high_data != 0 && high_data == node_parent(low_data));
+    assert(high_data != 0 && low_data != 0 && high_data == node_parent(low_data));
     key_data[low_data].swap(key_data[high_data]);
     if(has_union(low_data)){
         //recompute union data for the low set
@@ -126,6 +126,7 @@ void IntersectFinder::update_intermeds(){
 
 void IntersectFinder::clear(){
     union_data.resize(1);
+    union_data[0].clear();
     key_data.clear();
     key_locations.clear();
     keys.clear();
