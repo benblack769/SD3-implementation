@@ -113,8 +113,6 @@ void IntersectFinder::update_intermeds(){
         }
         for(int64_t i = int64_t(key_data.size())-1; i >= 0; i--){//union_data[0] always up to date
             if(data_parent(i) > 0){//union_data[0] always up to date
-                int asdasd = data_parent(i);
-                int aselkajsd = node_parent(i);
                 union_data[data_parent(i)].unite(key_data[i]);
             }
         }
