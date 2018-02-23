@@ -64,14 +64,14 @@ protected:
     CompressedSet & node_at(size_t node){
         return has_union(node) ? union_data[node] : key_data[node];
     }
-    size_t data_parent(size_t node){
-        return node < union_data.size() ? node : node_parent(node);
+    int64_t data_parent(size_t node){
+        return node < union_data.size() ? int64_t(node) : node_parent(node);
     }
     size_t has_union(size_t data_node){
         return data_node < union_data.size();
     }
-    size_t node_parent(size_t node){
-        return (node-1) / 2;
+    int64_t node_parent(size_t node){
+        return (int64_t(node)-1) / 2;
     }
     size_t left(size_t node){
         return node*2 + 1;
