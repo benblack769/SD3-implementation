@@ -61,7 +61,6 @@ M is the total number of memory adresses accesse
 */
 
 IntersectFinder::IntersectFinder(){
-    needs_update = true;
     union_data.resize(1);
 }
 void IntersectFinder::add_new_set(KeyType key){
@@ -70,11 +69,9 @@ void IntersectFinder::add_new_set(KeyType key){
     }
     key_data.push_back(CompressedSet());
     keys.push_back(key);
-    needs_update = true;
     key_locations[key] = keys.size()-1;
 }
 void IntersectFinder::add_values_to_key(KeyType key,CompressedSet & add_values){
-    needs_update = true;
     size_t key_loc = key_locations[key];
     key_data[key_loc].unite(add_values);
     union_data[0].unite(add_values);
@@ -85,21 +82,6 @@ void IntersectFinder::resize_unions(){
         union_data.resize(new_union_size);
     }
 }
-bool IntersectFinder::should_reorder_data_nodes(uint64_t high_count, uint64_t low_count){
-    return high_count * 1.25 < low_count;
-}
-void IntersectFinder::reorder_data_nodes(size_t high_data, size_t low_data){
-    assert(high_data != 0 && low_data != 0 && high_data == node_parent(low_data));
-    key_data[low_data].swap(key_data[high_data]);
-    swap(keys[low_data],keys[high_data]);
-    key_locations[keys[low_data]] = low_data;
-    key_locations[keys[high_data]] = high_data;
-    if(has_union(low_data)){
-        //clears out bad union data for the low set, will be recalculated later
-        union_data[low_data].clear();
-    }
-}
-
 struct NodeOrder{
     int64_t overhead;
     size_t old_loc;
@@ -128,20 +110,17 @@ void IntersectFinder::sort_key_data(){
     new_key_data.swap(key_data);
 }
 void IntersectFinder::update_intermeds(){
-    if(needs_update){
-        needs_update = false;
-        sort_key_data();
-        union_data.resize(1);
-        resize_unions();
-        for(int64_t i = int64_t(key_data.size())-1; i >= 0; i--){//union_data[0] always up to date
-            if(data_parent(i) > 0){//union_data[0] always up to date
-                union_data[data_parent(i)].unite(key_data[i]);
-            }
+    sort_key_data();
+    union_data.resize(1);
+    resize_unions();
+    for(int64_t i = int64_t(key_data.size())-1; i >= 0; i--){//union_data[0] always up to date
+        if(data_parent(i) > 0){//union_data[0] always up to date
+            union_data[data_parent(i)].unite(key_data[i]);
         }
-        for(int64_t i = int64_t(union_data.size())-1; i >= 0; i--){
-            if(node_parent(i) > 0){//union_data[0] always up to date
-                union_data[node_parent(i)].unite(union_data[i]);
-            }
+    }
+    for(int64_t i = int64_t(union_data.size())-1; i >= 0; i--){
+        if(node_parent(i) > 0){//union_data[0] always up to date
+            union_data[node_parent(i)].unite(union_data[i]);
         }
     }
 }
@@ -152,7 +131,6 @@ void IntersectFinder::clear(){
     key_data.clear();
     key_locations.clear();
     keys.clear();
-    needs_update = false;
 }
 
 void IntersectFinder::merge(IntersectFinder & other){
@@ -196,7 +174,7 @@ vector<IntersectInfo>  IntersectFinder::conflicting_keys(IntersectFinder & other
         }
     }
     union_data.resize(1);
-    resize_unions();
+    other.union_data.resize(1);
     return res;
 }
 vector<KeyType> IntersectFinder::find_overlap_keys(CompressedSet & with){

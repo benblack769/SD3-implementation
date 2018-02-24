@@ -22,8 +22,6 @@ protected:
     vector<KeyType> keys;
     map<KeyType,size_t> key_locations;
 
-    bool needs_update;
-    //vector<char> update_keys;
 public:
     IntersectFinder();
     void add_new_set(KeyType key);
@@ -51,17 +49,8 @@ protected:
     void subtract_from(CompressedSet & with,size_t cur_node);
     void resize_unions();
     void sort_key_data();
-    void reorder_heap();
-    void reorder_data_nodes(size_t high_data, size_t low_data);
-    bool should_reorder_data_nodes(uint64_t high_count, uint64_t low_count);
-    //bool is_data_node(size_t node){
-    //    return node >= num_tmps();
-    //}
     void update_intermeds();
 
-    //bool is_root(size_t loc){
-    //    return loc == 0;
-    //}
     CompressedSet & node_at(size_t node){
         return has_union(node) ? union_data[node] : key_data[node];
     }
