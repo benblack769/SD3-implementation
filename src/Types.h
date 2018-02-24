@@ -4,6 +4,7 @@
 #endif
 
 #include <stdint.h>
+#include <cstdlib>
 inline int64_t iabs(int64_t num){
     return num >= 0 ? num : -num;
 }

@@ -1,10 +1,10 @@
 {
 "Timings":
 {
-"TotalTime": 348188040, 
-"Add": 76316390, 
-"Merge": 8660645, 
-"ItEnd": 110498699 
+"TotalTime": 348729101, 
+"Add": 35870001, 
+"Merge": 48080421, 
+"ItEnd": 116364443 
 },
 "Loops": {
 "1":{
@@ -36,16 +36,16 @@
 
 },
 "3":{
-"RAW": { "LoopInstances": 2500, "ConflictingLoopInstances": 2500, "TotalLoopIterations": 125000, "ConflictedIterations": 122500, "TotalConflictingBytes": 490000, "InstructionSummary": [ 
-{ "AproxMemAddr": "4e24", "NumConflicts": 12500, "EarlierPC": "100006", "LaterPC": "100003", "NumConflictIters": 12500 }  ] }
+"RAW": { "LoopInstances": 2500, "ConflictingLoopInstances": 2500, "TotalLoopIterations": 125000, "ConflictedIterations": 10000, "TotalConflictingBytes": 40000, "InstructionSummary": [ 
+{ "AproxMemAddr": "4e24", "NumConflicts": 100000, "EarlierPC": "100006", "LaterPC": "100003", "NumConflictIters": 25000 }  ] }
 
 ,
-"WAR": { "LoopInstances": 2500, "ConflictingLoopInstances": 2500, "TotalLoopIterations": 125000, "ConflictedIterations": 122500, "TotalConflictingBytes": 490000, "InstructionSummary": [ 
-{ "AproxMemAddr": "4e24", "NumConflicts": 12500, "EarlierPC": "100003", "LaterPC": "100006", "NumConflictIters": 12500 }  ] }
+"WAR": { "LoopInstances": 2500, "ConflictingLoopInstances": 2500, "TotalLoopIterations": 125000, "ConflictedIterations": 10000, "TotalConflictingBytes": 40000, "InstructionSummary": [ 
+{ "AproxMemAddr": "4e24", "NumConflicts": 100000, "EarlierPC": "100003", "LaterPC": "100006", "NumConflictIters": 25000 }  ] }
 
 ,
-"WAW": { "LoopInstances": 2500, "ConflictingLoopInstances": 2500, "TotalLoopIterations": 125000, "ConflictedIterations": 122500, "TotalConflictingBytes": 490000, "InstructionSummary": [ 
-{ "AproxMemAddr": "4e24", "NumConflicts": 12500, "EarlierPC": "100006", "LaterPC": "100006", "NumConflictIters": 12500 }  ] }
+"WAW": { "LoopInstances": 2500, "ConflictingLoopInstances": 2500, "TotalLoopIterations": 125000, "ConflictedIterations": 10000, "TotalConflictingBytes": 40000, "InstructionSummary": [ 
+{ "AproxMemAddr": "4e24", "NumConflicts": 100000, "EarlierPC": "100006", "LaterPC": "100006", "NumConflictIters": 25000 }  ] }
 
 
 }}
