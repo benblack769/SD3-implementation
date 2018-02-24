@@ -2,13 +2,7 @@
 #include "Types.h"
 
 #include "ConflictData.h"
-#include "CompressedBits.h"
-#include "StrideDetector.h"
-#include "dynamic_gcd.h"
 #include "Dependence.h"
-
-typedef CompressedData<Point> PointTable;
-typedef CompressedData<Stride> StrideTable;
 
 #define HAS_DEP_LIMIT 4
 
@@ -18,16 +12,8 @@ typedef access_mode_pair<access_mode_pair<LoopInstanceDep> > AllLoopInstanceDep;
 
 class LoopInstance {
 protected:
-    map<PC_ID,StrideDetector> detectors;
-    PointTable pending_points;
-    StrideTable pending_strides;
-
-    PointTable history_points;
-    StrideTable history_strides;
-
-    CompressedSet killed_bits;
-    access_mode_pair<CompressedSet> pending_bits;
-    access_mode_pair<CompressedSet> history_bits;
+    access_mode_pair<CompressedData> pending_table;
+    access_mode_pair<CompressedData> history_table;
 
     AllLoopInstanceDep my_dependencies;//history_acc_mode<pending_acc_mode<deps>>
 
@@ -35,16 +21,16 @@ protected:
     int64_t loop_id;
 public:
     LoopInstance(int64_t in_loop_id);
-    void addMemAccess(Block block,PC_ID identifier,StrideDetector & pc_detector);
-    bool isKilled(Block block);
+    void addMemAccess(int64_t mem_addr,int64_t access_size,int64_t instr_address,MemAccessMode acc_mode);
     void iteration_end();
     void merge_history_pending(LoopInstance & otherloop);
 
     AllLoopInstanceDep &loop_end();
     int64_t get_loop_id(){return loop_id;}
 protected:
+    bool isKilled(int64_t mem_addr);
     void handle_all_conflicts();
     void handle_conflicts(MemAccessMode pending_mode,MemAccessMode history_mode);
-
+    void add_in_table(CompressedData & into, CompressedData & from);
     void merge_pending_history();
 };

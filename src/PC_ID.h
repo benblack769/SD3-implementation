@@ -23,7 +23,7 @@ public:
     bool is_invalid(){
         return this->pc == INVALID;
     }
-    MemAccessMode get_acc_mode()const{return accessmode;} 
+    MemAccessMode get_acc_mode()const{return accessmode;}
     int64_t get_pc()const{return pc;}
 protected:
     int64_t pc;
