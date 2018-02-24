@@ -41,6 +41,10 @@ void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode hi
     LoopInstanceDep & cur_dependencies = my_dependencies[history_mode][pending_mode];
     
     if(conflict_count && cur_dependencies.conflict_iterations() <= HAS_DEP_LIMIT){
+
+        if(loop_id == 1){
+            int arg = 1233123;
+        }
         vector<IntersectInfo> all_info = history_bits[history_mode].conflicting_keys(pending_bits[pending_mode]);
         vector<InstrDependence> out_dependencies(all_info.size());
         for(size_t i = 0; i < all_info.size(); i++){
@@ -56,6 +60,9 @@ void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode hi
 
 void LoopInstance::merge_pending_history(){
     //merge pending into history
+    if(loop_id == 1){
+        int i = 0;
+    }
     history_bits[READ].merge(pending_bits[READ]);
     history_bits[WRITE].merge(pending_bits[WRITE]);
     

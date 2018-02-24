@@ -182,6 +182,13 @@ def many_points():
 
     prog.loop_start(1)
     for i in range(size):
+
+        for k in range(100):
+            rand1 = random.randrange(i-5,size)
+            rand2 = random.randrange(i-5,size)
+            rand3 = random.randrange(0,i+1)
+            A[rand3].assign(500+k,prog.bin_op(1000+k,A[rand1],A[rand2]))
+
         for l in range(3):
             prog.loop_start(l+101)
             for j in range(10):
@@ -192,6 +199,7 @@ def many_points():
                     A[rand3].assign(2+k,prog.bin_op(1+k,A[rand1],A[rand2]))
                 prog.iter_end(l+101)
             prog.loop_end(l+101)
+
         prog.iter_end(1)
     prog.loop_end(1)
 

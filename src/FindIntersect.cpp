@@ -1,4 +1,5 @@
 #include "FindIntersect.h"
+#include <algorithm>
 
 /*
 The idea is this:
@@ -61,7 +62,7 @@ M is the total number of memory adresses accesse
 
 IntersectFinder::IntersectFinder(){
     needs_update = true;
-    union_data.push_back(CompressedSet());
+    union_data.resize(1);
 }
 void IntersectFinder::add_new_set(KeyType key){
     if(key_locations.count(key)){
@@ -70,9 +71,7 @@ void IntersectFinder::add_new_set(KeyType key){
     key_data.push_back(CompressedSet());
     keys.push_back(key);
     needs_update = true;
-    //update_keys.push_back(false);
     key_locations[key] = keys.size()-1;
-    resize_unions();
 }
 void IntersectFinder::add_values_to_key(KeyType key,CompressedSet & add_values){
     needs_update = true;
@@ -92,25 +91,48 @@ bool IntersectFinder::should_reorder_data_nodes(uint64_t high_count, uint64_t lo
 void IntersectFinder::reorder_data_nodes(size_t high_data, size_t low_data){
     assert(high_data != 0 && low_data != 0 && high_data == node_parent(low_data));
     key_data[low_data].swap(key_data[high_data]);
+    swap(keys[low_data],keys[high_data]);
+    key_locations[keys[low_data]] = low_data;
+    key_locations[keys[high_data]] = high_data;
     if(has_union(low_data)){
-        //recompute union data for the low set
-        union_data[low_data] = key_data[low_data];
-        if(has_data(left(low_data))){
-            union_data[low_data].unite(node_at(left(low_data)));
-        }
-        if(has_data(right(low_data))){
-            union_data[low_data].unite(node_at(right(low_data)));
-        }
+        //clears out bad union data for the low set, will be recalculated later
+        union_data[low_data].clear();
     }
+}
+
+struct NodeOrder{
+    int64_t overhead;
+    size_t old_loc;
+    bool operator < (NodeOrder order)const{
+        return overhead > order.overhead;
+    }
+};
+void IntersectFinder::sort_key_data(){
+    size_t num_keys = keys.size();
+    vector<NodeOrder> sorted_order(num_keys);
+    for(size_t i = 0; i < num_keys; i++){
+        NodeOrder val = {overhead_value(i),i};
+        sorted_order[i] = val;
+    }
+    sort(sorted_order.begin(), sorted_order.end());
+
+    vector<KeyType> new_keys(num_keys);
+    vector<CompressedSet> new_key_data(num_keys);
+    for(size_t i = 0; i < num_keys; i++){
+        size_t old_l = sorted_order[i].old_loc;
+        key_locations[keys[old_l]] = i;
+        new_keys[i] = keys[old_l];
+        new_key_data[i].swap(key_data[old_l]);
+    }
+    new_keys.swap(keys);
+    new_key_data.swap(key_data);
 }
 void IntersectFinder::update_intermeds(){
     if(needs_update){
         needs_update = false;
-        for(int64_t i = int64_t(key_data.size())-1; i >= 3; i--){
-            if(should_reorder_data_nodes(key_data[node_parent(i)].set_overhead(),key_data[i].set_overhead())){
-                reorder_data_nodes(node_parent(i),i);
-            }
-        }
+        sort_key_data();
+        union_data.resize(1);
+        resize_unions();
         for(int64_t i = int64_t(key_data.size())-1; i >= 0; i--){//union_data[0] always up to date
             if(data_parent(i) > 0){//union_data[0] always up to date
                 union_data[data_parent(i)].unite(key_data[i]);
@@ -173,6 +195,8 @@ vector<IntersectInfo>  IntersectFinder::conflicting_keys(IntersectFinder & other
             res.push_back(intersect);
         }
     }
+    union_data.resize(1);
+    resize_unions();
     return res;
 }
 vector<KeyType> IntersectFinder::find_overlap_keys(CompressedSet & with){
@@ -191,8 +215,10 @@ void IntersectFinder::add_overlap_keys(vector<KeyType> & out_keys,CompressedSet 
 }
 void IntersectFinder::slow_merge(IntersectFinder & other){
     for(size_t i = 0; i < other.key_data.size(); i++){
-        KeyType add_key = other.keys[i];
-        this->add_new_set(add_key);
-        this->add_values_to_key(add_key,other.key_data[i]);
+        if(other.key_data[i].any()){
+            KeyType add_key = other.keys[i];
+            this->add_new_set(add_key);
+            this->add_values_to_key(add_key,other.key_data[i]);
+        }
     }
 }

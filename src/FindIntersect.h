@@ -50,6 +50,7 @@ protected:
     void add_overlap_keys(vector<KeyType> & out_keys,CompressedSet & with,size_t cur_node);
     void subtract_from(CompressedSet & with,size_t cur_node);
     void resize_unions();
+    void sort_key_data();
     void reorder_heap();
     void reorder_data_nodes(size_t high_data, size_t low_data);
     bool should_reorder_data_nodes(uint64_t high_count, uint64_t low_count);
@@ -78,6 +79,15 @@ protected:
     }
     size_t right(size_t node){
         return node*2 + 2;
+    }
+    int64_t neighbor(int64_t node){
+        return node % 2 ? node + 1 : node - 1;
+    }
+    bool has_neighbor(size_t node){
+        return node != 0 && neighbor(node) < union_data.size();
+    }
+    int64_t overhead_value(size_t node){
+        return key_data[node].set_overhead();
     }
     bool has_data(size_t node){
         return node < key_data.size();
