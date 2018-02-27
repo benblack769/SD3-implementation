@@ -12,7 +12,6 @@ typedef access_mode_pair<access_mode_pair<LoopInstanceDep> > AllLoopInstanceDep;
 
 class LoopInstance {
 protected:
-    CompressedSet killed_bits;
     access_mode_pair<IntersectFinder> pending_bits;
     access_mode_pair<IntersectFinder> history_bits;
 

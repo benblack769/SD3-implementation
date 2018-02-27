@@ -15,7 +15,7 @@ struct IntersectInfo{
 
 extern int64_t add_mem_time;
 
-bool any_in_intersect(BasicBlockSet & one, BasicBlockSet & other){
+inline bool any_in_intersect(BasicBlockSet & one, BasicBlockSet & other){
     BasicBlockSet inter = one;
     inter &= other;
     return inter.any();
@@ -77,95 +77,67 @@ protected:
     map<int64_t,InstrBlockSet> instr_blocks;
     typedef typename map<int64_t, InstrBlockSet>::iterator instr_blocks_iter;
 public:
-    IntersectFinder();
-    void add_block(KeyType key,int64_t start, int64_t size, bool is_read, IntersectFinder & reads, IntersectFinder & writes, CompressedSet & kills){
+    IntersectFinder(){}
+    void add_block(KeyType key,int64_t start, int64_t size, bool is_read, IntersectFinder & reads, IntersectFinder & writes){
         int64_t end = start + size;
         int64_t last = end - 1;
         if(block_val(start) == block_val(last)){
-            add_actual_block(key,start,size,is_read,reads,writes,kills);
+            add_actual_block(key,start,size,is_read,reads,writes);
         }
         else{
             int64_t block_split_end = block_val_loc(block_val(last));
             int64_t first_size = block_split_end - start;
             int64_t last_size = end - block_split_end;
             assert(first_size + last_size == size && start + last_size == end);
-            add_actual_block(key,start,first_size,is_read,reads,writes,kills);
-            add_actual_block(key,block_split_end,last_size,is_read,reads,writes,kills);
+            add_actual_block(key,start,first_size,is_read,reads,writes);
+            add_actual_block(key,block_split_end,last_size,is_read,reads,writes);
         }
     }
     void clear(){
         instr_blocks.clear();
     }
     BasicBlockSet & get_block(int64_t block_loc){
-        assert(block_loc % BLOCK_SIZE == 0);
         instr_blocks_iter iter = instr_blocks.find(block_loc);
         return (iter != instr_blocks.end()) ? iter->second.union_all() : empty_bb_set;
     }
 
     void merge(IntersectFinder & other){
-        instr_blocks_iter iter = this->instr_blocks.begin(), outer_iter = other.instr_blocks.begin();
-        for(;iter != this->instr_blocks.end() && outer_iter != other.instr_blocks.end(); ){
-            int64_t this_key = iter->first;
-            int64_t outer_key = outer_iter->first;
-            if(this_key == outer_key){
-                iter->second.merge_into(outer_iter->second);
-                ++iter;
-                ++outer_iter;
-            }
-            else if(this_key < outer_key){
-                iter = this->instr_blocks.lower_bound(outer_key);
-            }
-            else{
-                instr_blocks_iter new_outer_iter = outer_iter;
-                ++new_outer_iter;
-                this->instr_blocks.insert(iter,*new_outer_iter);
-                outer_iter = new_outer_iter;
-            }
-        }
-        if(outer_iter != other.instr_blocks.end()){
-            this->instr_blocks.insert(outer_iter,other.instr_blocks.end());
+        for(instr_blocks_iter it = other.instr_blocks.begin(); it != other.instr_blocks.end(); ++it){
+            this->instr_blocks[it->first].merge_into(it->second);
         }
     }
 
     vector<IntersectInfo> conflicting_keys(IntersectFinder & other){
         vector<IntersectInfo> res;
         for(instr_blocks_iter it = other.instr_blocks.begin(); it != other.instr_blocks.end(); ++it){
-            this->instr_blocks[it->first].add_conflict_keys_to(it->second,res,it->first);
+            if(this->instr_blocks.count(it->first)){
+                this->instr_blocks[it->first].add_conflict_keys_to(it->second,res,it->first);
+            }
         }
         return res;
     }
-    void subtract_from_all(CompressedSet & outer){
-        typename CompressedSet::set_iterator outer_iter = outer.data.begin();
-        instr_blocks_iter iter = this->instr_blocks.begin();
-        for(;iter != this->instr_blocks.end() && outer_iter != outer.data.end(); ){
-            int64_t this_key = iter->first;
-            int64_t outer_key = outer_iter->first;
-            if(this_key == outer_key){
-                iter->second.subtract_from_all(outer_iter->second);
-                ++iter;
-                ++outer_iter;
-            }
-            else if(this_key < outer_key){
-                iter = this->instr_blocks.lower_bound(outer_key);
-            }
-            else{
-                outer_iter = outer.data.lower_bound(this_key);
+    void subtract_from_all(IntersectFinder & reads, IntersectFinder & writes){
+        for(instr_blocks_iter it = this->instr_blocks.begin(); it != this->instr_blocks.end(); ++it){
+            BasicBlockSet remove = writes.get_block(it->first);
+            remove.subtract(reads.get_block(it->first));
+            if(remove.any()){
+                it->second.subtract_from_all(remove);
             }
         }
     }
 protected:
-
-    void add_actual_block(KeyType key,int64_t start, int64_t size, bool is_read, IntersectFinder & reads, IntersectFinder & writes, CompressedSet & kills){
+    void add_actual_block(KeyType key,int64_t start, int64_t size, bool is_read, IntersectFinder & reads, IntersectFinder & writes){
         BasicBlockSet new_b;
+        int64_t block_num = block_val(start);
         int64_t adj_el = block_loc(start);
         for(int64_t i = adj_el; i < adj_el + size; i++){
             new_b.add(i);
         }
-        new_b &= kills.get_block(adj_el);
-        if(!is_read){
-            BasicBlockSet new_kills = new_b;
-            new_kills &= reads.get_block(adj_el);
-            kills.unite_block(adj_el,new_kills);
+        BasicBlockSet kills = writes.get_block(block_num);
+        kills.subtract(reads.get_block(block_num));
+        new_b.subtract(kills);
+        if(new_b.any()){
+            instr_blocks[block_num].add_key_data(key,new_b);
         }
     }
 };
