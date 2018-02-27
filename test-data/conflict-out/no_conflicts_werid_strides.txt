@@ -1,23 +1,23 @@
 {
 "Timings":
 {
-"TotalTime": 304805, 
-"Add": 40340, 
-"Merge": 7715, 
-"ItEnd": 30628 
+"TotalTime": 194663, 
+"Add": 16080, 
+"Merge": 6077, 
+"ItEnd": 25677 
 },
 "Loops": {
 "1":{
 "RAW": { "LoopInstances": 1, "ConflictingLoopInstances": 1, "TotalLoopIterations": 10, "ConflictedIterations": 9, "TotalConflictingBytes": 36, "InstructionSummary": [ 
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a2", "LaterPC": "186a1", "NumConflictIters": 5 }  ] }
+{ "AproxMemAddr": "0", "NumConflicts": 36, "EarlierPC": "186a2", "LaterPC": "186a1", "NumConflictIters": 9 }  ] }
 
 ,
 "WAR": { "LoopInstances": 1, "ConflictingLoopInstances": 1, "TotalLoopIterations": 10, "ConflictedIterations": 9, "TotalConflictingBytes": 36, "InstructionSummary": [ 
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a1", "LaterPC": "186a2", "NumConflictIters": 5 }  ] }
+{ "AproxMemAddr": "0", "NumConflicts": 36, "EarlierPC": "186a1", "LaterPC": "186a2", "NumConflictIters": 9 }  ] }
 
 ,
 "WAW": { "LoopInstances": 1, "ConflictingLoopInstances": 1, "TotalLoopIterations": 10, "ConflictedIterations": 9, "TotalConflictingBytes": 288, "InstructionSummary": [ 
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 160, "EarlierPC": "186a2", "LaterPC": "186a2", "NumConflictIters": 5 }  ] }
+{ "AproxMemAddr": "0", "NumConflicts": 288, "EarlierPC": "186a2", "LaterPC": "186a2", "NumConflictIters": 9 }  ] }
 
 
 },

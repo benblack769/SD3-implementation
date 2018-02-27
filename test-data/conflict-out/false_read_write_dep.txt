@@ -1,15 +1,15 @@
 {
 "Timings":
 {
-"TotalTime": 58999, 
-"Add": 10272, 
-"Merge": 1321, 
-"ItEnd": 8554 
+"TotalTime": 81002, 
+"Add": 10092, 
+"Merge": 1282, 
+"ItEnd": 8442 
 },
 "Loops": {
 "1":{
 "RAW": { "LoopInstances": 1, "ConflictingLoopInstances": 1, "TotalLoopIterations": 20, "ConflictedIterations": 10, "TotalConflictingBytes": 40, "InstructionSummary": [ 
-{ "AproxMemAddr": "ffffffffffffffff", "NumConflicts": 20, "EarlierPC": "186a2", "LaterPC": "186a1", "NumConflictIters": 5 }  ] }
+{ "AproxMemAddr": "0", "NumConflicts": 40, "EarlierPC": "186a2", "LaterPC": "186a1", "NumConflictIters": 10 }  ] }
 
 ,
 "WAR": { "LoopInstances": 1, "ConflictingLoopInstances": 0, "TotalLoopIterations": 20, "ConflictedIterations": 0, "TotalConflictingBytes": 0, "InstructionSummary": [ 
