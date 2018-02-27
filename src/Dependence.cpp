@@ -18,6 +18,9 @@ DependenceType get_dep_type(MemAccessMode earlier,MemAccessMode later){
 
 InstrDependence::InstrDependence(){
     myDependenceType = NODEP;
+    myMemoryAddr = 0;
+    numConflicts = 0;
+    num_conflict_iters = 0;
 }
 
 InstrDependence::InstrDependence(PC_ID earlier, PC_ID later, int64_t mem_addr, int64_t num_conflicts, int64_t num_conflict_iterations){
@@ -38,6 +41,7 @@ bool InstrDependence::can_summarize(const InstrDependence & other){
 }
 void InstrDependence::sum_num_conflicts(const InstrDependence & other){
     assert(can_summarize(other));
+    myMemoryAddr = myMemoryAddr == 0 ? other.myMemoryAddr : myMemoryAddr;
     numConflicts += other.numConflicts;
     num_conflict_iters += other.num_conflict_iters;
 }
