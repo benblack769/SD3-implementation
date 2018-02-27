@@ -48,6 +48,9 @@ public:
         for(map_iter t_it = this->instr_keys.begin(); t_it != this->instr_keys.end(); ++t_it){
             KeyType this_key = t_it->first;
             BasicBlockSet this_set = t_it->second;
+            if(!any_in_intersect(this_set, other.union_all())){
+                    continue;
+            }
             for(map_iter o_it = other.instr_keys.begin(); o_it != other.instr_keys.end(); ++o_it){
                 KeyType other_key = o_it->first;
                 BasicBlockSet other_set = o_it->second;
