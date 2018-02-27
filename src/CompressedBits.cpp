@@ -2,31 +2,9 @@
 #include "CompressedBits.h"
 
 CompressedSet empty_set;
+BasicBlockSet empty_bb_set;
 
-void BlockSet::add(int64_t element){
-    assert(element < BLOCK_SIZE && element >= 0);
-    bits[element] = true;
-}
-bool BlockSet::has(int64_t element){
-    assert(element < BLOCK_SIZE && element >= 0);
-    return bits[element];
-}
-void BlockSet::operator |= (const BlockSet &outer){
-    bits |= outer.bits;
-}
-void BlockSet::operator &= (const BlockSet &  outer){
-    bits &= outer.bits;
-}
-void BlockSet::subtract(const BlockSet & outer){
-    bits &= ~outer.bits;
-}
-bool BlockSet::any(){
-    return bits.any();
-}
-int64_t BlockSet::count(){
-    return bits.count();
-}
-ostream & operator << (ostream & os, const BlockSet &block_set){
+ostream & operator << (ostream & os, const BasicBlockSet &block_set){
     for(size_t i = 0; i < BLOCK_SIZE; i++){
         os << block_set.bits[i];
     }
@@ -39,6 +17,15 @@ void CompressedSet::add(int64_t element){
     data[uint64_t(element) / BLOCK_SIZE].add(uint64_t(element) % BLOCK_SIZE);
 }
 
+BasicBlockSet & CompressedSet::get_block(int64_t block_loc){
+    assert(block_loc % BLOCK_SIZE == 0);
+    set_iterator iter = data.find(block_loc);
+    return (iter != data.end()) ? iter->second : empty_bb_set;
+}
+void CompressedSet::unite_block(int64_t block_loc, BasicBlockSet & outer){
+    assert(block_loc % BLOCK_SIZE == 0);
+    data[block_loc] |= outer;
+}
 void CompressedSet::add_block(int64_t element,int64_t size){
     for(int64_t i = 0; i < size; i++){
         this->add(element+i);
@@ -81,7 +68,7 @@ bool CompressedSet::has_any_in_intersect(CompressedSet & outer){
         int64_t this_key = iter->first;
         int64_t outer_key = outer_iter->first;
         if(this_key == outer_key){
-            BlockSet block = iter->second;
+            BasicBlockSet block = iter->second;
             block &= outer_iter->second;
             if(block.any()){
                 return true;
@@ -106,7 +93,7 @@ int64_t CompressedSet::count_intersect(CompressedSet & outer){
         int64_t this_key = iter->first;
         int64_t outer_key = outer_iter->first;
         if(this_key == outer_key){
-            BlockSet intersect = iter->second;
+            BasicBlockSet intersect = iter->second;
             intersect &= outer_iter->second;
             count += intersect.count();
 
@@ -191,7 +178,7 @@ void CompressedSet::clear(){
 ostream & operator << (ostream & os, CompressedSet &compset){
     for(CompressedSet::set_iterator iter = compset.data.begin(); iter != compset.data.end(); ++iter){
         int64_t upper_loc = iter->first;
-        BlockSet lower_loc = iter->second;
+        BasicBlockSet lower_loc = iter->second;
         os << hex << upper_loc << dec << ": " << lower_loc << "\n";
     }
     return os;
