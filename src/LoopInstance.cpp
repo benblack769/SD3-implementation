@@ -21,7 +21,8 @@ void LoopInstance::handle_all_conflicts(){
 void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode history_mode){
     LoopInstanceDep & cur_dependencies = my_dependencies[history_mode][pending_mode];
     //if(all_info.size()){// && cur_dependencies.conflict_iterations() <= HAS_DEP_LIMIT){
-    vector<IntersectInfo> all_info = history_bits[history_mode].conflicting_keys(pending_bits[pending_mode]);
+    int64_t total_mem_footprint = 0;
+    vector<IntersectInfo> all_info = history_bits[history_mode].conflicting_keys(pending_bits[pending_mode],total_mem_footprint);
     int64_t total_count = 0;
     vector<InstrDependence> out_dependencies(all_info.size());
     for(size_t i = 0; i < all_info.size(); i++){
@@ -29,7 +30,7 @@ void LoopInstance::handle_conflicts(MemAccessMode pending_mode, MemAccessMode hi
         total_count += info.size_of_intersect;
         out_dependencies[i] = InstrDependence(info.key_one,info.key_two,info.approx_mem_addr,info.size_of_intersect);
     }
-    cur_dependencies.addIterationDependencies(out_dependencies,total_count);
+    cur_dependencies.addIterationDependencies(out_dependencies,total_mem_footprint);
 }
 
 void LoopInstance::merge_pending_history(){

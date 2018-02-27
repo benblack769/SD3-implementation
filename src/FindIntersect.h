@@ -21,6 +21,12 @@ inline bool any_in_intersect(BasicBlockSet & one, BasicBlockSet & other){
     return inter.any();
 }
 
+inline int64_t count_in_intersect(BasicBlockSet & one, BasicBlockSet & other){
+    BasicBlockSet inter = one;
+    inter &= other;
+    return inter.count();
+}
+
 class InstrBlockSet{
 protected:
     BasicBlockSet _union_all;
@@ -34,10 +40,11 @@ public:
     BasicBlockSet & union_all(){
         return _union_all;
     }
-    void add_conflict_keys_to(InstrBlockSet & other, vector<IntersectInfo> & inter_info, int64_t approx_mem_addr){
+    void add_conflict_keys_to(InstrBlockSet & other, vector<IntersectInfo> & inter_info, int64_t approx_mem_addr, int64_t & mem_footprint){
         if(!any_in_intersect(this->union_all(), other.union_all())){
             return;
         }
+        mem_footprint += count_in_intersect(this->union_all(), other.union_all());
         for(map_iter t_it = this->instr_keys.begin(); t_it != this->instr_keys.end(); ++t_it){
             KeyType this_key = t_it->first;
             BasicBlockSet this_set = t_it->second;
@@ -107,11 +114,11 @@ public:
         }
     }
 
-    vector<IntersectInfo> conflicting_keys(IntersectFinder & other){
+    vector<IntersectInfo> conflicting_keys(IntersectFinder & other,int64_t & total_mem_footprint){
         vector<IntersectInfo> res;
         for(instr_blocks_iter it = other.instr_blocks.begin(); it != other.instr_blocks.end(); ++it){
             if(this->instr_blocks.count(it->first)){
-                this->instr_blocks[it->first].add_conflict_keys_to(it->second,res,it->first);
+                this->instr_blocks[it->first].add_conflict_keys_to(it->second,res,it->first,total_mem_footprint);
             }
         }
         return res;
