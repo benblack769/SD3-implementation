@@ -95,7 +95,7 @@ public:
             int64_t block_split_end = block_val_loc(block_val(last));
             int64_t first_size = block_split_end - start;
             int64_t last_size = end - block_split_end;
-            assert(first_size + last_size == size && start + last_size == end);
+            assert(first_size + last_size == size && last_size != 0);
             add_actual_block(key,start,first_size,is_read,reads,writes);
             add_actual_block(key,block_split_end,last_size,is_read,reads,writes);
         }
@@ -148,4 +148,3 @@ protected:
         }
     }
 };
-
