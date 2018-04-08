@@ -19,6 +19,7 @@ MemAccessMode mode_convert(MemoryAccessMode m){
         case READ_MODE: return READ;
         case WRITE_MODE: return WRITE;
     }
+    assert(false && "mode convert failed");
     return READ;
 }
 void d_mem_access(ParrDetector * detector,void * mem_address,unsigned long long access_size,void * instruction, MemoryAccessMode mode){

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Types.h"
+
 // Unknown is when you have observed first address only.
 enum MemAccessType { UNDEFINED = -1, POINT = 0, STRIDE = 1};
 
@@ -30,7 +31,7 @@ class StrideDetector {
     FSMState getState() { return myState; }
 
     // Returns current stride distance
-    int getStride() { return myStrideDist; }
+    int getStride() { return iabs(myStrideDist); }
 
     // Given an address, updates the FSM state appropriately.  Returns the type
     // of access (Unknown, Point, Stride) this address was classified as.
@@ -47,7 +48,6 @@ class StrideDetector {
     int64_t myFirstMemAddr;
     int64_t myPrevMemAddr;
     int64_t myStrideDist;
-    
+
     FSMState myState;
 };
-

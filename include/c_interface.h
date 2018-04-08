@@ -1,5 +1,5 @@
 #pragma once
-extern "C" {
+//extern "C" {
 
 struct ParrDetector;
 enum MemoryAccessMode {READ_MODE,WRITE_MODE};
@@ -11,4 +11,4 @@ void d_loop_end(ParrDetector * detector,void * loop_id);
 void d_iteration_end(ParrDetector * detector,void * loop_id);
 void d_loop_begin(ParrDetector * detector,void * loop_id);
 void d_print_output(ParrDetector * detector,char * filename);
-}
+//}

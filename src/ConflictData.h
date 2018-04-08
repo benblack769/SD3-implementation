@@ -39,7 +39,7 @@ class len_offset{
 public:
     len_offset(int64_t stride_start,int64_t stride_len){
         assert(stride_len > 0);
-        
+
         while(stride_start < 0){
             stride_start += stride_len;
         }

@@ -1,10 +1,10 @@
 {
 "Timings":
 {
-"TotalTime": 227875, 
-"Add": 30159, 
-"Merge": 16683, 
-"ItEnd": 76611 
+"TotalTime": 236967, 
+"Add": 32114, 
+"Merge": 18069, 
+"ItEnd": 81432 
 },
 "Loops": {
 "1":{
