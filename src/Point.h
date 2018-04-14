@@ -17,8 +17,8 @@ public:
         access_size = -1;
     }
     void add(int64_t cur_addr, int64_t cur_access_size){
-        assert(access_size == -1 || access_size == cur_access_size);
-        access_size = cur_access_size;
+        //assert(access_size == -1 || access_size == cur_access_size);
+        access_size = max(cur_access_size,access_size);
         points.push_back(cur_addr);
     }
     void merge_into(PointList & other){
