@@ -25,9 +25,10 @@ check_overlap(A,B)
                 new_before_last.append(item)
         swap(before_last,new_before_last)
 
-        increment ib until B[ib].first() >= interval.first()
+        while B[ib].first() >= interval.first()
             if B[ib].last() >= interval.first()
                 before_last.append(B[ib])
+            increment ib
 
         for bl in before_last
             overlap.add(bl,interval)

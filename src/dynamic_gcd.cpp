@@ -151,6 +151,7 @@ bool has_overlap(SparseStride one, SparseStride other) {
         return true;
     }
     else if(one.is_dense() || other.is_dense()){
+        //TODO: this case is not always true! Consider a really short stride inside one with a huge stride length.
         return true;
     }
     else if(one.block_size() == other.block_size() && 
