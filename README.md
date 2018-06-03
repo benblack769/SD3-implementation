@@ -3,6 +3,13 @@
 This package attempts to efficiently find memory dependencies dynamically based
 on the pairwise method and this paper: SD3: A Scalable Approach to Dynamic Data-Dependence Profiling
 
+## Different versions
+
+There are different versions of the parallelism detection that are implemented in different branches of this repository:
+
+* hash_bit_compress: An efficient method based on storing access information in bit arrays. See [my thesis](https://github.com/weepingwillowben/thesis) for more details 
+* naive_method_real: An inefficient method for comparison to the efficient methods
+
 ### Building the code
 
 The code is built with CMake.
@@ -54,4 +61,4 @@ The major changes are:
 
 * Instead of using a interval tree, I sort lists of the items that would have been put in the tree, and use an linear time algorithm to compare the lists. Then I ensured that this routine would not run too many times (measured in terms of the number of times this routine would look at a particular memory access).
 * Another change is the data structure for merging strides. They use an interval tree and caching, which works most of the time, while I use a hash table and a binary search tree that merges all mergable lists efficiently. See `src/ConflictData.h` for more details.
-* I also did not implement a number of other optimizations mentioned in the paper, like Dynamic Site ID. 
+* I also did not implement a number of other optimizations mentioned in the paper, like Dynamic Site ID.
